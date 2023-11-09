@@ -12,7 +12,7 @@ function useRouteElements() {
       element: <Homepage />
     },
     {
-      path: '/sign-in',
+      path: '/signin',
       element: (
         <AuthLayout>
           <Signin />
@@ -20,7 +20,7 @@ function useRouteElements() {
       )
     },
     {
-      path: '/sign-up',
+      path: '/signup',
       element: (
         <AuthLayout>
           <Signup />
