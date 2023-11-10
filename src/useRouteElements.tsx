@@ -4,15 +4,16 @@ import Homepage from './pages/Homepage'
 import Signin from './pages/Signin'
 import Signup from './pages/Signup'
 import AuthLayout from './layouts/AuthLayout'
+import path from './constants/path'
 
 function useRouteElements() {
   const routeElements = useRoutes([
     {
-      path: '/',
+      path: path.home,
       element: <Homepage />
     },
     {
-      path: '/signin',
+      path: path.signin,
       element: (
         <AuthLayout>
           <Signin />
@@ -20,7 +21,7 @@ function useRouteElements() {
       )
     },
     {
-      path: '/signup',
+      path: path.signup,
       element: (
         <AuthLayout>
           <Signup />
