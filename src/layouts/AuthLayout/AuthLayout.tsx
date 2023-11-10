@@ -6,11 +6,11 @@ interface Props {
 
 function AuthLayout({ children }: Props) {
   return (
-    <div className='container flex h-screen max-w-[56rem] flex-col items-center gap-24 py-5 lg:flex-row'>
+    <div className='container flex max-w-[56rem] flex-col items-center gap-24 py-5 lg:h-screen lg:flex-row'>
       <div className='flex-1'>
         <Leftside />
       </div>
-      <div className='flex-1'>{children}</div>
+      <div className='w-full flex-1'>{children}</div>
     </div>
   )
 }
