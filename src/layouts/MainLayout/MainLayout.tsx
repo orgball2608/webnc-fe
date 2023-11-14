@@ -1,3 +1,5 @@
+import Header from 'src/components/Header'
+
 interface Props {
   children?: React.ReactNode
 }
@@ -5,7 +7,7 @@ interface Props {
 function MainLayout({ children }: Props) {
   return (
     <div>
-      MainLayout
+      <Header />
       {children}
     </div>
   )
