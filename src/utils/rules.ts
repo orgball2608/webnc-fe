@@ -3,23 +3,23 @@ import * as zod from 'zod'
 const authValidation = {
   email: zod
     .string()
-    .min(1, { message: 'Email là bắt buộc' })
-    .email('Email không đúng định dạng')
-    .max(160, 'Độ dài từ 5 - 160 ký tự'),
+    .min(1, { message: 'Email is required' })
+    .email('Email is invalid')
+    .max(160, 'Length from 5 to 160 characters'),
   password: zod
     .string()
-    .min(1, 'Mật khẩu là bắt buộc')
-    .min(5, 'Độ dài từ 5 - 160 ký tự')
-    .max(160, 'Độ dài từ 5 - 160 ký tự'),
-  confirm_password: zod
+    .min(1, 'Password is required')
+    .min(5, 'Length from 5 to 160 characters')
+    .max(160, 'Length from 5 to 160 characters'),
+  confirmPassword: zod
     .string()
-    .min(1, 'Mật khẩu nhập lại là bắt buộc')
-    .min(5, 'Độ dài từ 5 - 160 ký tự')
-    .max(160, 'Độ dài từ 5 - 160 ký tự'),
-  first_name: zod.string().min(1, 'First name là bắt buộc').max(160, 'Độ dài tối đa là 160 kí tự'),
-  last_name: zod.string().min(1, 'Last name là bắt buộc').max(160, 'Độ dài tối đa là 160 kí tự'),
-  phone_number: zod.string().min(1, 'Số điện thoại là bắt buộc').max(20, 'Độ dài tối đa là 20 kí tự'),
-  address: zod.string().min(1, 'Địa chỉ là bắt buộc').max(160, 'Độ dài tối đa là 160 kí tự')
+    .min(1, 'Confirm password is required')
+    .min(5, 'Length from 5 to 160 characters')
+    .max(160, 'Length from 5 to 160 characters'),
+  firstName: zod.string().min(1, 'First name is required').max(160, 'Maximum length is 160 characters'),
+  lastName: zod.string().min(1, 'Last name is required').max(160, 'Maximum length is 160 characters'),
+  phoneNumber: zod.string().min(1, 'Phone number is required').max(20, 'Maximum length is 20 characters'),
+  address: zod.string().min(1, 'Address is required').max(160, 'Maximum length is 160 characters')
 }
 
 export const loginSchema = zod.object({
@@ -31,15 +31,15 @@ export const registerSchema = zod
   .object({
     email: authValidation.email,
     password: authValidation.password,
-    confirm_password: authValidation.confirm_password,
-    first_name: authValidation.first_name,
-    last_name: authValidation.last_name,
-    phone_number: authValidation.phone_number,
+    confirmPassword: authValidation.confirmPassword,
+    firstName: authValidation.firstName,
+    lastName: authValidation.lastName,
+    phoneNumber: authValidation.phoneNumber,
     address: authValidation.address
   })
-  .refine((data) => data.password === data.confirm_password, {
-    message: 'Mật khẩu nhập lại không đúng',
-    path: ['confirm_password']
+  .refine((data) => data.password === data.confirmPassword, {
+    message: 'Confirm password does not match',
+    path: ['confirmPassword']
   })
 
 export type LoginSchema = zod.infer<typeof loginSchema>
