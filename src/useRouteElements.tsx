@@ -11,11 +11,13 @@ import ChangePassword from './pages/change-password'
 
 const isAuthenticated = true
 function ProtectedRoutes() {
-  return isAuthenticated ? <Outlet /> : <Navigate to={path.signin} />
+  // return isAuthenticated ? <Outlet /> : <Navigate to={path.signin} />
+  return <Outlet />
 }
 
 function RejectedRoutes() {
-  return !isAuthenticated ? <Outlet /> : <Navigate to={path.home} />
+  // return !isAuthenticated ? <Outlet /> : <Navigate to={path.home} />
+  return <Outlet />
 }
 
 function useRouteElements() {
