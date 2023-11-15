@@ -3,11 +3,9 @@ type Role = 'user' | 'admin'
 export interface User {
   id: number
   email: string
-  password: string
-  firstName: string
-  lastName: string
-  status: boolean
-  phoneNumber: string
+  name: string
+  avatar_url: string
+  date_of_birth: null
   address: string
   role: string
   isEmailConfirmed: boolean
