@@ -4,6 +4,7 @@ export interface User {
   roles: Role[]
   email: string
   name: string
+  avatar_url: string
   date_of_birth: null
   address: string
   phone: string
