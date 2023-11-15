@@ -1,12 +1,18 @@
 type Role = 'user' | 'admin'
+
 export interface User {
-  _id: string
-  roles: Role[]
+  id: number
   email: string
-  name: string
-  date_of_birth: null
+  password: string
+  firstName: string
+  lastName: string
+  status: boolean
+  phoneNumber: string
   address: string
-  phone: string
+  role: string
+  isEmailConfirmed: boolean
+  resetPasswordToken: null
+  resetPasswordExpires: null
   createdAt: string
   updatedAt: string
 }

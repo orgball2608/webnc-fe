@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { IconButton, Input, Typography, Button } from '@material-tailwind/react'
+import { IconButton, Input, Button } from '@material-tailwind/react'
 import { useForm } from 'react-hook-form'
 import { FaFacebookF } from 'react-icons/fa6'
 import { FcGoogle } from 'react-icons/fc'
@@ -72,13 +72,13 @@ function Signin() {
         </Button>
       </form>
 
-      <p className='mb-0 mt-2 pt-1 text-xs font-semibold'>
+      <p className='mb-0 mt-2 pt-1 text-sm font-semibold'>
         Don't have an account?
         <Link
           to={path.signup}
           className='ml-1 text-red-500 transition duration-150 ease-in-out hover:text-red-600 focus:text-red-600 active:text-red-700'
         >
-          Register
+          Sign up
         </Link>
       </p>
     </>
