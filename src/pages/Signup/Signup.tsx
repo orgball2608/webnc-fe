@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom'
 import authApi, { SignupBodyRequest } from 'src/apis/auth.api'
 import path from 'src/constants/path'
 import { RegisterSchema, registerSchema } from 'src/utils/rules'
+import { isAxiosUnprocessableEntityError } from 'src/utils/utils'
 
 type FormData = RegisterSchema
 
@@ -35,7 +36,18 @@ function Signup() {
         console.log(data)
       },
       onError: (error) => {
-        console.log(error)
+        if (isAxiosUnprocessableEntityError<{ message: { fieldName: string; errorMessage: string }[] }>(error)) {
+          const formError = error.response?.data.message
+
+          if (formError) {
+            formError.forEach((error) => {
+              setError(error.fieldName as keyof FormData, {
+                message: error.errorMessage,
+                type: 'server'
+              })
+            })
+          }
+        }
       }
     })
   })
