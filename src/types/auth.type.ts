@@ -1,8 +1,10 @@
 import { ResponseApi } from './utils.type'
 
 export type SignupResponse = ResponseApi<{
-  access_token: string
-  refresh_token: string
+  token: string
 }>
 
-export type SigninResponse = ResponseApi<null>
+export type SigninResponse = ResponseApi<{
+  accessToken: string
+  refreshToken: string
+}>

@@ -18,7 +18,7 @@ export const getRefreshTokenFromLS = () => {
 
 export const getProfileFromLS = () => {
   const result = localStorage.getItem('profile')
-  if (result) return JSON.parse(result)
+  if (result) return JSON.parse(result) as User
   return null
 }
 
