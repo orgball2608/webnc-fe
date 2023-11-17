@@ -12,13 +12,26 @@ import MoreIcon from '@mui/icons-material/MoreVert'
 import { Link } from 'react-router-dom'
 import MenuMobile from './MenuMobile'
 import MenuDesktop from './MenuDesktop'
+import { useMutation } from '@tanstack/react-query'
+import authApi from 'src/apis/auth.api'
+import { useAppDispatch, useAppSelector } from 'src/app/store'
+import { signout as signoutAction } from 'src/slices/auth.slice'
 
 export default function Header() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState<null | HTMLElement>(null)
 
+  const dispatch = useAppDispatch()
+
   // const isMenuOpen = Boolean(anchorEl)
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl)
+
+  const signoutMutation = useMutation({
+    mutationFn: authApi.signout,
+    onSuccess: () => {
+      dispatch(signoutAction())
+    }
+  })
 
   const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget)
@@ -37,8 +50,12 @@ export default function Header() {
     setMobileMoreAnchorEl(event.currentTarget)
   }
 
+  const handleSignout = () => {
+    signoutMutation.mutate()
+  }
+
   const menuId = 'primary-search-account-menu'
-  const renderMenu = MenuDesktop({ anchorEl, handleMenuClose })
+  const renderMenu = MenuDesktop({ anchorEl, handleMenuClose, handleSignout })
 
   const mobileMenuId = 'primary-search-account-menu-mobile'
   const renderMobileMenu = MenuMobile({
