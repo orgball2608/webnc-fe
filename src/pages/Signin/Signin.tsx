@@ -1,16 +1,22 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { IconButton, Input, Button } from '@material-tailwind/react'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
+import { log } from 'console'
+import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { Link, useNavigate } from 'react-router-dom'
 import authApi, { SigninBodyRequest } from 'src/apis/auth.api'
+import { useAppDispatch } from 'src/app/store'
 import path from 'src/constants/path'
+import { signin as signinAction } from 'src/slices/auth.slice'
 import { LoginSchema, loginSchema } from 'src/utils/rules'
+import { isAxiosBadRequestError, isAxiosNotFound, isAxiosUnauthorized } from 'src/utils/utils'
 
 type FormData = LoginSchema
 
 function Signin() {
   const navigate = useNavigate()
+  const dispatch = useAppDispatch()
 
   const {
     register,
@@ -29,21 +35,40 @@ function Signin() {
     mutationFn: (body: SigninBodyRequest) => authApi.signin(body)
   })
 
+  const getMeQuery = useQuery({
+    queryKey: ['me'],
+    queryFn: authApi.getMe,
+    enabled: signinMutation.isSuccess,
+    gcTime: 0
+  })
+
+  useEffect(() => {
+    if (getMeQuery.isSuccess) {
+      const profile = getMeQuery.data.data
+      dispatch(signinAction({ profile }))
+      navigate(path.home)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [getMeQuery.isSuccess])
+
   const onSubmit = handleSubmit((data) => {
-    if (signinMutation.isPending) return
+    if (signinMutation.isPending || getMeQuery.isFetching) return
 
     signinMutation.mutate(data, {
-      onSuccess: (data) => {
-        console.log(data)
-        // navigate(path.home)
-      },
       onError: (error) => {
-        console.log(error)
+        if (
+          isAxiosBadRequestError<{ message: string }>(error) ||
+          isAxiosUnauthorized<{ message: string }>(error) ||
+          isAxiosNotFound<{ message: string }>(error)
+        ) {
+          setError('email', {
+            message: error.response?.data.message,
+            type: 'Server'
+          })
+        }
       }
     })
   })
-
-  console.log(errors)
 
   return (
     <>
@@ -65,7 +90,11 @@ function Signin() {
             </div>
           </div>
 
-          <Button type='submit' className='mt-2 bg-primary uppercase' disabled={signinMutation.isPending}>
+          <Button
+            type='submit'
+            className='mt-2 bg-primary uppercase'
+            disabled={getMeQuery.isFetching || signinMutation.isPending}
+          >
             Sign in
           </Button>
         </form>

@@ -8,7 +8,9 @@ function MainLayout() {
   return (
     <div>
       <Header />
-      <Outlet />
+      <div className='mt-[48px]'>
+        <Outlet />
+      </div>
     </div>
   )
 }

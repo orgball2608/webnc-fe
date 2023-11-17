@@ -13,15 +13,13 @@ import Homepage from './pages/Homepage'
 
 function ProtectedRoutes() {
   const { isAuthenticated } = useAppSelector((state) => state.auth)
-  // return isAuthenticated ? <Outlet /> : <Navigate to={path.signin} />
-  return <Outlet />
+  return isAuthenticated ? <Outlet /> : <Navigate to={path.signin} />
 }
 
 function RejectedRoutes() {
   const { isAuthenticated } = useAppSelector((state) => state.auth)
 
-  // return !isAuthenticated ? <Outlet /> : <Navigate to={path.home} />
-  return <Outlet />
+  return !isAuthenticated ? <Outlet /> : <Navigate to={path.home} />
 }
 
 function useRouteElements() {
