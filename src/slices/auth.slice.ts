@@ -1,6 +1,6 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import { User } from 'src/types/user.type'
-import { getAccessTokenFromLS, getProfileFromLS, setProfileToLS } from 'src/utils/auth'
+import { clearLS, getAccessTokenFromLS, getProfileFromLS, setProfileToLS } from 'src/utils/auth'
 
 // Define a type for the slice state
 interface AuthState {
@@ -22,13 +22,17 @@ export const authSlice = createSlice({
     signin: (state, action: PayloadAction<{ profile: User }>) => {
       const { profile } = action.payload
 
-      setProfileToLS(profile)
+      // setProfileToLS(profile)
       state.isAuthenticated = true
       state.profile = profile
+    },
+    signout: (state) => {
+      state.isAuthenticated = false
+      state.profile = null
     }
   }
 })
 
-export const { signin } = authSlice.actions
+export const { signin, signout } = authSlice.actions
 
 export default authSlice.reducer

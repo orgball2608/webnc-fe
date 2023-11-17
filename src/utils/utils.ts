@@ -18,3 +18,7 @@ export const isAxiosBadRequestError = <BadRequestError>(error: unknown): error i
 export const isAxiosUnauthorized = <Unauthorized>(error: unknown): error is AxiosError<Unauthorized> => {
   return isAxiosError(error) && error.response?.status === HttpStatusCode.Unauthorized
 }
+
+export const isAxiosNotFound = <NotFound>(error: unknown): error is AxiosError<NotFound> => {
+  return isAxiosError(error) && error.response?.status === HttpStatusCode.NotFound
+}

@@ -1,3 +1,4 @@
+import { User } from './user.type'
 import { ResponseApi } from './utils.type'
 
 export type SignupResponse = ResponseApi<{
@@ -8,3 +9,5 @@ export type SigninResponse = ResponseApi<{
   accessToken: string
   refreshToken: string
 }>
+
+export type GetMeResponse = User

@@ -1,19 +1,23 @@
 import { User } from 'src/types/user.type'
 
+const ACCESS_TOKEN_KEY = 'access_token'
+const REFRESH_TOKEN_KEY = 'refresh_token'
+const PROFILE_KEY = 'profile'
+
 export const setAccessTokenToLS = (access_token: string) => {
-  localStorage.setItem('access_token', access_token)
+  localStorage.setItem(ACCESS_TOKEN_KEY, access_token)
 }
 
 export const setRefreshTokenToLS = (refresh_token: string) => {
-  localStorage.setItem('refresh_token', refresh_token)
+  localStorage.setItem(REFRESH_TOKEN_KEY, refresh_token)
 }
 
 export const getAccessTokenFromLS = () => {
-  return localStorage.getItem('access_token') || ''
+  return localStorage.getItem(ACCESS_TOKEN_KEY) || ''
 }
 
 export const getRefreshTokenFromLS = () => {
-  return localStorage.getItem('refresh_token') || ''
+  return localStorage.getItem(REFRESH_TOKEN_KEY) || ''
 }
 
 export const getProfileFromLS = () => {
@@ -23,5 +27,9 @@ export const getProfileFromLS = () => {
 }
 
 export const setProfileToLS = (profile: User) => {
-  localStorage.setItem('profile', JSON.stringify(profile))
+  localStorage.setItem(PROFILE_KEY, JSON.stringify(profile))
+}
+
+export const clearLS = () => {
+  localStorage.clear()
 }

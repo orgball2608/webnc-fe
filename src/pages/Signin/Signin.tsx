@@ -1,6 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { IconButton, Input, Button } from '@material-tailwind/react'
 import { useMutation, useQuery } from '@tanstack/react-query'
+import { log } from 'console'
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { Link, useNavigate } from 'react-router-dom'
@@ -9,7 +10,7 @@ import { useAppDispatch } from 'src/app/store'
 import path from 'src/constants/path'
 import { signin as signinAction } from 'src/slices/auth.slice'
 import { LoginSchema, loginSchema } from 'src/utils/rules'
-import { isAxiosBadRequestError, isAxiosUnauthorized } from 'src/utils/utils'
+import { isAxiosBadRequestError, isAxiosNotFound, isAxiosUnauthorized } from 'src/utils/utils'
 
 type FormData = LoginSchema
 
@@ -37,7 +38,8 @@ function Signin() {
   const getMeQuery = useQuery({
     queryKey: ['me'],
     queryFn: authApi.getMe,
-    enabled: signinMutation.isSuccess
+    enabled: signinMutation.isSuccess,
+    gcTime: 0
   })
 
   useEffect(() => {
@@ -54,7 +56,11 @@ function Signin() {
 
     signinMutation.mutate(data, {
       onError: (error) => {
-        if (isAxiosBadRequestError<{ message: string }>(error) || isAxiosUnauthorized<{ message: string }>(error)) {
+        if (
+          isAxiosBadRequestError<{ message: string }>(error) ||
+          isAxiosUnauthorized<{ message: string }>(error) ||
+          isAxiosNotFound<{ message: string }>(error)
+        ) {
           setError('email', {
             message: error.response?.data.message,
             type: 'Server'

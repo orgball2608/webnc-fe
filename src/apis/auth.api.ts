@@ -1,5 +1,5 @@
-import { SigninResponse, SignupResponse } from 'src/types/auth.type'
-import { User } from 'src/types/user.type'
+import { GetMeResponse, SigninResponse, SignupResponse } from 'src/types/auth.type'
+import { ResponseApi } from 'src/types/utils.type'
 import http from 'src/utils/http'
 import { LoginSchema, RegisterSchema } from 'src/utils/rules'
 
@@ -18,8 +18,11 @@ const authApi = {
   signin: (body: SigninBodyRequest) => {
     return http.post<SigninResponse>(URL_SIGNIN, body)
   },
+  signout: () => {
+    return http.delete<ResponseApi<null>>(URL_SIGNOUT)
+  },
   getMe: () => {
-    return http.get<User>(URL_GETME)
+    return http.get<GetMeResponse>(URL_GETME)
   }
 }
 
