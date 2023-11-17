@@ -16,6 +16,7 @@ import { useMutation } from '@tanstack/react-query'
 import authApi from 'src/apis/auth.api'
 import { useAppDispatch, useAppSelector } from 'src/app/store'
 import { signout as signoutAction } from 'src/slices/auth.slice'
+import path from 'src/constants/path'
 
 export default function Header() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
@@ -82,6 +83,13 @@ export default function Header() {
               CLASSROOM
             </Typography>
           </Link>
+
+          <Link to={path.landingPage} style={{ textDecoration: 'none', color: 'inherit', marginLeft: '32px' }}>
+            <Typography variant='h7' component='div' style={{ cursor: 'pointer' }}>
+              Landing Page
+            </Typography>
+          </Link>
+
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
             <IconButton size='large' aria-label='show 17 new notifications' color='inherit'>

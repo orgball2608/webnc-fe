@@ -10,6 +10,7 @@ import Profile from './pages/Profile'
 import ChangePassword from './pages/change-password'
 import { useAppSelector } from './app/store'
 import Homepage from './pages/Homepage'
+import LandingPage from './pages/LandingPage'
 
 function ProtectedRoutes() {
   const { isAuthenticated } = useAppSelector((state) => state.auth)
@@ -43,6 +44,10 @@ function useRouteElements() {
             {
               path: path.change_password,
               element: <ChangePassword />
+            },
+            {
+              path: path.landingPage,
+              element: <LandingPage />
             }
           ]
         }
