@@ -85,7 +85,7 @@ export default function Header() {
           </Link>
 
           <Link to={path.landingPage} style={{ textDecoration: 'none', color: 'inherit', marginLeft: '32px' }}>
-            <Typography variant='h7' component='div' style={{ cursor: 'pointer' }}>
+            <Typography component='div' style={{ cursor: 'pointer' }}>
               Landing Page
             </Typography>
           </Link>
