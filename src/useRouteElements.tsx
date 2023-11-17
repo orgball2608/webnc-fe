@@ -27,6 +27,16 @@ function useRouteElements() {
   const routeElements = useRoutes([
     {
       path: '',
+      element: <MainLayout />,
+      children: [
+        {
+          path: path.landingPage,
+          element: <LandingPage />
+        }
+      ]
+    },
+    {
+      path: '',
       element: <ProtectedRoutes />,
       children: [
         {
@@ -44,10 +54,6 @@ function useRouteElements() {
             {
               path: path.change_password,
               element: <ChangePassword />
-            },
-            {
-              path: path.landingPage,
-              element: <LandingPage />
             }
           ]
         }

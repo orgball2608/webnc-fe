@@ -79,49 +79,64 @@ function Signup() {
           <form onSubmit={onSubmit}>
             <div className='grid grid-cols-12 gap-2'>
               <div className='col-span-6'>
-                <Input label='First name' {...register('firstName')} containerProps={{ className: 'min-w-min' }} />
+                <Input
+                  size='lg'
+                  label='First name'
+                  {...register('firstName')}
+                  containerProps={{ className: 'min-w-min' }}
+                />
                 <p className='ml-1 flex min-h-[20px] items-center gap-1 text-xs font-normal text-red-400'>
                   {errors.firstName?.message}
                 </p>
               </div>
 
               <div className='col-span-6'>
-                <Input label='Last name' {...register('lastName')} containerProps={{ className: 'min-w-min' }} />
+                <Input
+                  size='lg'
+                  label='Last name'
+                  {...register('lastName')}
+                  containerProps={{ className: 'min-w-min' }}
+                />
                 <p className='ml-1 flex min-h-[20px] items-center gap-1 text-xs font-normal text-red-400'>
                   {errors.lastName?.message}
                 </p>
               </div>
 
               <div className='col-span-12'>
-                <Input label='Email' {...register('email')} containerProps={{ className: 'min-w-min' }} />
+                <Input size='lg' label='Email' {...register('email')} containerProps={{ className: 'min-w-min' }} />
                 <p className='ml-1 flex min-h-[20px] items-center gap-1 text-xs font-normal text-red-400'>
                   {errors.email?.message}
                 </p>
               </div>
 
               <div className='col-span-12'>
-                <Input label='Phone number' {...register('phoneNumber')} containerProps={{ className: 'min-w-min' }} />
+                <Input
+                  size='lg'
+                  label='Phone number'
+                  {...register('phoneNumber')}
+                  containerProps={{ className: 'min-w-min' }}
+                />
                 <p className='ml-1 flex min-h-[20px] items-center gap-1 text-xs font-normal text-red-400'>
                   {errors.phoneNumber?.message}
                 </p>
               </div>
 
               <div className='col-span-12'>
-                <Input label='Address' {...register('address')} containerProps={{ className: 'min-w-min' }} />
+                <Input size='lg' label='Address' {...register('address')} containerProps={{ className: 'min-w-min' }} />
                 <p className='ml-1 flex min-h-[20px] items-center gap-1 text-xs font-normal text-red-400'>
                   {errors.address?.message}
                 </p>
               </div>
 
               <div className='col-span-12'>
-                <Input label='Password' type='password' {...register('password')} />
+                <Input size='lg' label='Password' type='password' {...register('password')} />
                 <p className='ml-1 flex min-h-[20px] items-center gap-1 text-xs font-normal text-red-400'>
                   {errors.password?.message}
                 </p>
               </div>
 
               <div className='col-span-12'>
-                <Input label='Confirm password' type='password' {...register('confirmPassword')} />
+                <Input size='lg' label='Confirm password' type='password' {...register('confirmPassword')} />
                 <p className='ml-1 flex min-h-[20px] items-center gap-1 text-xs font-normal text-red-400'>
                   {errors.confirmPassword?.message}
                 </p>
