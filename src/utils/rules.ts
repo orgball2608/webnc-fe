@@ -1,32 +1,46 @@
-import * as yup from 'yup'
+import * as zod from 'zod'
 
-const handleConfirmPasswordYup = (refString: string) => {
-  return yup
+const authValidation = {
+  email: zod
     .string()
-    .required('Nhập lại mật khẩu là bắt buộc')
-    .min(5, 'Độ dài từ 5 - 160 ký tự')
-    .max(160, 'Độ dài từ 5 - 160 ký tự')
-    .oneOf([yup.ref(refString)], 'Mật khẩu nhập lại không khớp')
+    .min(1, { message: 'Email is required' })
+    .email('Email is invalid')
+    .max(160, 'Length from 5 to 160 characters'),
+  password: zod
+    .string()
+    .min(1, 'Password is required')
+    .min(5, 'Length from 5 to 160 characters')
+    .max(160, 'Length from 5 to 160 characters'),
+  confirmPassword: zod
+    .string()
+    .min(1, 'Confirm password is required')
+    .min(5, 'Length from 5 to 160 characters')
+    .max(160, 'Length from 5 to 160 characters'),
+  firstName: zod.string().min(1, 'First name is required').max(160, 'Maximum length is 160 characters'),
+  lastName: zod.string().min(1, 'Last name is required').max(160, 'Maximum length is 160 characters'),
+  phoneNumber: zod.string().min(1, 'Phone number is required').max(20, 'Maximum length is 20 characters'),
+  address: zod.string().min(1, 'Address is required').max(160, 'Maximum length is 160 characters')
 }
 
-export const authSchema = yup.object({
-  email: yup
-    .string()
-    .required('Email là bắt buộc')
-    .matches(
-      // eslint-disable-next-line no-useless-escape
-      /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-      'Email không đúng định dạng'
-    )
-    // .email('Email không đúng định dạng')
-    .min(5, 'Độ dài từ 5 - 160 ký tự')
-    .max(160, 'Độ dài từ 5 - 160 ký tự'),
-  password: yup
-    .string()
-    .required('Mật khẩu là bắt buộc')
-    .min(5, 'Độ dài từ 5 - 160 ký tự')
-    .max(160, 'Độ dài từ 5 - 160 ký tự'),
-  confirm_password: handleConfirmPasswordYup('password')
+export const loginSchema = zod.object({
+  email: authValidation.email,
+  password: authValidation.password
 })
 
-export type AuthSchema = yup.InferType<typeof authSchema>
+export const registerSchema = zod
+  .object({
+    email: authValidation.email,
+    password: authValidation.password,
+    confirmPassword: authValidation.confirmPassword,
+    firstName: authValidation.firstName,
+    lastName: authValidation.lastName,
+    phoneNumber: authValidation.phoneNumber,
+    address: authValidation.address
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: 'Confirm password does not match',
+    path: ['confirmPassword']
+  })
+
+export type LoginSchema = zod.infer<typeof loginSchema>
+export type RegisterSchema = zod.infer<typeof registerSchema>

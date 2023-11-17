@@ -8,14 +8,20 @@ import path from './constants/path'
 import MainLayout from './layouts/MainLayout'
 import Profile from './pages/Profile'
 import ChangePassword from './pages/change-password'
+import { useAppSelector } from './app/store'
+import Homepage from './pages/Homepage'
 
-const isAuthenticated = true
 function ProtectedRoutes() {
-  return isAuthenticated ? <Outlet /> : <Navigate to={path.signin} />
+  const { isAuthenticated } = useAppSelector((state) => state.auth)
+  // return isAuthenticated ? <Outlet /> : <Navigate to={path.signin} />
+  return <Outlet />
 }
 
 function RejectedRoutes() {
-  return !isAuthenticated ? <Outlet /> : <Navigate to={path.home} />
+  const { isAuthenticated } = useAppSelector((state) => state.auth)
+
+  // return !isAuthenticated ? <Outlet /> : <Navigate to={path.home} />
+  return <Outlet />
 }
 
 function useRouteElements() {
@@ -25,24 +31,22 @@ function useRouteElements() {
       element: <ProtectedRoutes />,
       children: [
         {
-          path: path.home,
-          element: <MainLayout></MainLayout>
-        },
-        {
-          path: path.profile,
-          element: (
-            <MainLayout>
-              <Profile />
-            </MainLayout>
-          )
-        },
-        {
-          path: path.change_password,
-          element: (
-            <MainLayout>
-              <ChangePassword />
-            </MainLayout>
-          )
+          path: '',
+          element: <MainLayout />,
+          children: [
+            {
+              path: path.home,
+              element: <Homepage />
+            },
+            {
+              path: path.profile,
+              element: <Profile />
+            },
+            {
+              path: path.change_password,
+              element: <ChangePassword />
+            }
+          ]
         }
       ]
     },
@@ -51,20 +55,18 @@ function useRouteElements() {
       element: <RejectedRoutes />,
       children: [
         {
-          path: path.signin,
-          element: (
-            <AuthLayout>
-              <Signin />
-            </AuthLayout>
-          )
-        },
-        {
-          path: path.signup,
-          element: (
-            <AuthLayout>
-              <Signup />
-            </AuthLayout>
-          )
+          path: '',
+          element: <AuthLayout />,
+          children: [
+            {
+              path: path.signin,
+              element: <Signin />
+            },
+            {
+              path: path.signup,
+              element: <Signup />
+            }
+          ]
         }
       ]
     }
