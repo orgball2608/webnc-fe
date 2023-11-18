@@ -99,7 +99,12 @@ export default function Header() {
               onClick={handleProfileMenuOpen}
               color='inherit'
             >
-              <AccountCircle />
+              {profile?.avatar ? (
+                <img src={profile?.avatar} alt='' className='h-6 w-6 rounded-full border-white' />
+              ) : (
+                <AccountCircle />
+              )}
+
               <Typography style={{ marginLeft: 8 }}>{profile?.firstName + ' ' + profile?.lastName}</Typography>
             </IconButton>
           </Box>
