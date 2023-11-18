@@ -35,15 +35,8 @@ function Profile() {
     register,
     formState: { errors },
     handleSubmit,
-    setValue,
-    setError
+    setValue
   } = useForm<FormData>({
-    defaultValues: {
-      firstName: '',
-      lastName: '',
-      phoneNumber: '',
-      address: ''
-    },
     resolver: zodResolver(updateProfileSchema)
   })
 
@@ -91,7 +84,12 @@ function Profile() {
             </div>
 
             <div className='col-span-12'>
-              <Input label='Email' containerProps={{ className: 'min-w-min' }} value={profileUser?.email} readOnly />
+              <Input
+                label='Email'
+                defaultValue={profileUser?.email}
+                containerProps={{ className: 'min-w-min' }}
+                readOnly
+              />
               <p className='ml-1 flex min-h-[20px] items-center gap-1 text-xs font-normal text-red-400'></p>
             </div>
 

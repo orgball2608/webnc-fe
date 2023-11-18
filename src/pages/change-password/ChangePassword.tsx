@@ -8,12 +8,7 @@ import userApi, { ChangePasswordRequest } from 'src/apis/user.api'
 import path from 'src/constants/path'
 import { ErrorResponseApi } from 'src/types/utils.type'
 import { ChangePasswordSchema, changePasswordSchema } from 'src/utils/rules'
-import {
-  isAxiosBadRequestError,
-  isAxiosNotFound,
-  isAxiosUnauthorized,
-  isAxiosUnprocessableEntityError
-} from 'src/utils/utils'
+import { isAxiosUnprocessableEntityError } from 'src/utils/utils'
 
 type FormData = ChangePasswordSchema
 
@@ -64,17 +59,18 @@ function ChangePassword() {
   })
 
   return (
-    <div className=' mt-40 flex flex-col items-center justify-center'>
-      <div className='mb-5 text-5xl font-bold uppercase text-primary  '>CHANGE PASSWORD</div>
+    <div className=' mt-32 flex flex-col items-center justify-center'>
+      <div className='mb-5 text-center text-5xl font-bold uppercase text-primary'>CHANGE PASSWORD</div>
       <form className='w-4/5 md:w-2/5' onSubmit={onSubmit}>
         <div className='mt-8 flex flex-col-reverse md:flex-row md:items-start'>
           <div className='grid w-full grid-cols-6 gap-2 px-10'>
             <div className='col-span-12'>
               <Input
+                autoFocus={true}
                 type='password'
                 label='Current Password'
                 {...register('oldPassword')}
-                containerProps={{ className: 'min-w-min' }}
+                containerProps={{ className: 'min-w-min focus' }}
               />
               <p className='ml-1 flex min-h-[20px] items-center gap-1 text-xs font-normal text-red-400'>
                 {errors.oldPassword?.message}

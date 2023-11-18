@@ -1,3 +1,4 @@
+import { RefreshTokenResponse } from 'src/types/auth.type'
 import { User } from 'src/types/user.type'
 import { ResponseApi } from 'src/types/utils.type'
 import http from 'src/utils/http'
