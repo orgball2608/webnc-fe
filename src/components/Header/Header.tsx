@@ -18,6 +18,7 @@ import { useAppDispatch, useAppSelector } from 'src/app/store'
 import { signout as signoutAction } from 'src/slices/auth.slice'
 
 export default function Header() {
+  const { profile } = useAppSelector((state) => state.auth)
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState<null | HTMLElement>(null)
 
@@ -99,7 +100,7 @@ export default function Header() {
               color='inherit'
             >
               <AccountCircle />
-              <Typography style={{ marginLeft: 8 }}>{'User Name'}</Typography>
+              <Typography style={{ marginLeft: 8 }}>{profile?.firstName + ' ' + profile?.lastName}</Typography>
             </IconButton>
           </Box>
           <Box sx={{ display: { xs: 'flex', md: 'none' } }}>

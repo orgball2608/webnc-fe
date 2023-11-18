@@ -29,10 +29,17 @@ export const authSlice = createSlice({
     signout: (state) => {
       state.isAuthenticated = false
       state.profile = null
+    },
+    updateProfile: (state, action: PayloadAction<{ updatedProfile: User }>) => {
+      const { updatedProfile } = action.payload
+      // Cập nhật thông tin trong state
+      state.profile = updatedProfile
+      // Cập nhật thông tin trong localStorage (nếu cần)
+      setProfileToLS(updatedProfile)
     }
   }
 })
 
-export const { signin, signout } = authSlice.actions
+export const { signin, signout, updateProfile } = authSlice.actions
 
 export default authSlice.reducer

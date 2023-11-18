@@ -1,4 +1,4 @@
-import axios, { HttpStatusCode } from 'axios'
+import axios, { HttpStatusCode, InternalAxiosRequestConfig } from 'axios'
 import {
   clearLS,
   getAccessTokenFromLS,
@@ -8,9 +8,11 @@ import {
   setProfileToLS,
   setRefreshTokenToLS
 } from './auth'
-import { URL_GETME, URL_SIGNIN, URL_SIGNOUT } from 'src/apis/auth.api'
+import { URL_GETME, URL_SIGNIN, URL_SIGNOUT, URL_REFRESH_TOKEN } from 'src/apis/auth.api'
 import { GetMeResponse, SigninResponse } from 'src/types/auth.type'
 import { toast } from 'react-toastify'
+import { isAxiosUnauthorized } from './utils'
+import { ErrorResponseApi } from 'src/types/utils.type'
 
 function createHttpInstance() {
   let accessToken = getAccessTokenFromLS()
@@ -42,6 +44,7 @@ function createHttpInstance() {
   http.interceptors.response.use(
     function (response) {
       const url = response.config.url
+
       if (url === URL_SIGNIN) {
         const data = response.data as SigninResponse
         accessToken = data.data?.accessToken
@@ -61,6 +64,8 @@ function createHttpInstance() {
     },
     function (error) {
       // Chỉ toast lỗi không phải 422 và 401
+      console.log(error.response)
+
       if (
         error.response?.status &&
         ![HttpStatusCode.UnprocessableEntity, HttpStatusCode.Unauthorized].includes(error.response?.status)
@@ -69,6 +74,29 @@ function createHttpInstance() {
         const data: any | undefined = error.response?.data
         const message = data?.message || error.message
         toast.error(message)
+      }
+
+      if (!isAxiosUnauthorized<ErrorResponseApi<{ name: string; message: string }>>(error)) {
+        const config = error.response?.config || ({ headers: {} } as InternalAxiosRequestConfig)
+        const { url } = config
+
+        // if (isAxiosExpiredTokenError(error) && url !== URL_REFRESH_TOKEN) {
+        //   refreshTokenRequest = refreshTokenRequest
+        //     ? refreshTokenRequest
+        //     : handleRefreshToken().finally(() => {
+        //         setTimeout(() => {
+        //           refreshTokenRequest = null
+        //         }, 10000)
+        //       })
+
+        //   await refreshTokenRequest
+        //   return await http(config)
+        // }
+        // clearLS()
+        // accessToken = ''
+        // refreshToken = ''
+        // profile = null
+        // toast.error(error.response?.data.data?.message || error.response?.data.message)
       }
 
       return Promise.reject(error)
