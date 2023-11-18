@@ -20,7 +20,6 @@ import path from 'src/constants/path'
 import { Button } from '@material-tailwind/react'
 
 export default function Header() {
-  const { profile } = useAppSelector((state) => state.auth)
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState<null | HTMLElement>(null)
 

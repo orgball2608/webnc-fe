@@ -13,7 +13,6 @@ import { GetMeResponse, RefreshTokenResponse, SigninResponse } from 'src/types/a
 import { toast } from 'react-toastify'
 import { isAxiosExpiredTokenError, isAxiosUnauthorized } from './utils'
 import { ErrorResponseApi } from 'src/types/utils.type'
-import { config } from 'process'
 
 function createHttpInstance() {
   let accessToken = getAccessTokenFromLS()
