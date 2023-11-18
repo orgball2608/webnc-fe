@@ -75,14 +75,14 @@ function Signin() {
         <form onSubmit={onSubmit}>
           <div className='grid grid-cols-12 gap-2'>
             <div className='col-span-12'>
-              <Input label='Email' {...register('email')} containerProps={{ className: 'min-w-min' }} />
+              <Input size='lg' label='Email' {...register('email')} containerProps={{ className: 'min-w-min' }} />
               <p className='ml-1 flex min-h-[20px] items-center gap-1 text-xs font-normal text-red-400'>
                 {errors.email?.message}
               </p>
             </div>
 
             <div className='col-span-12'>
-              <Input label='Password' type='password' {...register('password')} />
+              <Input size='lg' label='Password' type='password' {...register('password')} />
               <p className='ml-1 flex min-h-[20px] items-center gap-1 text-xs font-normal text-red-400'>
                 {errors.password?.message}
               </p>

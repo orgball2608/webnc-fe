@@ -16,6 +16,8 @@ import { useMutation } from '@tanstack/react-query'
 import authApi from 'src/apis/auth.api'
 import { useAppDispatch, useAppSelector } from 'src/app/store'
 import { signout as signoutAction } from 'src/slices/auth.slice'
+import path from 'src/constants/path'
+import { Button } from '@material-tailwind/react'
 
 export default function Header() {
   const { profile } = useAppSelector((state) => state.auth)
@@ -23,6 +25,7 @@ export default function Header() {
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState<null | HTMLElement>(null)
 
   const dispatch = useAppDispatch()
+  const { profile, isAuthenticated } = useAppSelector((state) => state.auth)
 
   // const isMenuOpen = Boolean(anchorEl)
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl)
@@ -83,8 +86,9 @@ export default function Header() {
               CLASSROOM
             </Typography>
           </Link>
+
           <Box sx={{ flexGrow: 1 }} />
-          <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+          {/* <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
             <IconButton size='large' aria-label='show 17 new notifications' color='inherit'>
               <Badge badgeContent={17} color='error'>
                 <NotificationsIcon />
@@ -107,7 +111,40 @@ export default function Header() {
 
               <Typography style={{ marginLeft: 8 }}>{profile?.firstName + ' ' + profile?.lastName}</Typography>
             </IconButton>
-          </Box>
+          </Box> */}
+
+          {isAuthenticated ? (
+            <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+              <IconButton size='large' aria-label='show 17 new notifications' color='inherit'>
+                <Badge badgeContent={17} color='error'>
+                  <NotificationsIcon />
+                </Badge>
+              </IconButton>
+              <IconButton
+                size='large'
+                edge='end'
+                aria-label='account of current user'
+                aria-controls={menuId}
+                aria-haspopup='true'
+                onClick={handleProfileMenuOpen}
+                color='inherit'
+              >
+                {profile?.avatar ? (
+                  <img src={profile?.avatar} alt='' className='h-6 w-6 rounded-full border-white' />
+                ) : (
+                  <AccountCircle />
+                )}
+                <Typography style={{ marginLeft: 8 }}>{profile?.firstName + ' ' + profile?.lastName}</Typography>
+              </IconButton>
+            </Box>
+          ) : (
+            <Link to={path.signin} className='inline-block'>
+              <Button size='md' variant='text' className='text-white'>
+                Login
+              </Button>
+            </Link>
+          )}
+
           <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
             <IconButton
               size='large'
