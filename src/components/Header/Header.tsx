@@ -20,6 +20,7 @@ import path from 'src/constants/path'
 import { Button } from '@material-tailwind/react'
 
 export default function Header() {
+  const { profile } = useAppSelector((state) => state.auth)
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState<null | HTMLElement>(null)
 
@@ -87,6 +88,30 @@ export default function Header() {
           </Link>
 
           <Box sx={{ flexGrow: 1 }} />
+          {/* <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+            <IconButton size='large' aria-label='show 17 new notifications' color='inherit'>
+              <Badge badgeContent={17} color='error'>
+                <NotificationsIcon />
+              </Badge>
+            </IconButton>
+            <IconButton
+              size='large'
+              edge='end'
+              aria-label='account of current user'
+              aria-controls={menuId}
+              aria-haspopup='true'
+              onClick={handleProfileMenuOpen}
+              color='inherit'
+            >
+              {profile?.avatar ? (
+                <img src={profile?.avatar} alt='' className='h-6 w-6 rounded-full border-white' />
+              ) : (
+                <AccountCircle />
+              )}
+
+              <Typography style={{ marginLeft: 8 }}>{profile?.firstName + ' ' + profile?.lastName}</Typography>
+            </IconButton>
+          </Box> */}
 
           {isAuthenticated ? (
             <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
@@ -104,7 +129,11 @@ export default function Header() {
                 onClick={handleProfileMenuOpen}
                 color='inherit'
               >
-                <AccountCircle />
+                {profile?.avatar ? (
+                  <img src={profile?.avatar} alt='' className='h-6 w-6 rounded-full border-white' />
+                ) : (
+                  <AccountCircle />
+                )}
                 <Typography style={{ marginLeft: 8 }}>{profile?.firstName + ' ' + profile?.lastName}</Typography>
               </IconButton>
             </Box>

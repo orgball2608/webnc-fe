@@ -7,6 +7,7 @@ export const URL_SIGNIN = 'auth/login'
 export const URL_SIGNUP = 'auth/register'
 export const URL_SIGNOUT = 'auth/logout'
 export const URL_GETME = 'auth/me'
+export const URL_REFRESH_TOKEN = 'auth/refresh'
 
 export type SignupBodyRequest = Omit<RegisterSchema, 'confirmPassword'>
 export type SigninBodyRequest = LoginSchema

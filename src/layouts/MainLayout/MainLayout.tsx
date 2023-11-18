@@ -1,3 +1,6 @@
+interface Props {
+  children?: React.ReactNode
+}
 import { Outlet } from 'react-router-dom'
 import Header from 'src/components/Header'
 

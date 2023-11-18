@@ -1,3 +1,4 @@
+import exp from 'constants'
 import * as zod from 'zod'
 
 const authValidation = {
@@ -42,5 +43,26 @@ export const registerSchema = zod
     path: ['confirmPassword']
   })
 
+export const updateProfileSchema = zod.object({
+  firstName: authValidation.firstName,
+  lastName: authValidation.lastName,
+  phoneNumber: authValidation.phoneNumber,
+  address: authValidation.address
+})
+
+export const changePasswordSchema = zod
+  .object({
+    oldPassword: authValidation.password,
+    newPassword: authValidation.password,
+    confirmPassword: authValidation.confirmPassword
+  })
+  .refine((data) => data.newPassword === data.confirmPassword, {
+    message: 'Confirm password does not match',
+    path: ['confirmPassword']
+  })
+
 export type LoginSchema = zod.infer<typeof loginSchema>
 export type RegisterSchema = zod.infer<typeof registerSchema>
+
+export type UpdateProfileSchema = zod.infer<typeof updateProfileSchema>
+export type ChangePasswordSchema = zod.infer<typeof changePasswordSchema>

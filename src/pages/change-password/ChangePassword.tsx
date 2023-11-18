@@ -1,64 +1,115 @@
-// ChangePassword.tsx
-import React from 'react'
-import { useForm, SubmitHandler, Controller } from 'react-hook-form'
-import { TextField, Button, Grid, Paper, Typography } from '@mui/material'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Button, Input } from '@material-tailwind/react'
+import { useMutation } from '@tanstack/react-query'
+import { useForm } from 'react-hook-form'
+import { useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
+import userApi, { ChangePasswordRequest } from 'src/apis/user.api'
+import path from 'src/constants/path'
+import { ErrorResponseApi } from 'src/types/utils.type'
+import { ChangePasswordSchema, changePasswordSchema } from 'src/utils/rules'
+import { isAxiosUnprocessableEntityError } from 'src/utils/utils'
 
-interface ChangePasswordFormData {
-  currentPassword: string
-  newPassword: string
-  confirmPassword: string
-}
+type FormData = ChangePasswordSchema
 
 function ChangePassword() {
-  const { control, handleSubmit } = useForm<ChangePasswordFormData>()
+  const navigate = useNavigate()
+  const {
+    register,
+    handleSubmit,
+    setError,
+    watch,
+    reset,
+    formState: { errors }
+  } = useForm<FormData>({
+    defaultValues: {
+      oldPassword: '',
+      newPassword: '',
+      confirmPassword: ''
+    },
+    resolver: zodResolver(changePasswordSchema)
+  })
 
-  const onSubmit: SubmitHandler<ChangePasswordFormData> = (data) => {
-    // Handle change password logic
-    console.log(data)
-  }
+  const changePasswordMutation = useMutation({
+    mutationFn: (body: ChangePasswordRequest) => userApi.changePassword(body)
+  })
+
+  const onSubmit = handleSubmit(async (data) => {
+    if (changePasswordMutation.isPending) return
+
+    try {
+      const res = await changePasswordMutation.mutateAsync(data)
+      toast.success(res.data.message)
+      navigate(path.home)
+    } catch (error) {
+      reset()
+      if (isAxiosUnprocessableEntityError<ErrorResponseApi<FormData>>(error)) {
+        const formError = error.response?.data.data
+
+        if (formError) {
+          Object.keys(formError).forEach((key) => {
+            setError(key as keyof FormData, {
+              message: formError[key as keyof FormData],
+              type: 'Server'
+            })
+          })
+        }
+      }
+    }
+  })
 
   return (
-    <Grid container justifyContent='center' alignItems='center' height='100vh'>
-      <Grid item xs={12} sm={8} md={6} lg={4}>
-        <Paper elevation={3} sx={{ padding: 3 }}>
-          <Typography variant='h5' gutterBottom>
-            Change Password
-          </Typography>
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <Controller
-              name='currentPassword'
-              control={control}
-              defaultValue=''
-              render={({ field }) => (
-                <TextField {...field} label='Current Password' type='password' fullWidth margin='normal' />
-              )}
-            />
+    <div className=' mt-32 flex flex-col items-center justify-center'>
+      <div className='mb-5 text-center text-5xl font-bold uppercase text-primary'>CHANGE PASSWORD</div>
+      <form className='w-4/5 md:w-2/5' onSubmit={onSubmit}>
+        <div className='mt-8 flex flex-col-reverse md:flex-row md:items-start'>
+          <div className='grid w-full grid-cols-6 gap-2 px-10'>
+            <div className='col-span-12'>
+              <Input
+                autoFocus={true}
+                type='password'
+                label='Current Password'
+                {...register('oldPassword')}
+                containerProps={{ className: 'min-w-min focus' }}
+              />
+              <p className='ml-1 flex min-h-[20px] items-center gap-1 text-xs font-normal text-red-400'>
+                {errors.oldPassword?.message}
+              </p>
+            </div>
 
-            <Controller
-              name='newPassword'
-              control={control}
-              defaultValue=''
-              render={({ field }) => (
-                <TextField {...field} label='New Password' type='password' fullWidth margin='normal' />
-              )}
-            />
+            <div className='col-span-12'>
+              <Input
+                label='New Password'
+                type='password'
+                {...register('newPassword')}
+                containerProps={{ className: 'min-w-min' }}
+              />
+              <p className='ml-1 flex min-h-[20px] items-center gap-1 text-xs font-normal text-red-400'>
+                {errors.newPassword?.message}
+              </p>
+            </div>
 
-            <Controller
-              name='confirmPassword'
-              control={control}
-              defaultValue=''
-              render={({ field }) => (
-                <TextField {...field} label='Confirm Password' type='password' fullWidth margin='normal' />
-              )}
-            />
+            <div className='col-span-12'>
+              <Input
+                type='password'
+                label='Confirm New Password'
+                {...register('confirmPassword')}
+                containerProps={{ className: 'min-w-min' }}
+              />
+              <p className='ml-1 flex min-h-[20px] items-center gap-1 text-xs font-normal text-red-400'>
+                {errors.confirmPassword?.message}
+              </p>
+            </div>
+          </div>
+        </div>
 
-            <Button type='submit' variant='contained' color='primary' fullWidth sx={{ marginTop: 2 }}>
-              Change Password
-            </Button>
-          </form>
-        </Paper>
-      </Grid>
-    </Grid>
+        <div className='mt-10 flex items-center justify-center'>
+          <Button type='submit' className='mt-2 bg-primary uppercase '>
+            Change password
+          </Button>
+        </div>
+      </form>
+    </div>
   )
 }
 

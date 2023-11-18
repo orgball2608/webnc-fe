@@ -10,4 +10,8 @@ export type SigninResponse = ResponseApi<{
   refreshToken: string
 }>
 
+export type RefreshTokenResponse = ResponseApi<{
+  access_token: string
+}>
+
 export type GetMeResponse = User
