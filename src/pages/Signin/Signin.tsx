@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Input, Button } from '@material-tailwind/react'
+import { Input, Button, Typography } from '@material-tailwind/react'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
@@ -72,6 +72,10 @@ function Signin() {
   return (
     <>
       <div className='px-5'>
+        <Typography variant='h3' className='mb-8'>
+          Sign in
+        </Typography>
+
         <form onSubmit={onSubmit}>
           <div className='grid grid-cols-12 gap-2'>
             <div className='col-span-12'>
@@ -98,15 +102,21 @@ function Signin() {
           </Button>
         </form>
 
-        <p className='mb-0 mt-2 pt-1 text-sm font-semibold'>
-          Don't have an account?
-          <Link
-            to={path.signup}
-            className='ml-1 text-red-500 transition duration-150 ease-in-out hover:text-red-600 focus:text-red-600 active:text-red-700'
-          >
-            Sign up
+        <div className='mb-0 mt-2 flex justify-between pt-1'>
+          <p className='text-sm font-normal'>
+            Don't have an account?
+            <Link
+              to={path.signup}
+              className='ml-1 text-red-500 transition duration-150 ease-in-out hover:text-red-600 focus:text-red-600 active:text-red-700'
+            >
+              Sign up
+            </Link>
+          </p>
+
+          <Link to={path.forgotPassword} className='text-sm font-normal text-red-500'>
+            Forgot password?
           </Link>
-        </p>
+        </div>
       </div>
     </>
   )

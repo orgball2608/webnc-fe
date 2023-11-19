@@ -11,6 +11,8 @@ import ChangePassword from './pages/change-password'
 import { useAppSelector } from './app/store'
 import Homepage from './pages/Homepage'
 import LandingPage from './pages/LandingPage'
+import ForgotPassword from './pages/ForgotPassword'
+import ResetPassword from './pages/ResetPassword'
 
 function ProtectedRoutes() {
   const { isAuthenticated } = useAppSelector((state) => state.auth)
@@ -32,6 +34,20 @@ function useRouteElements() {
         {
           path: path.landingPage,
           element: <LandingPage />
+        }
+      ]
+    },
+    {
+      path: '',
+      element: <AuthLayout />,
+      children: [
+        {
+          path: path.forgotPassword,
+          element: <ForgotPassword />
+        },
+        {
+          path: path.resetPassword,
+          element: <ResetPassword />
         }
       ]
     },
