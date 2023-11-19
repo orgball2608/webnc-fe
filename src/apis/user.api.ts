@@ -1,4 +1,3 @@
-import { RefreshTokenResponse } from 'src/types/auth.type'
 import { User } from 'src/types/user.type'
 import { ResponseApi } from 'src/types/utils.type'
 import http from 'src/utils/http'
@@ -15,10 +14,6 @@ export type ChangePasswordRequest = ChangePasswordSchema
 const userApi = {
   getProfile: (userId: string) => {
     return http.get<User>(URL_GETPROFILE + userId)
-  },
-
-  getABC: () => {
-    return http.get<ResponseApi<User>>(URL_GETPROFILE + '2')
   },
 
   updateProfile: (body: UpdateProfileRequest) => {

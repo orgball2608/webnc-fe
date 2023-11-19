@@ -32,6 +32,7 @@ export const isAxiosNotFound = <NotFound>(error: unknown): error is AxiosError<N
 export const isAxiosExpiredTokenError = <ExpiredTokenError>(error: unknown): error is AxiosError<ExpiredTokenError> => {
   // eslint-disable-next-line import/no-named-as-default-member
   return (
-    isAxiosUnauthorized<ErrorResponseApi<{ name: string; message: string }>>(error) && error.response?.status == 498
+    isAxiosUnauthorized<ErrorResponseApi<{ name: string; message: string }>>(error) &&
+    error.response?.data.message == 'Token is expired'
   )
 }
