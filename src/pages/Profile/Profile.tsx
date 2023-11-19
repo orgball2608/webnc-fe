@@ -2,9 +2,8 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Button, Input } from '@material-tailwind/react'
 import AccountCircle from '@mui/icons-material/AccountCircle'
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { useEffect } from 'react'
-import { useForm } from 'react-hook-form'
-import { useDispatch } from 'react-redux'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import { Form, useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import userApi, { UpdateProfileRequest } from 'src/apis/user.api'
@@ -13,13 +12,27 @@ import path from 'src/constants/path'
 import { updateProfile } from 'src/slices/auth.slice'
 import { UpdateProfileSchema, updateProfileSchema } from 'src/utils/rules'
 
-type FormData = UpdateProfileSchema
+type FormData = {
+  firstName: string
+  lastName: string
+  phoneNumber: string
+  address: string
+  avatar: File // Thêm trường avatar với kiểu dữ liệu phù hợp (có thể là string hoặc một kiểu dữ liệu khác)
+}
 
 function Profile() {
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
 
+  const fileInputRef = useRef<HTMLInputElement>(null)
+
+  const [fileAvatar, setFileAvatar] = useState<File | null>(null)
+
   const { profile } = useAppSelector((state) => state.auth)
+
+  const previewAvatar = useMemo(() => {
+    return fileAvatar ? URL.createObjectURL(fileAvatar) : profile?.avatar
+  }, [fileAvatar, profile?.avatar])
 
   const profileData = useQuery({
     queryKey: ['profile'],
@@ -51,12 +64,35 @@ function Profile() {
   })
 
   const onSubmit = handleSubmit(async (data) => {
+    data.avatar = fileAvatar as File
     const res = await updateProfileMutation.mutateAsync(data)
+
     const updatedProfile = res.data.data
     dispatch(updateProfile({ updatedProfile }))
     toast.success(res.data.message)
     navigate(path.home)
   })
+
+  const handleChooseAvatar = () => {
+    fileInputRef.current?.click()
+  }
+
+  const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files
+    if (files && files.length > 0) {
+      const file = files[0]
+
+      if (file.size > 5 * 1024 * 1024) {
+        toast.error('Maximum image size is 5MB')
+        return
+      }
+      if (!['image/jpg', 'image/jpeg', 'image/png'].includes(file.type)) {
+        toast.error('File type must be .jpg, .jpeg, .png')
+        return
+      }
+      setFileAvatar(file)
+    }
+  }
 
   return (
     <div className=' mt-20 flex flex-col items-center justify-center'>
@@ -108,16 +144,25 @@ function Profile() {
           <div className='flex justify-center pb-5 md:w-1/3 md:border-l md:border-l-gray-200'>
             <div className='flex flex-col items-center'>
               <div className='my-5 h-24 w-24'>
-                {profileUser?.avatar ? (
-                  <img src={profileUser?.avatar} alt='' className='h-full w-full rounded-full object-cover' />
+                {previewAvatar ? (
+                  <img src={previewAvatar as string} alt='' className='h-full w-full rounded-full object-cover' />
                 ) : (
-                  <AccountCircle className='my-5 h-24 w-24' />
+                  <AccountCircle sx={{ fontSize: '6rem' }} />
                 )}
               </div>
-              <Input type='file' containerProps={{ className: 'hidden' }} accept='.jpg, .jpeg, png' />
-              <Button type='button' className='border bg-white text-primary'>
-                Choose Image
+              <input
+                {...register('avatar')}
+                type='file'
+                className='hidden'
+                accept='.jpg, .jpeg, .png'
+                ref={fileInputRef}
+                onChange={onFileChange}
+              />
+              <Button type='button' onClick={handleChooseAvatar} className='border bg-white text-primary'>
+                Choose Avatar
               </Button>
+              <span className=' mt-3 text-xs text-gray-400'>Maximum image size: 5MB</span>
+              <span className=' text-xs text-gray-400'>File: .jpg, .jpeg, .png</span>
             </div>
           </div>
         </div>

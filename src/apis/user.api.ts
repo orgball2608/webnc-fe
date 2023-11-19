@@ -8,7 +8,7 @@ const URL_UPDATEPROFILE = 'users/me'
 const URL_UPLOADAVATAR = 'users/me/avatar'
 const URL_CHANGEPASSWORD = 'users/change-password'
 
-export type UpdateProfileRequest = UpdateProfileSchema
+// export type UpdateProfileRequest = UpdateProfileSchema
 export type ChangePasswordRequest = ChangePasswordSchema
 
 const userApi = {
@@ -16,8 +16,11 @@ const userApi = {
     return http.get<User>(URL_GETPROFILE + userId)
   },
 
-  updateProfile: (body: UpdateProfileRequest) => {
-    return http.patch<ResponseApi<User>>(URL_UPDATEPROFILE, body)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  updateProfile: (body: any) => {
+    return http.patch<ResponseApi<User>>(URL_UPDATEPROFILE, body, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    })
   },
 
   uploadAvatar: (body: FormData) => {
