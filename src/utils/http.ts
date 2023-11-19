@@ -89,7 +89,6 @@ function createHttpInstance() {
       if (isAxiosUnauthorized<ErrorResponseApi<{ name: string; message: string }>>(error)) {
         const config = error.response?.config || ({ headers: {} } as InternalAxiosRequestConfig)
         const { url } = config
-        console.log(error)
 
         if (isAxiosExpiredTokenError(error) && url !== URL_REFRESH_TOKEN) {
           refreshTokenRequest = refreshTokenRequest
@@ -104,11 +103,15 @@ function createHttpInstance() {
           return await http(config)
         }
         clearLS()
+        if (url === URL_REFRESH_TOKEN) {
+          HandleClearRedux()
+        }
         accessToken = ''
         refreshToken = ''
         profile = null
-        HandleClearRedux()
-        toast.error(error.response?.data.data?.message || error.response?.data.message)
+        console.log(error)
+
+        // toast.error(error.response?.data.data?.message || error.response?.data.message)
       }
 
       return Promise.reject(error)
@@ -133,8 +136,9 @@ function createHttpInstance() {
 }
 
 const HandleClearRedux = () => {
-  const dispatch = useAppDispatch()
-  dispatch(signout())
+  // const dispatch = useAppDispatch()
+  // dispatch(signout())
+  console.log('clear redux')
   window.location.reload()
 }
 

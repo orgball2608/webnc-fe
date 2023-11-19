@@ -27,6 +27,8 @@ export const authSlice = createSlice({
       state.profile = profile
     },
     signout: (state) => {
+      console.log('signout')
+
       state.isAuthenticated = false
       state.profile = null
     },
