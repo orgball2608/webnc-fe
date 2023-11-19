@@ -4,6 +4,8 @@ const ACCESS_TOKEN_KEY = 'access_token'
 const REFRESH_TOKEN_KEY = 'refresh_token'
 const PROFILE_KEY = 'profile'
 
+export const LocalStorageEventTarget = new EventTarget()
+
 export const setAccessTokenToLS = (access_token: string) => {
   localStorage.setItem(ACCESS_TOKEN_KEY, access_token)
 }
