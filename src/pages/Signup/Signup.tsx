@@ -3,8 +3,9 @@ import { Card, CardBody, CardFooter, Typography, Button, Input } from '@material
 import { useMutation } from '@tanstack/react-query'
 import omit from 'lodash/omit'
 import { useForm } from 'react-hook-form'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import authApi, { SignupBodyRequest } from 'src/apis/auth.api'
+import AccountConfirmation from 'src/components/AccountConfirmation'
 import path from 'src/constants/path'
 import { RegisterSchema, registerSchema } from 'src/utils/rules'
 import { isAxiosUnprocessableEntityError } from 'src/utils/utils'
@@ -12,6 +13,8 @@ import { isAxiosUnprocessableEntityError } from 'src/utils/utils'
 type FormData = RegisterSchema
 
 function Signup() {
+  const navigate = useNavigate()
+
   const {
     register,
     handleSubmit,
@@ -55,27 +58,18 @@ function Signup() {
   return (
     <>
       {signupMutation.isSuccess ? (
-        <div className='px-5'>
-          <Card className='bg-primary text-white'>
-            <CardBody>
-              <Typography variant='h2' className='mb-8 text-center'>
-                Account Confirmation
-              </Typography>
-              <Typography className='mb-3 text-center'>
-                An email with your account confirmation link has been sent to your email:{' '}
-                <b className='font-bold'>{watch('email')}</b>
-              </Typography>
-              <Typography className='text-center'>Check your email and comeback to proceed!</Typography>
-            </CardBody>
-            <CardFooter className='pt-0 text-center'>
-              <Link to={path.signin} className='inline-block h-max'>
-                <Button size='lg'>Proceed</Button>
-              </Link>
-            </CardFooter>
-          </Card>
-        </div>
+        <AccountConfirmation
+          email={watch('email')}
+          onSubmit={() => {
+            navigate(path.signin)
+          }}
+        />
       ) : (
         <div>
+          <Typography variant='h3' className='mb-8'>
+            Sign up
+          </Typography>
+
           <form onSubmit={onSubmit}>
             <div className='grid grid-cols-12 gap-2'>
               <div className='col-span-6'>
@@ -148,7 +142,7 @@ function Signup() {
             </Button>
           </form>
 
-          <p className='mb-0 mt-2 pt-1 text-sm font-semibold'>
+          <p className='mb-0 mt-2 pt-1 text-sm font-normal'>
             Have an account?
             <Link
               to={path.signin}

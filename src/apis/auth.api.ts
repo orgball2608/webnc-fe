@@ -27,11 +27,11 @@ const authApi = {
   getMe: () => {
     return http.get<GetMeResponse>(URL_GETME)
   },
-
-  refreshToken: (refreshToken: string) => {
-    return http.post<RefreshTokenResponse>(URL_REFRESH_TOKEN, {
-      refreshToken
-    })
+  forgotPassword: (body: { email: string }) => {
+    return http.post<ResponseApi<null>>('auth/forgot-password', body)
+  },
+  resetPassword: (body: { token: string; password: string }) => {
+    return http.post<ResponseApi<null>>('auth/reset-password', body)
   }
 }
 

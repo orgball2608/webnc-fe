@@ -5,7 +5,9 @@ const path = {
   logout: '/logout',
   profile: '/user/profile',
   change_password: '/user/change_password',
-  landingPage: '/'
+  landingPage: '/',
+  forgotPassword: '/forgot-password',
+  resetPassword: '/reset-password'
 } as const
 
 export default path
