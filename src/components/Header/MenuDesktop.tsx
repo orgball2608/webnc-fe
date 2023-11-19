@@ -8,12 +8,18 @@ export default function MenuDesktop({ anchorEl, handleMenuClose, handleSignout }
   return (
     <Menu id='user-menu' anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleMenuClose}>
       <MenuItem onClick={handleMenuClose}>
-        <Link to={path.profile}>Profile</Link>
+        <Link to={path.profile} className='w-full'>
+          Profile
+        </Link>
       </MenuItem>
       <MenuItem onClick={handleMenuClose}>
-        <Link to={path.change_password}>Change Password</Link>
+        <Link to={path.change_password} className='w-full'>
+          Change Password
+        </Link>
       </MenuItem>
-      <MenuItem onClick={handleSignout}>Log Out</MenuItem>
+      <MenuItem onClick={handleSignout} className='w-full'>
+        Log Out
+      </MenuItem>
     </Menu>
   )
 }

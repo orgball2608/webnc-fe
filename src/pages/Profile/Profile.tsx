@@ -65,7 +65,6 @@ function Profile() {
 
   const onSubmit = handleSubmit(async (data) => {
     data.avatar = fileAvatar as File
-    console.log(data)
     const res = await updateProfileMutation.mutateAsync(data)
 
     const updatedProfile = res.data.data
@@ -80,11 +79,8 @@ function Profile() {
 
   const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files
-    console.log(files)
-
     if (files && files.length > 0) {
       const file = files[0]
-      console.log(file)
 
       if (file.size > 5 * 1024 * 1024) {
         toast.error('Maximum image size is 5MB')
