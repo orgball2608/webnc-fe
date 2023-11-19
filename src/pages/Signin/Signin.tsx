@@ -44,6 +44,8 @@ function Signin() {
   useEffect(() => {
     if (getMeQuery.isSuccess) {
       const profile = getMeQuery.data.data
+      console.log(profile)
+
       dispatch(signinAction({ profile }))
       navigate(path.home)
     }
