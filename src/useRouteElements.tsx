@@ -13,6 +13,7 @@ import Homepage from './pages/Homepage'
 import LandingPage from './pages/LandingPage'
 import ForgotPassword from './pages/ForgotPassword'
 import ResetPassword from './pages/ResetPassword'
+import NotFound from './pages/NotFound'
 
 function ProtectedRoutes() {
   const { isAuthenticated } = useAppSelector((state) => state.auth)
@@ -92,6 +93,16 @@ function useRouteElements() {
               element: <Signup />
             }
           ]
+        }
+      ]
+    },
+    {
+      path: '*',
+      element: <MainLayout />,
+      children: [
+        {
+          path: '*',
+          element: <NotFound />
         }
       ]
     }
