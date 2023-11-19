@@ -24,6 +24,12 @@ const authApi = {
   },
   getMe: () => {
     return http.get<GetMeResponse>(URL_GETME)
+  },
+  forgotPassword: (body: { email: string }) => {
+    return http.post<ResponseApi<null>>('auth/forgot-password', body)
+  },
+  resetPassword: (body: { token: string; password: string }) => {
+    return http.post<ResponseApi<null>>('auth/reset-password', body)
   }
 }
 
