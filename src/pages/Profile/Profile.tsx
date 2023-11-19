@@ -1,26 +1,23 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button, Input } from '@material-tailwind/react'
+import AccountCircle from '@mui/icons-material/AccountCircle'
 import { useMutation, useQuery } from '@tanstack/react-query'
-import omit from 'lodash/omit'
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { useDispatch } from 'react-redux'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
-import authApi, { SignupBodyRequest } from 'src/apis/auth.api'
 import userApi, { UpdateProfileRequest } from 'src/apis/user.api'
-import { useAppSelector, useAppDispatch } from 'src/app/store'
+import { useAppDispatch, useAppSelector } from 'src/app/store'
 import path from 'src/constants/path'
 import { updateProfile } from 'src/slices/auth.slice'
-import { setProfileToLS } from 'src/utils/auth'
 import { UpdateProfileSchema, updateProfileSchema } from 'src/utils/rules'
-import { isAxiosUnprocessableEntityError } from 'src/utils/utils'
 
 type FormData = UpdateProfileSchema
 
 function Profile() {
   const navigate = useNavigate()
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
 
   const { profile } = useAppSelector((state) => state.auth)
 
@@ -111,11 +108,11 @@ function Profile() {
           <div className='flex justify-center pb-5 md:w-1/3 md:border-l md:border-l-gray-200'>
             <div className='flex flex-col items-center'>
               <div className='my-5 h-24 w-24'>
-                <img
-                  src='https://scontent.fsgn5-10.fna.fbcdn.net/v/t39.30808-6/403709958_3496704047263312_6905800829882165925_n.jpg?_nc_cat=107&ccb=1-7&_nc_sid=5f2048&_nc_ohc=CO2MHkfaY7QAX9IyBv_&_nc_ht=scontent.fsgn5-10.fna&cb_e2o_trans=t&oh=00_AfBATazKAbvooB3C3EhGnLBP9I949LvavES7PNMGH42e-g&oe=655D34C2'
-                  alt=''
-                  className='h-full w-full rounded-full object-cover'
-                />
+                {profileUser?.avatar ? (
+                  <img src={profileUser?.avatar} alt='' className='h-full w-full rounded-full object-cover' />
+                ) : (
+                  <AccountCircle className='my-5 h-24 w-24' />
+                )}
               </div>
               <Input type='file' containerProps={{ className: 'hidden' }} accept='.jpg, .jpeg, png' />
               <Button type='button' className='border bg-white text-primary'>

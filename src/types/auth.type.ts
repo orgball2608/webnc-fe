@@ -11,7 +11,7 @@ export type SigninResponse = ResponseApi<{
 }>
 
 export type RefreshTokenResponse = ResponseApi<{
-  access_token: string
+  accessToken: string
 }>
 
 export type GetMeResponse = User

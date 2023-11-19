@@ -10,4 +10,5 @@ export interface User {
   phoneNumber: string
   address: string
   role: string
+  avatar: string
 }

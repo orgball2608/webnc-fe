@@ -8,11 +8,21 @@ import {
   setProfileToLS,
   setRefreshTokenToLS
 } from './auth'
-import { URL_GETME, URL_SIGNIN, URL_SIGNOUT, URL_REFRESH_TOKEN } from 'src/apis/auth.api'
+import authApi, { URL_GETME, URL_SIGNIN, URL_SIGNOUT, URL_REFRESH_TOKEN } from 'src/apis/auth.api'
 import { GetMeResponse, RefreshTokenResponse, SigninResponse } from 'src/types/auth.type'
 import { toast } from 'react-toastify'
 import { isAxiosExpiredTokenError, isAxiosUnauthorized } from './utils'
 import { ErrorResponseApi } from 'src/types/utils.type'
+import { useAppDispatch } from 'src/app/store'
+import { signout } from 'src/slices/auth.slice'
+import { useQuery } from '@tanstack/react-query'
+
+// function Reset() {
+//   console.log('reset')
+
+//   const dispatch = useAppDispatch()
+//   dispatch(signout())
+// }
 
 function createHttpInstance() {
   let accessToken = getAccessTokenFromLS()
@@ -33,6 +43,7 @@ function createHttpInstance() {
       if (accessToken && config.headers) {
         config.headers.Authorization = 'Bearer ' + accessToken
       }
+
       return config
     },
     function (error) {
@@ -78,66 +89,57 @@ function createHttpInstance() {
       if (isAxiosUnauthorized<ErrorResponseApi<{ name: string; message: string }>>(error)) {
         const config = error.response?.config || ({ headers: {} } as InternalAxiosRequestConfig)
         const { url } = config
-        console.log('url:' + url)
 
         if (isAxiosExpiredTokenError(error) && url !== URL_REFRESH_TOKEN) {
           refreshTokenRequest = refreshTokenRequest
             ? refreshTokenRequest
-            : handleRefreshToken().finally(() => {
+            : HandleRefreshToken().finally(() => {
                 setTimeout(() => {
                   refreshTokenRequest = null
-                }, 10000)
+                }, 3000)
               })
 
           await refreshTokenRequest
           return await http(config)
         }
         clearLS()
+        if (url === URL_REFRESH_TOKEN) {
+          HandleClearRedux()
+        }
         accessToken = ''
         refreshToken = ''
         profile = null
-        toast.error(error.response?.data.data?.message || error.response?.data.message)
+        console.log(error)
+
+        // toast.error(error.response?.data.data?.message || error.response?.data.message)
       }
 
       return Promise.reject(error)
     }
   )
 
-  const handleRefreshToken = async () => {
+  const HandleRefreshToken = async () => {
     try {
-      console.log('accessToken:' + accessToken)
-
-      console.log('refreshToken:' + refreshToken)
-
-      // const res = await http.get<RefreshTokenResponse>(URL_REFRESH_TOKEN, {
-      //   headers: {
-      //     Authorization:
-      //       'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwidmVyaWZ5U3RhdHVzIjoiVkVSSUZZIiwiaWF0IjoxNzAwMjk1NTAyLCJleHAiOjE3MDI4ODc1MDJ9.QoDrOy9-JL2cf38i3anKd88tBWhZbcG_G4WNgwVMwVw'
-      //   }
-      // })
-
-      const ref =
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwidmVyaWZ5U3RhdHVzIjoiVkVSSUZZIiwiaWF0IjoxNzAwMjk1NTAyLCJleHAiOjE3MDI4ODc1MDJ9.QoDrOy9-JL2cf38i3anKd88tBWhZbcG_G4WNgwVMwVw'
-      const res = await http.get<RefreshTokenResponse>('auth/refresh', {
-        headers: {
-          Authorization: 'Bearer ' + ref
-        }
-      })
-      console.log('res:' + res)
-
-      accessToken = res.data.data.access_token
+      const res = await authApi.refreshToken(refreshToken)
+      accessToken = res.data.data.accessToken
       setAccessTokenToLS(accessToken)
     } catch (err) {
-      console.log('err:' + err)
-
       clearLS()
       accessToken = ''
       refreshToken = ''
+      HandleClearRedux()
       throw err
     }
   }
 
   return http
+}
+
+const HandleClearRedux = () => {
+  // const dispatch = useAppDispatch()
+  // dispatch(signout())
+  console.log('clear redux')
+  window.location.reload()
 }
 
 const http = createHttpInstance()
