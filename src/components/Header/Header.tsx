@@ -80,7 +80,7 @@ export default function Header() {
           <IconButton size='large' edge='start' color='inherit' aria-label='open drawer' sx={{ mr: 2 }}>
             <MenuIcon />
           </IconButton>
-          <Link to='/' style={{ textDecoration: 'none', color: 'inherit' }}>
+          <Link to={path.home} style={{ textDecoration: 'none', color: 'inherit' }} className='w-full'>
             <Typography variant='h6' component='div' style={{ cursor: 'pointer' }}>
               CLASSROOM
             </Typography>
@@ -137,7 +137,7 @@ export default function Header() {
               </IconButton>
             </Box>
           ) : (
-            <Link to={path.signin} className='inline-block'>
+            <Link to={path.signin} className='inline-block w-full'>
               <Button size='md' variant='text' className='text-white'>
                 Login
               </Button>
