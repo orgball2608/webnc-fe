@@ -8,7 +8,7 @@ const URL_UPDATEPROFILE = 'users/me'
 const URL_UPLOADAVATAR = 'users/me/avatar'
 const URL_CHANGEPASSWORD = 'users/change-password'
 
-// export type UpdateProfileRequest = UpdateProfileSchema
+export type UpdateProfileRequest = UpdateProfileSchema
 export type ChangePasswordRequest = ChangePasswordSchema
 
 const userApi = {

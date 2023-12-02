@@ -15,3 +15,8 @@ export type RefreshTokenResponse = ResponseApi<{
 }>
 
 export type GetMeResponse = User
+
+export type AuthQueryConfig = {
+  access_token?: string
+  refresh_token?: string
+}

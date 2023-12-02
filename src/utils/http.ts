@@ -16,6 +16,7 @@ import { ErrorResponseApi } from 'src/types/utils.type'
 import { useAppDispatch } from 'src/app/store'
 import { signout } from 'src/slices/auth.slice'
 import { useQuery } from '@tanstack/react-query'
+import useQueryString from 'src/hooks/useQueryString'
 
 // function Reset() {
 //   console.log('reset')
@@ -30,6 +31,8 @@ function createHttpInstance() {
   let profile = getProfileFromLS()
   let refreshTokenRequest: Promise<void> | null = null
 
+  console.log(accessToken)
+
   const http = axios.create({
     baseURL: import.meta.env.VITE_BASE_URL,
     headers: {
@@ -40,8 +43,19 @@ function createHttpInstance() {
   // Add a request interceptor
   http.interceptors.request.use(
     function (config) {
-      if (accessToken && config.headers) {
-        config.headers.Authorization = 'Bearer ' + accessToken
+      const urlSearchParams = new URLSearchParams(window.location.search)
+      const urlQueryParams = Object.fromEntries([...urlSearchParams])
+
+      if (config.headers) {
+        if (accessToken) {
+          config.headers.Authorization = 'Bearer ' + accessToken
+        } else if (urlQueryParams.access_token) {
+          accessToken = urlQueryParams.access_token
+          refreshToken = urlQueryParams.refresh_token
+          config.headers.Authorization = 'Bearer ' + accessToken
+          setAccessTokenToLS(accessToken)
+          setRefreshTokenToLS(refreshToken)
+        }
       }
 
       return config
