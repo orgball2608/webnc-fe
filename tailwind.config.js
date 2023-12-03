@@ -10,7 +10,15 @@ module.exports = withMT({
     extend: {
       colors: {
         primary: '#3061AF',
+        border: '#dadce0',
         ...colors
+      },
+      borderColor: {
+        primary: '#dadce0'
+      },
+      textColor: {
+        primary: '#3c4043',
+        secondary: '#5f6368'
       }
     }
   },

@@ -1,17 +1,18 @@
-interface Props {
-  children?: React.ReactNode
-}
 import { Outlet } from 'react-router-dom'
 import Header from 'src/components/Header'
+import Sidebar from './components/Sidebar'
 
 function MainLayout() {
   return (
-    <div>
+    <>
       <Header />
-      <div className='mt-[48px]'>
+      <aside className='fixed bottom-0 left-0 top-[64px] w-[300px] border-r border-r-primary bg-white'>
+        <Sidebar />
+      </aside>
+      <main className='ml-[300px] mt-[64px]'>
         <Outlet />
-      </div>
-    </div>
+      </main>
+    </>
   )
 }
 
