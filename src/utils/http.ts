@@ -31,8 +31,6 @@ function createHttpInstance() {
   let profile = getProfileFromLS()
   let refreshTokenRequest: Promise<void> | null = null
 
-  console.log(accessToken)
-
   const http = axios.create({
     baseURL: import.meta.env.VITE_BASE_URL,
     headers: {
