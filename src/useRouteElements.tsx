@@ -14,6 +14,7 @@ import ForgotPassword from './pages/ForgotPassword'
 import ResetPassword from './pages/ResetPassword'
 import NotFound from './pages/NotFound'
 import HeaderOnly from './layouts/HeaderOnly'
+import ClassDetail, { ClassDetailExcercises, ClassDetailNews, ClassDetailPeople } from './pages/ClassDetail'
 
 function ProtectedRoutes() {
   const { isAuthenticated } = useAppSelector((state) => state.auth)
@@ -71,6 +72,24 @@ function useRouteElements() {
             {
               path: path.change_password,
               element: <ChangePassword />
+            },
+            {
+              path: path.classDetail.prefix,
+              element: <ClassDetail />,
+              children: [
+                {
+                  path: path.classDetail.news,
+                  element: <ClassDetailNews />
+                },
+                {
+                  path: path.classDetail.excercises,
+                  element: <ClassDetailExcercises />
+                },
+                {
+                  path: path.classDetail.people,
+                  element: <ClassDetailPeople />
+                }
+              ]
             }
           ]
         }

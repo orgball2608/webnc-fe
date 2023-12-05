@@ -59,7 +59,7 @@ function LandingPage() {
 
               <Typography className='mb-5 text-gray-600'>
                 Năm 2021, đối mặt với dịch Covid, việc học trực tuyến ngày càng đóng vai trò quan trọng trong nền giáo
-                dục. Friendly CLass ra đời với sự mệnh giải quyết những vấn đề trong việc học và dạy.
+                dục. Friendly Class ra đời với sự mệnh giải quyết những vấn đề trong việc học và dạy.
               </Typography>
 
               <Link className='inline-block' to={path.signin}>

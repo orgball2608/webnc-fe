@@ -2,6 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Input, Button, Typography } from '@material-tailwind/react'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { useEffect } from 'react'
+import { Helmet } from 'react-helmet'
 import { useForm } from 'react-hook-form'
 import { FaGoogle } from 'react-icons/fa'
 import { Link, useNavigate } from 'react-router-dom'
@@ -89,6 +90,10 @@ function Signin() {
 
   return (
     <>
+      <Helmet>
+        <title>Đăng nhập</title>
+      </Helmet>
+
       <div className='px-5'>
         <Typography variant='h3' className='mb-8'>
           Sign in
