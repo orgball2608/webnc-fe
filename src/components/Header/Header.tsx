@@ -18,6 +18,8 @@ import { useAppDispatch, useAppSelector } from 'src/app/store'
 import { signout as signoutAction } from 'src/slices/auth.slice'
 import path from 'src/constants/path'
 import { Button } from '@material-tailwind/react'
+import { FaPlus } from 'react-icons/fa6'
+import Dropdown, { DropdownItem } from '../Dropdown'
 
 export default function Header() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
@@ -55,6 +57,7 @@ export default function Header() {
 
   const handleSignout = () => {
     signoutMutation.mutate()
+    handleMenuClose()
   }
 
   const menuId = 'primary-search-account-menu'
@@ -70,17 +73,21 @@ export default function Header() {
   })
 
   const headerStyle = {
-    minHeight: '2rem'
+    minHeight: '64px'
   }
 
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position='fixed'>
         <Toolbar className='bg-primary' style={headerStyle}>
-          <IconButton size='large' edge='start' color='inherit' aria-label='open drawer' sx={{ mr: 2 }}>
-            <MenuIcon />
-          </IconButton>
-          <Link to={path.home} style={{ textDecoration: 'none', color: 'inherit' }} className='w-full'>
+          {isAuthenticated && (
+            <>
+              <IconButton size='large' edge='start' color='inherit' aria-label='open drawer' sx={{ mr: 2 }}>
+                <MenuIcon />
+              </IconButton>
+            </>
+          )}
+          <Link to={path.home} style={{ textDecoration: 'none', color: 'inherit' }}>
             <Typography variant='h6' component='div' style={{ cursor: 'pointer' }}>
               CLASSROOM
             </Typography>
@@ -114,6 +121,19 @@ export default function Header() {
 
           {isAuthenticated ? (
             <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+              <Dropdown
+                placement='bottom-end'
+                render={() => (
+                  <>
+                    <DropdownItem>Tham gia lớp học</DropdownItem>
+                    <DropdownItem>Tạo lớp học</DropdownItem>
+                  </>
+                )}
+              >
+                <IconButton size='large' color='inherit'>
+                  <FaPlus className='text-2xl' />
+                </IconButton>
+              </Dropdown>
               <IconButton size='large' aria-label='show 17 new notifications' color='inherit'>
                 <Badge badgeContent={17} color='error'>
                   <NotificationsIcon />
@@ -137,7 +157,7 @@ export default function Header() {
               </IconButton>
             </Box>
           ) : (
-            <Link to={path.signin} className='inline-block w-full'>
+            <Link to={path.signin} className='inline-block'>
               <Button size='md' variant='text' className='text-white'>
                 Login
               </Button>

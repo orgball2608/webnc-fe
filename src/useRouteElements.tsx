@@ -1,6 +1,5 @@
 import { Navigate, Outlet, useRoutes } from 'react-router-dom'
 
-// import Homepage from './pages/Homepage'
 import Signin from './pages/Signin'
 import Signup from './pages/Signup'
 import AuthLayout from './layouts/AuthLayout'
@@ -13,6 +12,8 @@ import Homepage from './pages/Homepage'
 import LandingPage from './pages/LandingPage'
 import ForgotPassword from './pages/ForgotPassword'
 import ResetPassword from './pages/ResetPassword'
+import NotFound from './pages/NotFound'
+import HeaderOnly from './layouts/HeaderOnly'
 
 function ProtectedRoutes() {
   const { isAuthenticated } = useAppSelector((state) => state.auth)
@@ -29,7 +30,7 @@ function useRouteElements() {
   const routeElements = useRoutes([
     {
       path: '',
-      element: <MainLayout />,
+      element: <HeaderOnly />,
       children: [
         {
           path: path.landingPage,
@@ -94,6 +95,10 @@ function useRouteElements() {
           ]
         }
       ]
+    },
+    {
+      path: '*',
+      element: <NotFound />
     }
   ])
 

@@ -17,9 +17,7 @@ export default function MenuDesktop({ anchorEl, handleMenuClose, handleSignout }
           Change Password
         </Link>
       </MenuItem>
-      <MenuItem onClick={handleSignout} className='w-full'>
-        Log Out
-      </MenuItem>
+      <MenuItem onClick={handleSignout}>Log Out</MenuItem>
     </Menu>
   )
 }
