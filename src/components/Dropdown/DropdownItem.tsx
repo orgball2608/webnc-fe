@@ -1,6 +1,6 @@
 interface Props {
   children: React.ReactNode
-  onClick?: () => void
+  onClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
 }
 
 function DropdownItem({ children, onClick }: Props) {
