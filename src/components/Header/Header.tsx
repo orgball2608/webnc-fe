@@ -89,7 +89,7 @@ export default function Header() {
           )}
           <Link to={path.home} style={{ textDecoration: 'none', color: 'inherit' }}>
             <Typography variant='h6' component='div' style={{ cursor: 'pointer' }}>
-              CLASSROOM
+              Lớp học
             </Typography>
           </Link>
 

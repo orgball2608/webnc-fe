@@ -43,7 +43,7 @@ function Sidebar() {
               )
             }
           >
-            <AccountItem key={index} img={item.iconSrc} alt={item.iconAlt} title={item.title} />
+            <AccountItem key={index} avatarUrl={item.iconSrc} alt={item.iconAlt} name={item.title} />
           </NavLink>
         ))}
       </nav>

@@ -1,9 +1,7 @@
 import { useState } from 'react'
-import { DragDropContext, Draggable, DropResult, Droppable, ResponderProvided } from 'react-beautiful-dnd'
 import { Helmet } from 'react-helmet'
 import ClassCard from 'src/components/ClassCard'
 import { ClassItem } from 'src/types/class.type'
-import { GridContextProvider, GridDropZone, GridItem, swap } from 'react-grid-dnd'
 
 const initialClasses: ClassItem[] = [
   {
@@ -110,12 +108,6 @@ const initialClasses: ClassItem[] = [
 
 function Homepage() {
   const [classes, setClasses] = useState(initialClasses)
-  const [items, setItems] = useState([1, 2, 3, 4])
-
-  function onChange(sourceId: string, sourceIndex: number, targetIndex: number, targetId?: string) {
-    const nextState = swap(items, sourceIndex, targetIndex)
-    setItems(nextState)
-  }
 
   return (
     <>

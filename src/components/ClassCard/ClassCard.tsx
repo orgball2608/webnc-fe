@@ -6,6 +6,7 @@ import { Avatar } from '@material-tailwind/react'
 import Dropdown, { DropdownItem } from '../Dropdown'
 import defaultUser from 'src/assets/images/default-user.webp'
 import { ClassItem } from 'src/types/class.type'
+import Image from '../Image'
 
 interface Props {
   data: ClassItem
@@ -43,7 +44,7 @@ function ClassCard({ data }: Props) {
         </Dropdown>
 
         <div className='absolute bottom-0 right-3 translate-y-1/2'>
-          <Avatar src={data.owner?.avatar || defaultUser} alt='user avatar' size='xl' />
+          <Image src={data.owner?.avatar || defaultUser} alt='user avatar' size='xl' />
         </div>
       </header>
 

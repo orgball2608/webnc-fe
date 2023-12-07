@@ -20,7 +20,8 @@ module.exports = withMT({
       textColor: {
         primary: '#3c4043',
         secondary: '#5f6368',
-        third: '#1967d2'
+        third: '#1967d2',
+        fourth: '#0000008c'
       }
     }
   },
