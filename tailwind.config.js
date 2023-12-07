@@ -10,7 +10,8 @@ module.exports = withMT({
     extend: {
       colors: {
         primary: '#3061AF',
-        border: '#dadce0',
+        'active-hover': '#e8f0fe',
+        'active-border': '#1967d2',
         ...colors
       },
       borderColor: {
@@ -18,7 +19,9 @@ module.exports = withMT({
       },
       textColor: {
         primary: '#3c4043',
-        secondary: '#5f6368'
+        secondary: '#5f6368',
+        third: '#1967d2',
+        fourth: '#0000008c'
       }
     }
   },
