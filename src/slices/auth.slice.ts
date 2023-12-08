@@ -19,7 +19,7 @@ export const authSlice = createSlice({
   // `createSlice` will infer the state type from the `initialState` argument
   initialState,
   reducers: {
-    signin: (state, action: PayloadAction<{ profile: User }>) => {
+    signin: (state: AuthState, action: PayloadAction<{ profile: User }>) => {
       const { profile } = action.payload
 
       // setProfileToLS(profile)
@@ -32,7 +32,7 @@ export const authSlice = createSlice({
       state.isAuthenticated = false
       state.profile = null
     },
-    updateProfile: (state, action: PayloadAction<{ updatedProfile: User }>) => {
+    updateProfile: (state: AuthState, action: PayloadAction<{ updatedProfile: User }>) => {
       const { updatedProfile } = action.payload
       // Cập nhật thông tin trong state
       state.profile = updatedProfile
