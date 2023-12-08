@@ -1,23 +1,22 @@
 import classNames from 'classnames'
-import { NavLink, Outlet } from 'react-router-dom'
-import path from 'src/constants/path'
-
-const tabs = [
-  {
-    title: 'Bảng tin',
-    path: '/class/123/news'
-  },
-  {
-    title: 'Bài tập trên lớp',
-    path: '/class/123/excercises'
-  },
-  {
-    title: 'Mọi người',
-    path: '/class/123/people'
-  }
-]
+import { NavLink, Outlet, useParams } from 'react-router-dom'
 
 function ClassDetail() {
+  const { classId } = useParams()
+  const tabs = [
+    {
+      title: 'Bảng tin',
+      path: `/class/${classId}/news`
+    },
+    {
+      title: 'Bài tập trên lớp',
+      path: `/class/${classId}/excercises`
+    },
+    {
+      title: 'Mọi người',
+      path: `/class/${classId}/people`
+    }
+  ]
   return (
     <>
       <nav className='border-b border-b-primary'>
