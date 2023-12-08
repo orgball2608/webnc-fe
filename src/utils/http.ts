@@ -9,14 +9,14 @@ import {
   setRefreshTokenToLS
 } from './auth'
 import authApi, { URL_GETME, URL_SIGNIN, URL_SIGNOUT, URL_REFRESH_TOKEN } from 'src/apis/auth.api'
-import { GetMeResponse, RefreshTokenResponse, SigninResponse } from 'src/types/auth.type'
+import { GetMeResponse, SigninResponse } from 'src/types/auth.type'
 import { toast } from 'react-toastify'
 import { isAxiosExpiredTokenError, isAxiosUnauthorized } from './utils'
 import { ErrorResponseApi } from 'src/types/utils.type'
-import { useAppDispatch } from 'src/app/store'
-import { signout } from 'src/slices/auth.slice'
-import { useQuery } from '@tanstack/react-query'
-import useQueryString from 'src/hooks/useQueryString'
+// import { useAppDispatch } from 'src/app/store'
+// import { signout } from 'src/slices/auth.slice'
+// import { useQuery } from '@tanstack/react-query'
+// import useQueryString from 'src/hooks/useQueryString'
 
 // function Reset() {
 //   console.log('reset')
@@ -87,11 +87,10 @@ function createHttpInstance() {
       return response
     },
     async function (error) {
+      const statusCheck = error.response?.status
+
       // Chỉ toast lỗi không phải 422 và 401
-      if (
-        error.response?.status &&
-        ![HttpStatusCode.UnprocessableEntity, HttpStatusCode.Unauthorized].includes(error.response?.status)
-      ) {
+      if (statusCheck && ![HttpStatusCode.UnprocessableEntity, HttpStatusCode.Unauthorized].includes(statusCheck)) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const data: any | undefined = error.response?.data
         const message = data?.message || error.message
@@ -121,9 +120,13 @@ function createHttpInstance() {
         accessToken = ''
         refreshToken = ''
         profile = null
-        console.log(error)
-
         // toast.error(error.response?.data.data?.message || error.response?.data.message)
+      }
+
+      if ((statusCheck === 400 || statusCheck === 404) && error.response?.config.method === 'get') {
+        setTimeout(() => {
+          window.location.href = '/home'
+        }, 1000)
       }
 
       return Promise.reject(error)

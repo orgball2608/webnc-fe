@@ -19,7 +19,7 @@ import { signout as signoutAction } from 'src/slices/auth.slice'
 import path from 'src/constants/path'
 import { FaPlus } from 'react-icons/fa6'
 import Dropdown, { DropdownItem } from '../Dropdown'
-import { Button, Dialog, Card, CardBody, CardFooter, Input, Checkbox } from '@material-tailwind/react'
+import { Button, Dialog, Card, CardBody, CardFooter, Input } from '@material-tailwind/react'
 
 export default function Header() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
