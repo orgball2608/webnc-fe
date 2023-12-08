@@ -2,10 +2,10 @@ export interface ClassItem {
   id: string
   name: string
   description: string
-  path: string
-  owner: {
+  createdBy: {
     id: string
-    name: string
+    firstName: string
+    lastName: string
     avatar?: string
   }
 }
