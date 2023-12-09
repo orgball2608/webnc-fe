@@ -34,7 +34,9 @@ function ClassDetailPeople() {
     }
   }, [membersData.isError, navigate])
 
-  const memberList = membersData?.data?.data.data
+  const memberList = membersData?.data?.data.data[0]
+  console.log(memberList)
+
   const [isInviteModalOpen, setIsInviteModalOpen] = useState(false)
 
   const [isRole, setIsRole] = useState('')
@@ -102,8 +104,8 @@ function ClassDetailPeople() {
                 <AccountItem
                   className='cursor-default'
                   alt={`user ${index}`}
-                  avatarUrl={member?.avatar as string}
-                  name={(member?.firstName + ' ' + member?.lastName) as string}
+                  avatarUrl={member?.student.avatar as string}
+                  name={(member?.student.firstName + ' ' + member?.student.lastName) as string}
                 />
               </li>
             ))}

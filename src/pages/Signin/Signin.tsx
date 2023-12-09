@@ -1,7 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Input, Button, Typography } from '@material-tailwind/react'
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Helmet } from 'react-helmet'
 import { useForm } from 'react-hook-form'
 import { FaGoogle } from 'react-icons/fa'
@@ -53,6 +53,8 @@ function Signin() {
 
   const location = useLocation()
 
+  const [previousUrl, setPreviousUrl] = useState(null)
+
   useEffect(() => {
     if (getMeQuery.isSuccess) {
       const profile = getMeQuery.data.data
@@ -60,6 +62,11 @@ function Signin() {
       const doesAnyHistoryEntryExist = location.key !== 'default'
       if (doesAnyHistoryEntryExist) {
         navigate(-1)
+        console.log(location.pathname)
+
+        if (location.pathname === '') {
+          navigate(path.home)
+        }
       } else {
         navigate(path.home)
       }

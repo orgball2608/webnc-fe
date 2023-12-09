@@ -5,6 +5,7 @@ import path from 'src/constants/path'
 import { replace } from 'lodash'
 import courseApi from 'src/apis/courses.api'
 import { useQuery } from '@tanstack/react-query'
+import { toast } from 'react-toastify'
 
 // const onConfirm: () => void
 // const onCancel: () => void
@@ -15,6 +16,7 @@ export default function ClassDetailInvite() {
   const currentURL = useLocation().pathname
   const classURL = replace(currentURL, '/invite', '/news')
   const { classId } = useParams()
+  const [isLoading, setIsLoading] = useState<boolean>(false)
 
   const dataCheck = useQuery({
     queryKey: ['me_courses'],
@@ -47,9 +49,14 @@ export default function ClassDetailInvite() {
     navigate(path.home)
   }
 
-  const handleConfirm = () => {
-    dataCourse.refetch()
-    navigate(classURL)
+  const handleConfirm = async () => {
+    setIsLoading(true)
+    await dataCourse.refetch().then(() => {
+      toast.success('Tham gia lớp học thành công!')
+      navigate(classURL)
+      setIsLoading(false)
+    })
+    //
   }
 
   return (
@@ -61,7 +68,13 @@ export default function ClassDetailInvite() {
         </CardBody>
         <CardFooter>
           <div className='flex flex-col items-center justify-center gap-4 md:flex-row md:items-stretch'>
-            <Button color='gray' fullWidth={true} className='md:w-[120px]' onClick={handleConfirm}>
+            <Button
+              color='gray'
+              fullWidth={true}
+              className='md:w-[120px]'
+              onClick={handleConfirm}
+              disabled={isLoading === true}
+            >
               Xác nhận
             </Button>
             <Button
@@ -69,6 +82,7 @@ export default function ClassDetailInvite() {
               fullWidth={true}
               className='mt-2 border-2 md:mt-0 md:w-[120px]'
               onClick={handleCancle}
+              disabled={isLoading === true}
             >
               Hủy
             </Button>
