@@ -14,7 +14,8 @@ const path = {
     prefix: classDetailPrefix,
     news: classDetailPrefix + '/news',
     excercises: classDetailPrefix + '/excercises',
-    people: classDetailPrefix + '/people'
+    people: classDetailPrefix + '/people',
+    invite: classDetailPrefix + '/invite'
   }
 } as const
 

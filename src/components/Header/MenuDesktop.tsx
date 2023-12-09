@@ -6,7 +6,7 @@ import path from 'src/constants/path'
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default function MenuDesktop({ anchorEl, handleMenuClose, handleSignout }: any) {
   return (
-    <Menu id='user-menu' anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleMenuClose}>
+    <Menu id='user-menu' anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleMenuClose} className='font-medium'>
       <MenuItem onClick={handleMenuClose}>
         <Link to={path.profile} className='w-full'>
           Profile

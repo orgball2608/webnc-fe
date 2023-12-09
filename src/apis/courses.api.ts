@@ -20,6 +20,17 @@ const courseApi = {
     return http.get<ResponseApi<Members>>(`courses/${classId}/users`)
   },
 
+  checkEnrolled: (classId: string) => {
+    return http.get(`courses/checkEnrolled/${classId}`)
+  },
+
+  //add user to class
+  addUserToClass: (classId: string) => {
+    console.log('addUserToClass')
+
+    return http.patch<ResponseApi<CourseItem>>(`courses/${classId}/enroll`)
+  },
+
   createCourse: (body: ClassSchema) => http.post<ResponseApi<CourseItem>>(URL_CREATE_COURSE, body),
   getCourseDetail: (courseId: string) => http.get<ResponseApi<CourseItem>>(PREFIX + courseId)
 }
