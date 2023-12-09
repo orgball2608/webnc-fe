@@ -8,7 +8,7 @@ const PREFIX = 'courses/'
 const URL_GETCOURSEOFME = PREFIX + 'my-courses/list'
 const URL_CREATE_COURSE = PREFIX
 
-type Members = { students: User[]; teachers: User[] }
+type Members = [{ students: { student: User }[]; teachers: User[] }]
 
 const courseApi = {
   getCoursesOfMe: () => {
