@@ -5,7 +5,7 @@ import http from 'src/utils/http'
 import { ClassSchema } from 'src/utils/rules'
 
 const PREFIX = 'courses/'
-const URL_GETCOURSEOFME = PREFIX + 'mycourses/list'
+const URL_GETCOURSEOFME = PREFIX + 'my-courses/list'
 const URL_CREATE_COURSE = PREFIX
 
 type Members = { students: User[]; teachers: User[] }
