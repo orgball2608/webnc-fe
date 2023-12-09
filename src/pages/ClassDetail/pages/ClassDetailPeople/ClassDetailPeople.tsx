@@ -14,6 +14,7 @@ const role = {
   teachers: 'Giáo viên',
   students: 'Học sinh'
 }
+import Skeleton from 'react-loading-skeleton'
 
 function ClassDetailPeople() {
   const { profile } = useAppSelector((state) => state.auth)
@@ -59,16 +60,23 @@ function ClassDetailPeople() {
           />
         </div>
         <ul>
-          {memberList?.teachers?.map((member, index) => (
-            <li key={index} className='cursor-default border-b border-b-primary p-2 last:border-b-0'>
-              <AccountItem
-                className='cursor-default'
-                alt={`user ${index}`}
-                avatarUrl={member?.avatar as string}
-                name={(member?.firstName + ' ' + member?.lastName) as string}
-              />
-            </li>
-          ))}
+          {memberList?.teachers &&
+            memberList.teachers.length > 0 &&
+            memberList.teachers.map((member, index) => (
+              <li key={index} className='cursor-default border-b border-b-primary p-2 last:border-b-0'>
+                <AccountItem
+                  className='cursor-default'
+                  alt={`user ${index}`}
+                  avatarUrl={member?.avatar as string}
+                  name={(member?.firstName + ' ' + member?.lastName) as string}
+                />
+              </li>
+            ))}
+          {(!memberList?.teachers || memberList.teachers.length === 0) &&
+            membersData.isLoading &&
+            Array(2)
+              .fill(0)
+              .map((_, index) => <Skeleton key={index} className='h-[54px]' />)}
         </ul>
       </div>
 
@@ -87,16 +95,24 @@ function ClassDetailPeople() {
           </div>
         </div>
         <ul>
-          {memberList?.students?.map((member, index) => (
-            <li key={index} className='cursor-default border-b border-b-primary p-2 last:border-b-0'>
-              <AccountItem
-                className='cursor-default'
-                alt={`user ${index}`}
-                avatarUrl={member?.avatar as string}
-                name={(member?.firstName + ' ' + member?.lastName) as string}
-              />
-            </li>
-          ))}
+          {memberList?.students &&
+            memberList.students.length > 0 &&
+            memberList.students.map((member, index) => (
+              <li key={index} className='cursor-default border-b border-b-primary p-2 last:border-b-0'>
+                <AccountItem
+                  className='cursor-default'
+                  alt={`user ${index}`}
+                  avatarUrl={member?.avatar as string}
+                  name={(member?.firstName + ' ' + member?.lastName) as string}
+                />
+              </li>
+            ))}
+
+          {(!memberList?.students || memberList.students.length === 0) &&
+            membersData.isLoading &&
+            Array(2)
+              .fill(0)
+              .map((_, index) => <Skeleton key={index} className='h-[56px]' />)}
         </ul>
       </div>
       {inviteFormModal}

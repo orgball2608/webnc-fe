@@ -8,6 +8,7 @@ import introFunc4 from 'src/assets/images/intro_func_4.png'
 import defaultUser from 'src/assets/images/default-user.webp'
 import { Link } from 'react-router-dom'
 import path from 'src/constants/path'
+import { Helmet } from 'react-helmet'
 
 const features = [
   {
@@ -49,6 +50,10 @@ const members = [
 function LandingPage() {
   return (
     <>
+      <Helmet>
+        <title>Classroom</title>
+      </Helmet>
+
       <section className='py-8'>
         <div className='container'>
           <div className='grid grid-cols-2 gap-4 px-4'>

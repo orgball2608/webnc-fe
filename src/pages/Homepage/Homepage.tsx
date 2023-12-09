@@ -3,10 +3,10 @@ import { useQuery } from '@tanstack/react-query'
 import { Helmet } from 'react-helmet'
 import courseApi from 'src/apis/courses.api'
 import ClassCard from 'src/components/ClassCard'
-// import { ClassItem } from 'src/types/class.type'
+// import { CourseItem } from 'src/types/class.type'
 
 function Homepage() {
-  // const [classes, setClasses] = useState<ClassItem[]>([])
+  // const [classes, setClasses] = useState<CourseItem[]>([])
 
   const courseData = useQuery({
     queryKey: ['classes'],

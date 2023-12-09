@@ -9,7 +9,7 @@ import MenuIcon from '@mui/icons-material/Menu'
 import AccountCircle from '@mui/icons-material/AccountCircle'
 import NotificationsIcon from '@mui/icons-material/Notifications'
 import MoreIcon from '@mui/icons-material/MoreVert'
-import { Link } from 'react-router-dom'
+import { Link, useMatch } from 'react-router-dom'
 import MenuMobile from './MenuMobile'
 import MenuDesktop from './MenuDesktop'
 import { useMutation } from '@tanstack/react-query'
@@ -19,9 +19,12 @@ import { signout as signoutAction } from 'src/slices/auth.slice'
 import path from 'src/constants/path'
 import { FaPlus } from 'react-icons/fa6'
 import Dropdown, { DropdownItem } from '../Dropdown'
-import { Button, Dialog, Card, CardBody, CardFooter, Input } from '@material-tailwind/react'
+import { Button } from '@material-tailwind/react'
+import ModalManageClass from '../ModalManageClass'
 
 export default function Header() {
+  const homepageMatch = useMatch(path.home)
+
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState<null | HTMLElement>(null)
   const [isOpenCreateClassModal, setIsOpenCreateClassModal] = React.useState(false)
@@ -123,19 +126,22 @@ export default function Header() {
 
             {isAuthenticated ? (
               <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-                <Dropdown
-                  placement='bottom-end'
-                  render={() => (
-                    <>
-                      <DropdownItem>Tham gia lớp học</DropdownItem>
-                      <DropdownItem onClick={() => setIsOpenCreateClassModal(true)}>Tạo lớp học</DropdownItem>
-                    </>
-                  )}
-                >
-                  <IconButton size='large' color='inherit'>
-                    <FaPlus className='text-2xl' />
-                  </IconButton>
-                </Dropdown>
+                {Boolean(homepageMatch) && (
+                  <Dropdown
+                    placement='bottom-end'
+                    render={() => (
+                      <>
+                        <DropdownItem>Tham gia lớp học</DropdownItem>
+                        <DropdownItem onClick={() => setIsOpenCreateClassModal(true)}>Tạo lớp học</DropdownItem>
+                      </>
+                    )}
+                  >
+                    <IconButton size='large' color='inherit'>
+                      <FaPlus className='text-2xl' />
+                    </IconButton>
+                  </Dropdown>
+                )}
+
                 <IconButton size='large' aria-label='show 17 new notifications' color='inherit'>
                   <Badge badgeContent={17} color='error'>
                     <NotificationsIcon />
@@ -184,40 +190,7 @@ export default function Header() {
         {renderMenu}
       </Box>
 
-      <Dialog
-        size='sm'
-        open={isOpenCreateClassModal}
-        handler={setIsOpenCreateClassModal}
-        className='bg-transparent shadow-none'
-      >
-        <Card className='mx-auto w-full'>
-          <CardBody className='flex flex-col gap-4'>
-            <h4 className='mb-4 text-base font-medium text-primary'>Tạo lớp học</h4>
-            <Input variant='standard' label='Tên lớp học' containerProps={{ className: 'mb-4' }} />
-            <Input variant='standard' label='Phần' containerProps={{ className: 'mb-4' }} />
-            <Input variant='standard' label='Chủ đề' containerProps={{ className: 'mb-4' }} />
-            <Input variant='standard' label='Phòng' containerProps={{ className: 'mb-4' }} />
-          </CardBody>
-          <CardFooter className='flex gap-8 pt-0'>
-            <Button
-              variant='outlined'
-              className='flex-1 text-sm'
-              onClick={() => setIsOpenCreateClassModal(false)}
-              fullWidth
-            >
-              Hủy
-            </Button>
-            <Button
-              variant='gradient'
-              className='flex-1 text-sm'
-              onClick={() => setIsOpenCreateClassModal(false)}
-              fullWidth
-            >
-              Tạo
-            </Button>
-          </CardFooter>
-        </Card>
-      </Dialog>
+      <ModalManageClass open={isOpenCreateClassModal} handler={() => setIsOpenCreateClassModal((prev) => !prev)} />
     </>
   )
 }

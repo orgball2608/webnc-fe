@@ -11,3 +11,8 @@ body {
   font-family: 'Open Sans', sans-serif;
   font-family: 'Roboto', sans-serif;
 }
+
+.skeleton-custom {
+  --base-color: rgb(235 235 235 / 20%);
+  --highlight-color: rgb(245 245 245 / 20%);
+}

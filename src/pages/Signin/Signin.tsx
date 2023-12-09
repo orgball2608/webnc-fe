@@ -12,7 +12,6 @@ import path from 'src/constants/path'
 import useQueryString from 'src/hooks/useQueryString'
 import { signin as signinAction } from 'src/slices/auth.slice'
 import { AuthQueryConfig } from 'src/types/auth.type'
-import { setAccessTokenToLS, setRefreshTokenToLS } from 'src/utils/auth'
 import { LoginSchema, loginSchema } from 'src/utils/rules'
 import { isAxiosBadRequestError, isAxiosNotFound, isAxiosUnauthorized } from 'src/utils/utils'
 
@@ -72,7 +71,7 @@ function Signin() {
     if (queryConfig.access_token && queryConfig.refresh_token) {
       getMeQuery.refetch()
     }
-  }, [getMeQuery, queryConfig])
+  }, [getMeQuery, queryConfig.access_token, queryConfig.refresh_token])
 
   const onSubmit = handleSubmit((data) => {
     if (signinMutation.isPending || getMeQuery.isFetching) return
