@@ -13,10 +13,6 @@ import { GetMeResponse, SigninResponse } from 'src/types/auth.type'
 import { toast } from 'react-toastify'
 import { isAxiosExpiredTokenError, isAxiosUnauthorized } from './utils'
 import { ErrorResponseApi } from 'src/types/utils.type'
-// import { useAppDispatch } from 'src/app/store'
-// import { signout } from 'src/slices/auth.slice'
-// import { useQuery } from '@tanstack/react-query'
-// import useQueryString from 'src/hooks/useQueryString'
 
 // function Reset() {
 //   console.log('reset')
@@ -122,13 +118,6 @@ function createHttpInstance() {
         profile = null
         // toast.error(error.response?.data.data?.message || error.response?.data.message)
       }
-
-      if ((statusCheck === 400 || statusCheck === 404) && error.response?.config.method === 'get') {
-        setTimeout(() => {
-          window.location.href = '/home'
-        }, 1000)
-      }
-
       return Promise.reject(error)
     }
   )

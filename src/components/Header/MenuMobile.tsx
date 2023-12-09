@@ -27,6 +27,7 @@ export default function MenuMobile({
       }}
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
+      className='font-medium'
     >
       <MenuItem>
         <IconButton size='large' aria-label='show 17 new notifications' color='inherit'>

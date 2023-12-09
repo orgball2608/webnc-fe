@@ -15,6 +15,17 @@ const courseApi = {
   //get list student and teacher in class
   getUserInClass: (classId: string) => {
     return http.get<ResponseApi<members>>(`courses/${classId}/users`)
+  },
+
+  checkEnrolled: (classId: string) => {
+    return http.get(`courses/checkEnrolled/${classId}`)
+  },
+
+  //add user to class
+  addUserToClass: (classId: string) => {
+    console.log('addUserToClass')
+
+    return http.patch<ResponseApi<ClassItem>>(`courses/${classId}/enroll`)
   }
 }
 
