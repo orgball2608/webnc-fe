@@ -3,10 +3,11 @@ import { ResponseApi } from 'src/types/utils.type'
 import http from 'src/utils/http'
 import { UpdateProfileSchema, ChangePasswordSchema } from 'src/utils/rules'
 
-const URL_GETPROFILE = 'users/'
-const URL_UPDATEPROFILE = 'users/me'
-const URL_UPLOADAVATAR = 'users/me/avatar'
-const URL_CHANGEPASSWORD = 'users/change-password'
+const PREFIX = 'users/'
+const URL_GETPROFILE = PREFIX + ''
+const URL_UPDATEPROFILE = PREFIX + 'me'
+const URL_UPLOADAVATAR = PREFIX + 'me/avatar'
+const URL_CHANGEPASSWORD = PREFIX + 'change-password'
 
 export type UpdateProfileRequest = UpdateProfileSchema
 export type ChangePasswordRequest = ChangePasswordSchema

@@ -3,11 +3,12 @@ import { ResponseApi } from 'src/types/utils.type'
 import http from 'src/utils/http'
 import { LoginSchema, RegisterSchema } from 'src/utils/rules'
 
-export const URL_SIGNIN = 'auth/login'
-export const URL_SIGNUP = 'auth/register'
-export const URL_SIGNOUT = 'auth/logout'
-export const URL_GETME = 'auth/me'
-export const URL_REFRESH_TOKEN = 'auth/refresh'
+const PREFIX = 'auth/'
+export const URL_SIGNIN = PREFIX + 'login'
+export const URL_SIGNUP = PREFIX + 'register'
+export const URL_SIGNOUT = PREFIX + 'logout'
+export const URL_GETME = PREFIX + 'me'
+export const URL_REFRESH_TOKEN = PREFIX + 'refresh'
 
 export type SignupBodyRequest = Omit<RegisterSchema, 'confirmPassword'>
 export type SigninBodyRequest = LoginSchema
@@ -33,10 +34,10 @@ const authApi = {
     })
   },
   forgotPassword: (body: { email: string }) => {
-    return http.post<ResponseApi<null>>('auth/forgot-password', body)
+    return http.post<ResponseApi<null>>(PREFIX + 'forgot-password', body)
   },
   resetPassword: (body: { token: string; password: string }) => {
-    return http.post<ResponseApi<null>>('auth/reset-password', body)
+    return http.post<ResponseApi<null>>(PREFIX + 'reset-password', body)
   }
 }
 

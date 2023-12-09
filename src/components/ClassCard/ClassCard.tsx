@@ -5,11 +5,11 @@ import { LuFolder, LuUserSquare } from 'react-icons/lu'
 // import { Avatar } from '@material-tailwind/react'
 import Dropdown, { DropdownItem } from '../Dropdown'
 import defaultUser from 'src/assets/images/default-user.webp'
-import { ClassItem } from 'src/types/class.type'
+import { CourseItem } from 'src/types/course.type'
 import Image from '../Image'
 
 interface Props {
-  data: ClassItem
+  data: CourseItem
 }
 
 // eslint-disable-next-line no-empty-pattern

@@ -17,6 +17,7 @@ function ClassDetail() {
       path: `/class/${classId}/people`
     }
   ]
+
   return (
     <>
       <nav className='border-b border-b-primary'>
@@ -40,7 +41,7 @@ function ClassDetail() {
         </ul>
       </nav>
 
-      <div className='p-6'>
+      <div className='max-h-[calc(100vh-120px)] overflow-y-auto p-6'>
         <Outlet />
       </div>
     </>
