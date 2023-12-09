@@ -1,4 +1,3 @@
-import exp from 'constants'
 import * as zod from 'zod'
 
 const authValidation = {
@@ -71,9 +70,17 @@ export const resetPasswordSchema = zod
     path: ['confirmPassword']
   })
 
+export const classSchema = zod.object({
+  name: zod.string().min(1, 'Name is required').max(100, 'Maximum length is 100 characters'),
+  description: zod.optional(zod.string().max(100, 'Maximum length is 100 characters')),
+  room: zod.optional(zod.string().max(100, 'Maximum length is 100 characters')),
+  topic: zod.optional(zod.string().max(100, 'Maximum length is 100 characters'))
+})
+
 export type LoginSchema = zod.infer<typeof loginSchema>
 export type RegisterSchema = zod.infer<typeof registerSchema>
 
 export type UpdateProfileSchema = zod.infer<typeof updateProfileSchema>
 export type ChangePasswordSchema = zod.infer<typeof changePasswordSchema>
 export type ResetPasswordSchema = zod.infer<typeof resetPasswordSchema>
+export type ClassSchema = zod.infer<typeof classSchema>

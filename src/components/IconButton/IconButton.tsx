@@ -31,7 +31,7 @@ function IconButton({ mode = 'light', tooltip, to, className, disabled, Icon, ..
     })
   }
 
-  let Comp: string | ForwardRefExoticComponent<LinkProps & RefAttributes<HTMLAnchorElement>> = 'button'
+  let Comp: string | ForwardRefExoticComponent<LinkProps & RefAttributes<HTMLAnchorElement>> = 'div'
 
   if (to) {
     Comp = Link

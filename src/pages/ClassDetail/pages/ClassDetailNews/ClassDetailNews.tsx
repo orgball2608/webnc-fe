@@ -1,24 +1,46 @@
-import { Avatar, Button } from '@material-tailwind/react'
+import { Button } from '@material-tailwind/react'
 import { useAppSelector } from 'src/app/store'
 import Image from 'src/components/Image'
 import IconButton from 'src/components/IconButton'
 import { FaCircleInfo } from 'react-icons/fa6'
 import { useState } from 'react'
 import classNames from 'classnames'
+import { useParams } from 'react-router-dom'
+import { useQuery } from '@tanstack/react-query'
+import courseApi from 'src/apis/courses.api'
+import Skeleton from 'react-loading-skeleton'
 
 function ClassDetailNews() {
+  const { classId } = useParams()
+
+  const getCourseDetailQuery = useQuery({
+    queryKey: ['course-detail', classId],
+    queryFn: () => courseApi.getCourseDetail(classId as string),
+    enabled: Boolean(classId)
+  })
+
+  const courseDetailData = getCourseDetailQuery.data?.data.data
+
   const { profile } = useAppSelector((state) => state.auth)
   const [isMoreInfo, setIsMoreInfo] = useState(false)
 
   return (
     <>
       <div
-        className={classNames("relative flex h-[240px] bg-[url('/src/assets/images/img_graduation.jpg')] bg-cover", {
-          'rounded-lg': !isMoreInfo,
-          'rounded-t-lg shadow-md': isMoreInfo
-        })}
+        className={classNames(
+          "relative flex h-[240px] flex-col bg-[url('/src/assets/images/img_graduation.jpg')] bg-cover py-4 pl-6 pr-16",
+          {
+            'rounded-lg': !isMoreInfo,
+            'rounded-t-lg shadow-md': isMoreInfo
+          }
+        )}
       >
-        <h1 className='mt-auto px-6 py-4 text-[36px] font-medium text-white'>CNPM - TH/2020/1</h1>
+        <h1 className='mt-auto text-[36px] font-medium text-white'>
+          {courseDetailData?.name || <Skeleton className='skeleton-custom' />}
+        </h1>
+        <p className='text-[22px] font-normal text-white'>
+          {courseDetailData?.description || <Skeleton className='skeleton-custom' />}
+        </p>
 
         <button className='absolute bottom-1 right-1' onClick={() => setIsMoreInfo((prev) => !prev)}>
           <IconButton Icon={<FaCircleInfo />} />
@@ -28,10 +50,10 @@ function ClassDetailNews() {
       {isMoreInfo && (
         <div className='rounded-b-lg bg-white p-6 text-primary shadow-md'>
           <p className='text-sm'>
-            <span className='font-medium'>Chủ đề </span> Toán
+            <span className='font-medium'>Chủ đề </span> {courseDetailData?.topic || <Skeleton />}
           </p>
           <p className='text-sm'>
-            <span className='font-medium'>Phòng </span> 101
+            <span className='font-medium'>Phòng </span> {courseDetailData?.room || <Skeleton />}
           </p>
         </div>
       )}
