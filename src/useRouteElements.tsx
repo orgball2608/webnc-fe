@@ -16,6 +16,7 @@ import NotFound from './pages/NotFound'
 import HeaderOnly from './layouts/HeaderOnly'
 import ClassDetail, { ClassDetailExcercises, ClassDetailNews, ClassDetailPeople } from './pages/ClassDetail'
 import ClassDetailInvite from './pages/ClassDetail/pages/ClassDetailInvite/ClassDetailInvite'
+import InvitationEmail from './pages/ClassDetail/pages/ClassDetailInvite/InvitationEmail'
 
 function ProtectedRoutes() {
   const { isAuthenticated } = useAppSelector((state) => state.auth)
@@ -95,6 +96,10 @@ function useRouteElements() {
                   element: <ClassDetailInvite />
                 }
               ]
+            },
+            {
+              path: path.invitationEmail,
+              element: <InvitationEmail />
             }
           ]
         }

@@ -35,7 +35,6 @@ function ClassDetailPeople() {
   }, [membersData.isError, navigate])
 
   const memberList = membersData?.data?.data.data[0]
-  console.log(memberList)
 
   const [isInviteModalOpen, setIsInviteModalOpen] = useState(false)
 

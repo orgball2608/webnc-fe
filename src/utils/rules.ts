@@ -77,6 +77,12 @@ export const classSchema = zod.object({
   topic: zod.optional(zod.string().max(100, 'Maximum length is 100 characters'))
 })
 
+export const invitationSchema = zod.object({
+  email: authValidation.email,
+  courseId: zod.string().min(1),
+  role: zod.string().min(1)
+})
+export type InvitationSchema = zod.infer<typeof invitationSchema>
 export type LoginSchema = zod.infer<typeof loginSchema>
 export type RegisterSchema = zod.infer<typeof registerSchema>
 
