@@ -1,11 +1,11 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Card, CardBody, CardFooter, Typography, Button, Input } from '@material-tailwind/react'
+import { Typography, Button, Input } from '@material-tailwind/react'
 import { useMutation } from '@tanstack/react-query'
 import omit from 'lodash/omit'
 import { Helmet } from 'react-helmet'
 import { useForm } from 'react-hook-form'
 import { FaGoogle } from 'react-icons/fa'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import authApi, { SignupBodyRequest } from 'src/apis/auth.api'
 import AccountConfirmation from 'src/components/AccountConfirmation'
 import path from 'src/constants/path'
@@ -16,6 +16,7 @@ type FormData = RegisterSchema
 
 function Signup() {
   const navigate = useNavigate()
+  const location = useLocation()
 
   const {
     register,
@@ -37,9 +38,6 @@ function Signup() {
     const body = omit(data, ['confirmPassword'])
 
     signupMutation.mutate(body, {
-      onSuccess: (data) => {
-        console.log(data)
-      },
       onError: (error) => {
         if (isAxiosUnprocessableEntityError<{ message: { fieldName: string; errorMessage: string }[] }>(error)) {
           const formError = error.response?.data.message
@@ -63,7 +61,9 @@ function Signup() {
         <AccountConfirmation
           email={watch('email')}
           onSubmit={() => {
-            navigate(path.signin)
+            navigate(path.signin, {
+              state: location.state
+            })
           }}
         />
       ) : (
@@ -157,6 +157,7 @@ function Signup() {
               Have an account?
               <Link
                 to={path.signin}
+                state={location.state}
                 className='ml-1 text-red-500 transition duration-150 ease-in-out hover:text-red-600 focus:text-red-600 active:text-red-700'
               >
                 Sign in
