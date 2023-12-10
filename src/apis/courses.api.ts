@@ -27,8 +27,6 @@ const courseApi = {
 
   //add user to class
   addUserToClass: (classId: string) => {
-    console.log('addUserToClass')
-
     return http.patch<ResponseApi<CourseItem>>(`courses/${classId}/enroll`)
   },
 
@@ -43,7 +41,13 @@ const courseApi = {
   acceptInvitation: (token: string) => {
     return http.post<ResponseApi<CourseItem>>(`courses/join/${token}`)
   },
-  deleteCourse: (courseId: string) => http.delete<ResponseApi<CourseItem>>(PREFIX + courseId)
+  deleteCourse: (courseId: string) => http.delete<ResponseApi<CourseItem>>(PREFIX + courseId),
+  uploadBackground: (courseId: string, body: FormData) =>
+    http.patch<ResponseApi<CourseItem>>(PREFIX + courseId + '/avatar', body, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
 }
 
 export default courseApi

@@ -21,8 +21,6 @@ const authApi = {
     return http.post<SigninResponse>(URL_SIGNIN, body)
   },
   signout: () => {
-    console.log('signout')
-
     return http.delete<ResponseApi<null>>(URL_SIGNOUT)
   },
   getMe: () => {

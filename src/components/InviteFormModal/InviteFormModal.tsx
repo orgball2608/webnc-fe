@@ -1,5 +1,4 @@
 import { Button, Card, CardBody, CardFooter, Dialog, Input } from '@material-tailwind/react'
-// import React from 'react'
 import { LuCheck, LuCopy } from 'react-icons/lu'
 import IconButton from '../IconButton'
 import { useState } from 'react'
@@ -10,6 +9,7 @@ import { useMutation } from '@tanstack/react-query'
 import courseApi from 'src/apis/courses.api'
 import { isAxiosUnprocessableEntityError } from 'src/utils/utils'
 import { useParams } from 'react-router-dom'
+import { toast } from 'react-toastify'
 // import { useLocation } from 'react-router-dom'
 
 type FormData = InvitationSchema
@@ -43,13 +43,10 @@ export default function InviteFormModal({ isInviteModalOpen, setIsInviteModalOpe
       role: Role
     }
 
-    console.log(invitationData)
     invitationMutation.mutate(invitationData, {
       onSuccess: () => {
-        // reset()
-        console.log('invite success')
-
-        // setIsInviteModalOpen(false)
+        reset()
+        toast.success('Gửi email thành công!')
       },
       onError: (error) => {
         if (

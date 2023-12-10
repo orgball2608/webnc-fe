@@ -6,9 +6,11 @@ import { FaCircleInfo } from 'react-icons/fa6'
 import { useState } from 'react'
 import classNames from 'classnames'
 import { useParams } from 'react-router-dom'
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import courseApi from 'src/apis/courses.api'
 import Skeleton from 'react-loading-skeleton'
+import { FaPencilAlt } from 'react-icons/fa'
+import { toast } from 'react-toastify'
 
 function ClassDetailNews() {
   const { classId } = useParams()
@@ -18,29 +20,74 @@ function ClassDetailNews() {
     queryFn: () => courseApi.getCourseDetail(classId as string),
     enabled: Boolean(classId)
   })
-
   const courseDetailData = getCourseDetailQuery.data?.data.data
+
+  const uploadBackgroundMutation = useMutation({
+    mutationKey: ['upload-course-background', classId],
+    mutationFn: (body: FormData) => courseApi.uploadBackground(classId as string, body),
+    onSuccess: () => {
+      toast.success('Thay đổi hình nền thành công!')
+      getCourseDetailQuery.refetch()
+    }
+  })
 
   const { profile } = useAppSelector((state) => state.auth)
   const [isMoreInfo, setIsMoreInfo] = useState(false)
 
+  const onFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    if (file) {
+      const body = new FormData()
+      body.append('avatar', file)
+      uploadBackgroundMutation.mutate(body)
+    }
+  }
+
   return (
     <>
       <div
-        className={classNames(
-          "relative flex h-[240px] flex-col bg-[url('/src/assets/images/img_graduation.jpg')] bg-cover py-4 pl-6 pr-16",
-          {
-            'rounded-lg': !isMoreInfo,
-            'rounded-t-lg shadow-md': isMoreInfo
-          }
-        )}
+        className={classNames(`relative flex h-[240px] flex-col bg-contain px-6 py-4`, {
+          'rounded-lg': !isMoreInfo,
+          'rounded-t-lg shadow-md': isMoreInfo
+        })}
+        style={{ backgroundImage: `url('${courseDetailData?.avatar || '/src/assets/images/img_graduation.jpg'}')` }}
       >
-        <h1 className='mt-auto text-[36px] font-medium text-white'>
-          {courseDetailData?.name || <Skeleton className='skeleton-custom' />}
-        </h1>
-        <p className='text-[22px] font-normal text-white'>
-          {courseDetailData?.description || <Skeleton className='skeleton-custom' />}
-        </p>
+        <div className='flex justify-end'>
+          {courseDetailData?.createdBy.id === profile?.id && (
+            <Button
+              variant='filled'
+              color='white'
+              className='relative flex h-[36px] w-[130px] items-center gap-2 px-3 py-0 text-sm normal-case text-primary !shadow-md'
+            >
+              <label
+                htmlFor='course-background'
+                className='absolute left-0 top-0 flex h-full w-full cursor-pointer items-center justify-center px-3 py-0'
+              >
+                <span className='ml-3'>Tùy chỉnh</span>
+              </label>
+              <FaPencilAlt className='h-[18px] w-[18px]' />
+            </Button>
+          )}
+
+          <input
+            id='course-background'
+            type='file'
+            accept='.png, .jpg, .jpeg, .webp'
+            hidden
+            onChange={onFileChange}
+            onClick={(event) => {
+              event.target.value = null
+            }}
+          />
+        </div>
+        <div className='mt-auto pr-20'>
+          <h1 className='text-[36px] font-medium text-white drop-shadow-md'>
+            {courseDetailData?.name || <Skeleton className='skeleton-custom' />}
+          </h1>
+          <p className='text-[22px] font-normal text-white drop-shadow-md'>
+            {courseDetailData?.description || <Skeleton className='skeleton-custom' />}
+          </p>
+        </div>
 
         <button className='absolute bottom-1 right-1' onClick={() => setIsMoreInfo((prev) => !prev)}>
           <IconButton Icon={<FaCircleInfo />} />

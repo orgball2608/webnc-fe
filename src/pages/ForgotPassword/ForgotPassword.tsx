@@ -26,11 +26,7 @@ function ForgotPassword() {
   })
 
   const onSubmit = handleSubmit((data) => {
-    forgotPasswordMutation.mutate(data, {
-      onError: (error) => {
-        console.log(error)
-      }
-    })
+    forgotPasswordMutation.mutate(data)
   })
 
   const handleResendVerifyPassword = () => {

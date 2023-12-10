@@ -139,8 +139,6 @@ function createHttpInstance() {
 }
 
 const HandleClearRedux = () => {
-  // const dispatch = useAppDispatch()
-  // dispatch(signout())
   console.log('clear redux')
   window.location.reload()
 }

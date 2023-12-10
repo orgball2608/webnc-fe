@@ -3,6 +3,10 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --toastify-z-index: 10000;
+}
+
 .gradient {
   background: linear-gradient(90deg, #3061af 0%, #608acd 100%);
 }
