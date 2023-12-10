@@ -17,7 +17,6 @@ function Homepage() {
   })
 
   const courseList = courseData?.data?.data.data
-  console.log(courseList)
 
   return (
     <>
