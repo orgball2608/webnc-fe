@@ -52,6 +52,7 @@ function Signin() {
   })
 
   const location = useLocation()
+  console.log('signin location: ', location)
 
   const [previousUrl, setPreviousUrl] = useState(null)
 
@@ -59,6 +60,8 @@ function Signin() {
     if (getMeQuery.isSuccess) {
       const profile = getMeQuery.data.data
       dispatch(signinAction({ profile }))
+      console.log(location.state.from)
+
       const doesAnyHistoryEntryExist = location.key !== 'default'
       if (doesAnyHistoryEntryExist) {
         navigate(-1)

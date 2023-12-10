@@ -1,4 +1,4 @@
-import { Navigate, Outlet, useRoutes } from 'react-router-dom'
+import { Navigate, Outlet, useLocation, useMatch, useRoutes } from 'react-router-dom'
 
 import Signin from './pages/Signin'
 import Signup from './pages/Signup'
@@ -18,8 +18,26 @@ import ClassDetail, { ClassDetailExcercises, ClassDetailNews, ClassDetailPeople 
 import ClassDetailInvite from './pages/ClassDetail/pages/ClassDetailInvite/ClassDetailInvite'
 
 function ProtectedRoutes() {
+  const location = useLocation()
+  const classInviteMatch = useMatch(path.classDetail.invite)
+  const isFromInviteLink = Boolean(classInviteMatch)
+
   const { isAuthenticated } = useAppSelector((state) => state.auth)
-  return isAuthenticated ? <Outlet /> : <Navigate to={path.signin} />
+
+  return isAuthenticated ? (
+    <Outlet />
+  ) : (
+    <Navigate
+      to={path.signin}
+      state={
+        isFromInviteLink
+          ? {
+              from: location.pathname + location.search
+            }
+          : null
+      }
+    />
+  )
 }
 
 function RejectedRoutes() {

@@ -22,10 +22,11 @@ function ClassDetailPeople() {
   const navigate = useNavigate()
 
   const membersData = useQuery({
-    queryKey: ['members'],
+    queryKey: ['members', classId],
     queryFn: () => {
       return courseApi.getUserInClass(classId as string)
-    }
+    },
+    enabled: Boolean(classId)
   })
 
   useEffect(() => {
@@ -35,14 +36,12 @@ function ClassDetailPeople() {
   }, [membersData.isError, navigate])
 
   const memberList = membersData?.data?.data.data[0]
-  console.log(memberList)
 
   const [isInviteModalOpen, setIsInviteModalOpen] = useState(false)
 
   const [isRole, setIsRole] = useState('')
 
-  // eslint-disable-next-line prettier/prettier
-  const handleClick: any = (role: string) => {
+  const handleClick = (role: string) => {
     setIsInviteModalOpen(true)
     setIsRole(role)
   }
