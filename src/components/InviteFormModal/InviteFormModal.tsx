@@ -10,6 +10,7 @@ import courseApi from 'src/apis/courses.api'
 import { isAxiosUnprocessableEntityError } from 'src/utils/utils'
 import { useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
+// import { useLocation } from 'react-router-dom'
 
 type FormData = InvitationSchema
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -46,7 +47,6 @@ export default function InviteFormModal({ isInviteModalOpen, setIsInviteModalOpe
       onSuccess: () => {
         reset()
         toast.success('Gửi email thành công!')
-        // setIsInviteModalOpen(false)
       },
       onError: (error) => {
         if (
