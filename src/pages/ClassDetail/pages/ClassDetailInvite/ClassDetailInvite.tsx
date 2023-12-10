@@ -40,8 +40,6 @@ export default function ClassDetailInvite() {
     if (dataCheck.isSuccess && checkEnrolled?.isEnrolled === true) {
       navigate(classURL)
     } else if (dataCheck.isError) {
-      console.log(dataCheck.error)
-
       navigate(path.home)
     }
   }, [dataCheck, navigate, classURL, checkEnrolled])

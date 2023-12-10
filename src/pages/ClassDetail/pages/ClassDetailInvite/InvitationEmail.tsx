@@ -17,9 +17,9 @@ export default function InvitationEmail() {
       return courseApi.acceptInvitation(token as string)
     }
   })
-
   const course = dataCourse.data?.data.data
-  const classURL = currentURL.replace(`/join?token=${token}`, `/${course?.id}/news`)
+
+  const classURL = currentURL.replace(`/join`, `/${course?.id}/news`)
 
   useEffect(() => {
     if (dataCourse.isSuccess) {
@@ -27,7 +27,7 @@ export default function InvitationEmail() {
     } else if (dataCourse.isError) {
       navigate(path.home)
     }
-  }, [dataCourse, navigate, classURL])
+  }, [dataCourse, navigate, dataCourse.isSuccess, dataCourse.isError, classURL])
 
   return <></>
 }
