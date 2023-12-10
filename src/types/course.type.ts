@@ -12,7 +12,7 @@ export interface CourseItem {
   createdAt: string
   updatedAt: string
   createdBy: {
-    id: string
+    id: number
     firstName: string
     lastName: string
     avatar?: string

@@ -32,6 +32,7 @@ const courseApi = {
   },
 
   createCourse: (body: ClassSchema) => http.post<ResponseApi<CourseItem>>(URL_CREATE_COURSE, body),
+  deleteCourse: (courseId: string) => http.delete<ResponseApi<CourseItem>>(PREFIX + courseId),
   getCourseDetail: (courseId: string) => http.get<ResponseApi<CourseItem>>(PREFIX + courseId)
 }
 
