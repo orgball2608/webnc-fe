@@ -27,6 +27,7 @@ export default function InvitationEmail() {
 
   const course = dataCourse.data?.data.data
   const classURL = currentURL.replace(`/join?token=${token}`, `/${course?.id}/news`)
+  console.log(course)
 
   useEffect(() => {
     if (dataCourse.isSuccess) {
