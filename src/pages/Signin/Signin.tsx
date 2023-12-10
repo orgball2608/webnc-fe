@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react'
 import { Helmet } from 'react-helmet'
 import { useForm } from 'react-hook-form'
 import { FaGoogle } from 'react-icons/fa'
-import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import authApi, { SigninBodyRequest } from 'src/apis/auth.api'
 import { useAppDispatch } from 'src/app/store'
 import path from 'src/constants/path'
@@ -24,7 +24,6 @@ function Signin() {
     refresh_token: queryString.refresh_token || ''
   }
 
-  const navigate = useNavigate()
   const dispatch = useAppDispatch()
 
   const {
@@ -51,28 +50,10 @@ function Signin() {
     gcTime: 0
   })
 
-  const location = useLocation()
-  console.log('signin location: ', location)
-
-  const [previousUrl, setPreviousUrl] = useState(null)
-
   useEffect(() => {
     if (getMeQuery.isSuccess) {
       const profile = getMeQuery.data.data
       dispatch(signinAction({ profile }))
-      console.log(location.state.from)
-
-      const doesAnyHistoryEntryExist = location.key !== 'default'
-      if (doesAnyHistoryEntryExist) {
-        navigate(-1)
-        console.log(location.pathname)
-
-        if (location.pathname === '') {
-          navigate(path.home)
-        }
-      } else {
-        navigate(path.home)
-      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [getMeQuery.isSuccess])

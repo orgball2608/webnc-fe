@@ -14,8 +14,12 @@ import ForgotPassword from './pages/ForgotPassword'
 import ResetPassword from './pages/ResetPassword'
 import NotFound from './pages/NotFound'
 import HeaderOnly from './layouts/HeaderOnly'
-import ClassDetail, { ClassDetailExcercises, ClassDetailNews, ClassDetailPeople } from './pages/ClassDetail'
-import ClassDetailInvite from './pages/ClassDetail/pages/ClassDetailInvite/ClassDetailInvite'
+import ClassDetail, {
+  ClassDetailExcercises,
+  ClassDetailNews,
+  ClassDetailPeople,
+  ClassDetailInvite
+} from './pages/ClassDetail'
 
 function ProtectedRoutes() {
   const location = useLocation()
@@ -42,8 +46,10 @@ function ProtectedRoutes() {
 
 function RejectedRoutes() {
   const { isAuthenticated } = useAppSelector((state) => state.auth)
+  const location = useLocation()
+  const to = location?.state?.from || path.home
 
-  return !isAuthenticated ? <Outlet /> : <Navigate to={path.home} />
+  return !isAuthenticated ? <Outlet /> : <Navigate to={to} />
 }
 
 function useRouteElements() {
