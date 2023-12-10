@@ -34,6 +34,8 @@ export default function InvitationEmail() {
 
       navigate(classURL)
     } else if (dataCourse.isError) {
+      console.log(dataCourse.error)
+
       navigate(path.home)
     }
   }, [dataCourse, navigate, classURL])

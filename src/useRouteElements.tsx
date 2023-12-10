@@ -29,6 +29,14 @@ function ProtectedRoutes() {
   const classInviteMatch = useMatch(path.classDetail.invite)
   const isFromInviteLink = Boolean(classInviteMatch)
 
+  const invitationEmailMatch = useMatch(path.invitationEmail)
+  const isFromInvitationEmail = Boolean(invitationEmailMatch)
+  if (isFromInviteLink === true || isFromInvitationEmail === true) {
+    const invitationPath = location.pathname + location.search
+
+    localStorage.setItem('invitationPath', invitationPath)
+  }
+
   const { isAuthenticated } = useAppSelector((state) => state.auth)
 
   return isAuthenticated ? (
@@ -37,7 +45,7 @@ function ProtectedRoutes() {
     <Navigate
       to={path.signin}
       state={
-        isFromInviteLink
+        isFromInviteLink || isFromInvitationEmail
           ? {
               from: location.pathname + location.search
             }
