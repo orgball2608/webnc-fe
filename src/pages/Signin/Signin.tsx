@@ -5,7 +5,7 @@ import { useEffect } from 'react'
 import { Helmet } from 'react-helmet'
 import { useForm } from 'react-hook-form'
 import { FaGoogle } from 'react-icons/fa'
-import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import authApi, { SigninBodyRequest } from 'src/apis/auth.api'
 import { useAppDispatch } from 'src/app/store'
 import path from 'src/constants/path'
@@ -25,9 +25,7 @@ function Signin() {
   }
 
   const dispatch = useAppDispatch()
-  const navigate = useNavigate()
   const location = useLocation()
-  console.log('signin location', location)
 
   const {
     register,

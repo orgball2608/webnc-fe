@@ -45,9 +45,6 @@ function ResetPassword() {
       onSuccess: (res) => {
         toast.success(res.data.message)
         navigate(path.signin)
-      },
-      onError: (error) => {
-        console.log(error)
       }
     })
   })

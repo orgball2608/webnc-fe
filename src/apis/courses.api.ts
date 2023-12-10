@@ -27,8 +27,6 @@ const courseApi = {
 
   //add user to class
   addUserToClass: (classId: string) => {
-    console.log('addUserToClass')
-
     return http.patch<ResponseApi<CourseItem>>(`courses/${classId}/enroll`)
   },
 
