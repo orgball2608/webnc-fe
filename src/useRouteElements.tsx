@@ -7,49 +7,46 @@ import path from './constants/path'
 import MainLayout from './layouts/MainLayout'
 import Profile from './pages/Profile'
 import ChangePassword from './pages/change-password'
-import { useAppSelector } from './app/store'
+import { useAppDispatch, useAppSelector } from './app/store'
 import Homepage from './pages/Homepage'
 import LandingPage from './pages/LandingPage'
 import ForgotPassword from './pages/ForgotPassword'
 import ResetPassword from './pages/ResetPassword'
 import NotFound from './pages/NotFound'
 import HeaderOnly from './layouts/HeaderOnly'
+import InvitationEmail from './pages/ClassDetail/pages/ClassDetailInvite/InvitationEmail'
 import ClassDetail, {
   ClassDetailExcercises,
   ClassDetailNews,
   ClassDetailPeople,
   ClassDetailInvite
 } from './pages/ClassDetail'
+import { setInvitationLink } from './slices/class.slice'
 
 function ProtectedRoutes() {
   const location = useLocation()
   const classInviteMatch = useMatch(path.classDetail.invite)
   const isFromInviteLink = Boolean(classInviteMatch)
 
+  const invitationEmailMatch = useMatch(path.invitationEmail)
+  const isFromInvitationEmail = Boolean(invitationEmailMatch)
+  const dispatch = useAppDispatch()
+
+  if (isFromInviteLink || isFromInvitationEmail) {
+    const invitationPath = location.pathname + location.search
+    dispatch(setInvitationLink(invitationPath))
+  }
+
   const { isAuthenticated } = useAppSelector((state) => state.auth)
 
-  return isAuthenticated ? (
-    <Outlet />
-  ) : (
-    <Navigate
-      to={path.signin}
-      state={
-        isFromInviteLink
-          ? {
-              from: location.pathname + location.search
-            }
-          : null
-      }
-    />
-  )
+  return isAuthenticated ? <Outlet /> : <Navigate to={path.signin} />
 }
 
 function RejectedRoutes() {
   const { isAuthenticated } = useAppSelector((state) => state.auth)
-  const location = useLocation()
-  const to = location?.state?.from || path.home
+  const { invitationLink } = useAppSelector((state) => state.class)
 
-  return !isAuthenticated ? <Outlet /> : <Navigate to={to} />
+  return !isAuthenticated ? <Outlet /> : <Navigate to={invitationLink || path.home} />
 }
 
 function useRouteElements() {
@@ -119,6 +116,10 @@ function useRouteElements() {
                   element: <ClassDetailInvite />
                 }
               ]
+            },
+            {
+              path: path.invitationEmail,
+              element: <InvitationEmail />
             }
           ]
         }

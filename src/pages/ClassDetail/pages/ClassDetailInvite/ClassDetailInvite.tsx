@@ -6,12 +6,13 @@ import { replace } from 'lodash'
 import courseApi from 'src/apis/courses.api'
 import { useQuery } from '@tanstack/react-query'
 import { toast } from 'react-toastify'
-
-// const onConfirm: () => void
-// const onCancel: () => void
+import { useAppDispatch, useAppSelector } from 'src/app/store'
+import { setInvitationLink } from 'src/slices/class.slice'
 
 export default function ClassDetailInvite() {
   const navigate = useNavigate()
+  const dispatch = useAppDispatch()
+  const { invitationLink } = useAppSelector((state) => state.class)
 
   const currentURL = useLocation().pathname
   const classURL = replace(currentURL, '/invite', '/news')
@@ -33,17 +34,23 @@ export default function ClassDetailInvite() {
     enabled: false
   })
 
-  // const [course, setCourse] = useState(null)
-
   const checkEnrolled = dataCheck.data?.data.data
 
   useEffect(() => {
     if (dataCheck.isSuccess && checkEnrolled?.isEnrolled === true) {
       navigate(classURL)
     } else if (dataCheck.isError) {
+      console.log(dataCheck.error)
+
       navigate(path.home)
     }
   }, [dataCheck, navigate, classURL, checkEnrolled])
+
+  useEffect(() => {
+    if (invitationLink) {
+      dispatch(setInvitationLink(''))
+    }
+  }, [invitationLink, dispatch])
 
   const handleCancle = () => {
     navigate(path.home)

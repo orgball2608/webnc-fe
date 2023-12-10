@@ -1,6 +1,6 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import { User } from 'src/types/user.type'
-import { clearLS, getAccessTokenFromLS, getProfileFromLS, setProfileToLS } from 'src/utils/auth'
+import { getAccessTokenFromLS, getProfileFromLS, setProfileToLS } from 'src/utils/auth'
 
 // Define a type for the slice state
 interface AuthState {

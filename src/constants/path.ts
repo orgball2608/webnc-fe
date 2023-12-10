@@ -16,7 +16,8 @@ const path = {
     excercises: classDetailPrefix + '/excercises',
     people: classDetailPrefix + '/people',
     invite: classDetailPrefix + '/invite'
-  }
+  },
+  invitationEmail: 'class/join'
 } as const
 
 export default path
