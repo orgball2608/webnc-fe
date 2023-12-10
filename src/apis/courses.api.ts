@@ -42,7 +42,8 @@ const courseApi = {
 
   acceptInvitation: (token: string) => {
     return http.post<ResponseApi<CourseItem>>(`courses/join/${token}`)
-  }
+  },
+  deleteCourse: (courseId: string) => http.delete<ResponseApi<CourseItem>>(PREFIX + courseId)
 }
 
 export default courseApi

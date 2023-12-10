@@ -13,13 +13,8 @@ import { GetMeResponse, SigninResponse } from 'src/types/auth.type'
 import { toast } from 'react-toastify'
 import { isAxiosExpiredTokenError, isAxiosUnauthorized } from './utils'
 import { ErrorResponseApi } from 'src/types/utils.type'
-
-// function Reset() {
-//   console.log('reset')
-
-//   const dispatch = useAppDispatch()
-//   dispatch(signout())
-// }
+import store from 'src/app/store'
+import { signout } from 'src/slices/auth.slice'
 
 function createHttpInstance() {
   let accessToken = getAccessTokenFromLS()
@@ -108,14 +103,18 @@ function createHttpInstance() {
 
           await refreshTokenRequest
           return await http(config)
+        } else {
+          store.dispatch(signout())
         }
-        clearLS()
         if (url === URL_REFRESH_TOKEN) {
           HandleClearRedux()
         }
+
+        clearLS()
         accessToken = ''
         refreshToken = ''
         profile = null
+
         // toast.error(error.response?.data.data?.message || error.response?.data.message)
       }
       return Promise.reject(error)
