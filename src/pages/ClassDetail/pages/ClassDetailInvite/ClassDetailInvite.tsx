@@ -65,14 +65,14 @@ export default function ClassDetailInvite() {
   }
 
   return (
-    <div className='mt-10 flex w-full justify-center'>
+    <div className='mt-36 flex w-full justify-center'>
       <Card className='w-[50em] rounded-md border-2 border-solid border-[#cbd3e1] font-medium'>
         <CardBody>
-          <h1 className='mb-4 text-center'>Xác nhận tham gia lớp {checkEnrolled?.course?.data?.name}</h1>
+          <h1 className='mb-4 mt-4 text-center'>Xác nhận tham gia lớp {checkEnrolled?.course?.data?.name}</h1>
           {/* Hiển thị thông điệp và các thông tin khác */}
         </CardBody>
         <CardFooter>
-          <div className='flex flex-col items-center justify-center gap-4 md:flex-row md:items-stretch'>
+          <div className='mb-4 flex flex-col items-center justify-center gap-4 md:flex-row md:items-stretch'>
             <Button
               color='gray'
               fullWidth={true}
