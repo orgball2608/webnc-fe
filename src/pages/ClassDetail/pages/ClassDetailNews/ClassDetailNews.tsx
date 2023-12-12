@@ -50,7 +50,7 @@ function ClassDetailNews() {
           'rounded-lg': !isMoreInfo,
           'rounded-t-lg shadow-md': isMoreInfo
         })}
-        style={{ backgroundImage: `url('${courseDetailData?.avatar || '/src/assets/images/img_graduation.jpg'}')` }}
+        style={{ backgroundImage: `url('${courseDetailData?.avatar || '/assets/images/img_graduation.jpg'}')` }}
       >
         <div className='flex justify-end'>
           {courseDetailData?.createdBy.id === profile?.id && (
