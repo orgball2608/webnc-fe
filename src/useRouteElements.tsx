@@ -25,7 +25,7 @@ import { setInvitationLink } from './slices/class.slice'
 
 function ProtectedRoutes() {
   const location = useLocation()
-  const classInviteMatch = useMatch(path.classDetail.invite)
+  const classInviteMatch = useMatch(path.invite)
   const isFromInviteLink = Boolean(classInviteMatch)
 
   const invitationEmailMatch = useMatch(path.invitationEmail)
@@ -110,12 +110,12 @@ function useRouteElements() {
                 {
                   path: path.classDetail.people,
                   element: <ClassDetailPeople />
-                },
-                {
-                  path: path.classDetail.invite,
-                  element: <ClassDetailInvite />
                 }
               ]
+            },
+            {
+              path: path.invite,
+              element: <ClassDetailInvite />
             },
             {
               path: path.invitationEmail,
