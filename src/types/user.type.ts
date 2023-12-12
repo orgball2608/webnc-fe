@@ -1,5 +1,3 @@
-type Role = 'user' | 'admin'
-
 export interface User {
   id: number
   createdAt: string

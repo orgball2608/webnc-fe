@@ -15,11 +15,13 @@ function AccountItem({ avatarUrl, alt, subtitle, name, size = 'sm', className }:
     <>
       <div
         role='button'
-        className={classNames('flex w-full items-center px-3 text-start leading-tight outline-none', {
-          'h-[40px]': size === 'sm',
-          'h-[48px]': size === 'md',
-          [className]: className
-        })}
+        className={classNames(
+          `flex w-full items-center px-3 text-start leading-tight outline-none ${className || ''}`,
+          {
+            'h-[40px]': size === 'sm',
+            'h-[48px]': size === 'md'
+          }
+        )}
       >
         <div className='mr-4 grid w-10 place-items-center'>
           <Image src={avatarUrl} className='h-6 w-6' alt={alt} />

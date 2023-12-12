@@ -1,4 +1,3 @@
-import { List, ListItem, ListItemPrefix } from '@material-tailwind/react'
 import { NavLink } from 'react-router-dom'
 import homeIcon from 'src/assets/images/sidebar/home.svg'
 import path from 'src/constants/path'

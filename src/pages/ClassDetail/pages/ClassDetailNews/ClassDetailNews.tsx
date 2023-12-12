@@ -76,7 +76,8 @@ function ClassDetailNews() {
             hidden
             onChange={onFileChange}
             onClick={(event) => {
-              event.target.value = null
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              ;(event.target as any).value = null
             }}
           />
         </div>

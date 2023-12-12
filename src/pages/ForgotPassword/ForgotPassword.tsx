@@ -2,10 +2,8 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Button, Input, Typography } from '@material-tailwind/react'
 import { useMutation } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
-import { Link } from 'react-router-dom'
 import authApi from 'src/apis/auth.api'
 import AccountConfirmation from 'src/components/AccountConfirmation'
-import path from 'src/constants/path'
 import { LoginSchema, loginSchema } from 'src/utils/rules'
 
 type FormData = Pick<LoginSchema, 'email'>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Button, Card, CardBody, CardFooter } from '@material-tailwind/react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import path from 'src/constants/path'

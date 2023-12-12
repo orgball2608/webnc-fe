@@ -3,14 +3,14 @@ import { Button, Input } from '@material-tailwind/react'
 import AccountCircle from '@mui/icons-material/AccountCircle'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { Form, useForm } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import userApi, { UpdateProfileRequest } from 'src/apis/user.api'
 import { useAppDispatch, useAppSelector } from 'src/app/store'
 import path from 'src/constants/path'
 import { updateProfile } from 'src/slices/auth.slice'
-import { UpdateProfileSchema, updateProfileSchema } from 'src/utils/rules'
+import { updateProfileSchema } from 'src/utils/rules'
 
 type FormData = {
   firstName: string

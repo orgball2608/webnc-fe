@@ -18,7 +18,6 @@ function ChangePassword() {
     register,
     handleSubmit,
     setError,
-    watch,
     reset,
     formState: { errors }
   } = useForm<FormData>({
