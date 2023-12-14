@@ -1,0 +1,32 @@
+name: Lint and test
+
+on:
+  push:
+    branches: ['main']
+  pull_request:
+    branches: ['main']
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository code
+        uses: actions/checkout@v4
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version-file: .nvmrc
+
+      - name: Install dependencies from lockfile
+        run: npm install --frozen-lockfile
+
+      - name: Run prettier step
+        run: npm run prettier:fix
+
+      # - name: Run lint step
+      #   run: npm run lint:fix
+
+      - name: Run build step
+        run: npm run build
