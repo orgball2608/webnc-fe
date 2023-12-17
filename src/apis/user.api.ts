@@ -8,6 +8,8 @@ const URL_GETPROFILE = PREFIX + ''
 const URL_UPDATEPROFILE = PREFIX + 'me'
 const URL_UPLOADAVATAR = PREFIX + 'me/avatar'
 const URL_CHANGEPASSWORD = PREFIX + 'change-password'
+const URL_FORGOTPASSWORD = PREFIX + 'forgot-password'
+const URL_RESETPASSWORD = PREFIX + 'reset-password'
 
 export type UpdateProfileRequest = UpdateProfileSchema
 export type ChangePasswordRequest = ChangePasswordSchema
@@ -34,6 +36,12 @@ const userApi = {
 
   changePassword: (body: ChangePasswordRequest) => {
     return http.patch<ResponseApi<null>>(URL_CHANGEPASSWORD, body)
+  },
+  forgotPassword: (body: { email: string }) => {
+    return http.post<ResponseApi<null>>(URL_FORGOTPASSWORD, body)
+  },
+  resetPassword: (body: { token: string; password: string }) => {
+    return http.post<ResponseApi<null>>(URL_RESETPASSWORD, body)
   }
 }
 

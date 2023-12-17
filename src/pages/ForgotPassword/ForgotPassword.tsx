@@ -2,7 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Button, Input, Typography } from '@material-tailwind/react'
 import { useMutation } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
-import authApi from 'src/apis/auth.api'
+import userApi from 'src/apis/user.api'
 import AccountConfirmation from 'src/components/AccountConfirmation'
 import { LoginSchema, loginSchema } from 'src/utils/rules'
 
@@ -20,7 +20,7 @@ function ForgotPassword() {
   })
 
   const forgotPasswordMutation = useMutation({
-    mutationFn: (body: FormData) => authApi.forgotPassword(body)
+    mutationFn: (body: FormData) => userApi.forgotPassword(body)
   })
 
   const onSubmit = handleSubmit((data) => {

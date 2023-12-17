@@ -5,7 +5,7 @@ import { omit } from 'lodash'
 import { useForm } from 'react-hook-form'
 import { Link, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
-import authApi from 'src/apis/auth.api'
+import userApi from 'src/apis/user.api'
 import path from 'src/constants/path'
 import useQueryString from 'src/hooks/useQueryString'
 import { ResetPasswordSchema, resetPasswordSchema } from 'src/utils/rules'
@@ -26,7 +26,7 @@ function ResetPassword() {
   })
 
   const resetPasswordMutation = useMutation({
-    mutationFn: (body: { token: string; password: string }) => authApi.resetPassword(body)
+    mutationFn: (body: { token: string; password: string }) => userApi.resetPassword(body)
   })
 
   const onSubmit = handleSubmit((data) => {
