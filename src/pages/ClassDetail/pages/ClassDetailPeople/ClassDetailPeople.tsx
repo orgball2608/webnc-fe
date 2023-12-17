@@ -1,7 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { useNavigate, useParams } from 'react-router-dom'
 import courseApi from 'src/apis/courses.api'
-// import { useAppSelector } from 'src/app/store'
 import AccountItem from 'src/components/AccountItem'
 import { LuUserPlus } from 'react-icons/lu'
 import IconButton from 'src/components/IconButton'
@@ -35,7 +34,7 @@ function ClassDetailPeople() {
     }
   }, [membersData.isError, navigate])
 
-  const memberList = membersData?.data?.data.data[0]
+  const members = membersData.data?.data.data[0]
 
   const [isInviteModalOpen, setIsInviteModalOpen] = useState(false)
 
@@ -61,19 +60,19 @@ function ClassDetailPeople() {
           />
         </div>
         <ul>
-          {memberList?.teachers &&
-            memberList.teachers.length > 0 &&
-            memberList.teachers.map((member, index) => (
+          {members?.courseTeachers &&
+            members.courseTeachers.length > 0 &&
+            members.courseTeachers.map((member, index) => (
               <li key={index} className='cursor-default border-b border-b-primary p-2 last:border-b-0'>
                 <AccountItem
                   className='cursor-default'
-                  alt={`user ${index}`}
-                  avatarUrl={member?.avatar as string}
-                  name={(member?.firstName + ' ' + member?.lastName) as string}
+                  alt={`teacher ${index}`}
+                  avatarUrl={member?.teacher.avatar as string}
+                  name={(member?.teacher.firstName + ' ' + member?.teacher.lastName) as string}
                 />
               </li>
             ))}
-          {(!memberList?.teachers || memberList.teachers.length === 0) &&
+          {(!members?.courseTeachers || members.courseTeachers.length === 0) &&
             membersData.isLoading &&
             Array(2)
               .fill(0)
@@ -86,7 +85,7 @@ function ClassDetailPeople() {
           <h2 className='pl-4 text-[32px] font-normal leading-10 text-third'>{role.students}</h2>
 
           <div className='flex items-center'>
-            <span className='pr-6 text-sm font-medium text-third'>{memberList?.students?.length || 0} Sinh viên</span>
+            <span className='pr-6 text-sm font-medium text-third'>{members?.enrollments?.length || 0} Sinh viên</span>
             <IconButton
               Icon={<LuUserPlus />}
               tooltip='Mời học sinh'
@@ -96,9 +95,9 @@ function ClassDetailPeople() {
           </div>
         </div>
         <ul>
-          {memberList?.students &&
-            memberList.students.length > 0 &&
-            memberList.students.map((member, index) => (
+          {members?.enrollments &&
+            members.enrollments.length > 0 &&
+            members.enrollments.map((member, index) => (
               <li key={index} className='cursor-default border-b border-b-primary p-2 last:border-b-0'>
                 <AccountItem
                   className='cursor-default'
@@ -109,7 +108,7 @@ function ClassDetailPeople() {
               </li>
             ))}
 
-          {(!memberList?.students || memberList.students.length === 0) &&
+          {(!members?.enrollments || members.enrollments.length === 0) &&
             membersData.isLoading &&
             Array(2)
               .fill(0)

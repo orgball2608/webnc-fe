@@ -7,8 +7,6 @@ import ClassCard from 'src/components/ClassCard'
 // import { CourseItem } from 'src/types/class.type'
 
 function Homepage() {
-  // const [classes, setClasses] = useState<CourseItem[]>([])
-
   const courseData = useQuery({
     queryKey: ['classes'],
     queryFn: () => {

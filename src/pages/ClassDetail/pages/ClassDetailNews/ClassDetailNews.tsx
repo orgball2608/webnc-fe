@@ -11,6 +11,15 @@ import courseApi from 'src/apis/courses.api'
 import Skeleton from 'react-loading-skeleton'
 import { FaPencilAlt } from 'react-icons/fa'
 import { toast } from 'react-toastify'
+// src/Tiptap.jsx
+// import { EditorProvider, FloatingMenu, BubbleMenu } from '@tiptap/react'
+// eslint-disable-next-line import/no-named-as-default
+// import StarterKit from '@tiptap/starter-kit'
+
+// define your extension array
+// const extensions = [StarterKit]
+
+// const content = '<p>Hello World!</p>'
 
 function ClassDetailNews() {
   const { classId } = useParams()
@@ -46,7 +55,7 @@ function ClassDetailNews() {
   return (
     <>
       <div
-        className={classNames(`relative flex h-[240px] flex-col bg-contain px-6 py-4`, {
+        className={classNames(`relative flex h-[240px] flex-col bg-[length:100%_100%] bg-no-repeat px-6 py-4`, {
           'rounded-lg': !isMoreInfo,
           'rounded-t-lg shadow-md': isMoreInfo
         })}
@@ -128,6 +137,11 @@ function ClassDetailNews() {
           </div>
         </div>
       </div>
+      {/* 
+      <EditorProvider extensions={extensions} content={content}>
+        <FloatingMenu>This is the floating menu</FloatingMenu>
+        <BubbleMenu>This is the bubble menu</BubbleMenu>
+      </EditorProvider> */}
     </>
   )
 }

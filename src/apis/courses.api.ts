@@ -9,7 +9,7 @@ const URL_GETCOURSEOFME = PREFIX + 'my-courses/list'
 const URL_CREATE_COURSE = PREFIX
 const URL_INVITE_BY_EMAIL = PREFIX + 'invite/email'
 
-type Members = [{ students: { student: User }[]; teachers: User[] }]
+type Member = Pick<User, 'id' | 'email' | 'avatar' | 'firstName' | 'lastName'>
 
 const courseApi = {
   getCoursesOfMe: () => {
@@ -18,7 +18,9 @@ const courseApi = {
 
   //get list student and teacher in class
   getUserInClass: (classId: string) => {
-    return http.get<ResponseApi<Members>>(`courses/${classId}/users`)
+    return http.get<ResponseApi<[{ enrollments: { student: Member }[]; courseTeachers: { teacher: Member }[] }]>>(
+      `courses/${classId}/users`
+    )
   },
 
   checkEnrolled: (classId: string) => {
