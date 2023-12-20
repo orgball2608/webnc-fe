@@ -30,7 +30,6 @@ function ModalUnsubscribeClass({ open, handler, courseData }: Props) {
       }
     })
   }
-
   return (
     <>
       <Dialog size='xs' open={open} handler={handler} className='bg-transparent shadow-none'>

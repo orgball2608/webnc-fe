@@ -109,7 +109,13 @@ export default function InviteFormModal({ isInviteModalOpen, setIsInviteModalOpe
             <Button variant='outlined' className='flex-1 text-sm' onClick={() => setIsInviteModalOpen(false)} fullWidth>
               Hủy
             </Button>
-            <Button variant='gradient' className='flex-1 text-sm' onClick={onSubmit} fullWidth>
+            <Button
+              variant='gradient'
+              className='flex-1 text-sm'
+              onClick={onSubmit}
+              disabled={invitationMutation.isPending}
+              fullWidth
+            >
               Mời
             </Button>
           </CardFooter>
