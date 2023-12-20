@@ -28,6 +28,10 @@ export interface CourseItem {
   }[]
 }
 
+export interface CourseStudentTeacher {
+  courseId: number
+}
+
 const a = {
   enrollments: [
     {

@@ -1,4 +1,4 @@
-import { CourseItem } from 'src/types/course.type'
+import { CourseItem, CourseStudentTeacher } from 'src/types/course.type'
 import { User } from 'src/types/user.type'
 import { ResponseApi } from 'src/types/utils.type'
 import http from 'src/utils/http'
@@ -9,7 +9,7 @@ const URL_GETCOURSEOFME = PREFIX + 'my-courses/list'
 const URL_CREATE_COURSE = PREFIX
 const URL_INVITE_BY_EMAIL = PREFIX + 'invite/email'
 
-type Member = Pick<User, 'id' | 'email' | 'avatar' | 'firstName' | 'lastName'>
+export type Member = Pick<User, 'id' | 'email' | 'avatar' | 'firstName' | 'lastName' | 'address' | 'phoneNumber'>
 
 const courseApi = {
   getCoursesOfMe: () => {
@@ -18,9 +18,9 @@ const courseApi = {
 
   //get list student and teacher in class
   getUserInClass: (classId: string) => {
-    return http.get<ResponseApi<[{ enrollments: { student: Member }[]; courseTeachers: { teacher: Member }[] }]>>(
-      `courses/${classId}/users`
-    )
+    return http.get<
+      ResponseApi<[{ createdById: number; enrollments: { student: Member }[]; courseTeachers: { teacher: Member }[] }]>
+    >(`courses/${classId}/users`)
   },
 
   checkEnrolled: (classId: string) => {
@@ -41,7 +41,7 @@ const courseApi = {
   },
 
   acceptInvitation: (token: string) => {
-    return http.post<ResponseApi<CourseItem>>(`courses/join/${token}`)
+    return http.post<ResponseApi<CourseStudentTeacher>>(`courses/join/${token}`)
   },
   deleteCourse: (courseId: string) => http.delete<ResponseApi<CourseItem>>(PREFIX + courseId),
   uploadBackground: (courseId: string, body: FormData) =>
@@ -49,7 +49,11 @@ const courseApi = {
       headers: {
         'Content-Type': 'multipart/form-data'
       }
-    })
+    }),
+
+  deleteMember: ({ courseId, userId }: { courseId: string; userId: string }) => {
+    return http.delete<ResponseApi<CourseItem>>(PREFIX + `${courseId}/users/${userId}`)
+  }
 }
 
 export default courseApi

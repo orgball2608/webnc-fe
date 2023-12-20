@@ -103,7 +103,7 @@ function ChangePassword() {
         </div>
 
         <div className='mt-10 flex items-center justify-center'>
-          <Button type='submit' className='mt-2 bg-primary uppercase '>
+          <Button type='submit' className='mt-2 bg-primary uppercase ' disabled={changePasswordMutation.isPending}>
             Change password
           </Button>
         </div>
