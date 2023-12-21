@@ -15,6 +15,8 @@ import { isAxiosExpiredTokenError, isAxiosUnauthorized } from './utils'
 import { ErrorResponseApi } from 'src/types/utils.type'
 import store from 'src/app/store'
 import { signout } from 'src/slices/auth.slice'
+import nProgress from 'nprogress'
+nProgress.configure({ showSpinner: false })
 
 function createHttpInstance() {
   let accessToken = getAccessTokenFromLS()
@@ -23,7 +25,7 @@ function createHttpInstance() {
   let refreshTokenRequest: Promise<void> | null = null
 
   const http = axios.create({
-    baseURL: import.meta.env.VITE_BASE_URL,
+    baseURL: import.meta.env.VITE_BASE_API_URL,
     headers: {
       'Content-Type': 'application/json'
     }
@@ -32,6 +34,8 @@ function createHttpInstance() {
   // Add a request interceptor
   http.interceptors.request.use(
     function (config) {
+      nProgress.start()
+
       const urlSearchParams = new URLSearchParams(window.location.search)
       const urlQueryParams = Object.fromEntries([...urlSearchParams])
 
@@ -75,6 +79,8 @@ function createHttpInstance() {
         profile = null
         clearLS()
       }
+
+      nProgress.done()
       return response
     },
     async function (error) {
@@ -117,6 +123,8 @@ function createHttpInstance() {
 
         // toast.error(error.response?.data.data?.message || error.response?.data.message)
       }
+
+      nProgress.done()
       return Promise.reject(error)
     }
   )

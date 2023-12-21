@@ -1,5 +1,7 @@
 import classNames from 'classnames'
 import Image from '../Image'
+import { NOTIFICATION_STATUS } from 'src/constants/enums'
+import { calculateTimeDifference } from 'src/utils/utils'
 
 interface Props {
   size?: 'sm' | 'md'
@@ -8,9 +10,22 @@ interface Props {
   name: string
   subtitle?: string
   className?: string
+  notificationStatus?: NOTIFICATION_STATUS
+  notificationCreatedAt?: string
+  disabled?: boolean
 }
 
-function AccountItem({ avatarUrl, alt, subtitle, name, size = 'sm', className }: Props) {
+function AccountItem({
+  avatarUrl,
+  alt,
+  subtitle,
+  name,
+  size = 'sm',
+  className,
+  disabled,
+  notificationStatus,
+  notificationCreatedAt
+}: Props) {
   return (
     <>
       <div
@@ -19,7 +34,8 @@ function AccountItem({ avatarUrl, alt, subtitle, name, size = 'sm', className }:
           `flex w-full items-center px-3 text-start leading-tight outline-none ${className || ''}`,
           {
             'h-[40px]': size === 'sm',
-            'h-[48px]': size === 'md'
+            'h-[48px]': size === 'md',
+            'cursor-default': disabled
           }
         )}
       >
@@ -27,9 +43,34 @@ function AccountItem({ avatarUrl, alt, subtitle, name, size = 'sm', className }:
           <Image src={avatarUrl} className='h-6 w-6' alt={alt} />
         </div>
         <div className='max-w-[75%] flex-1'>
-          <p className='truncate text-sm font-medium leading-5 text-primary'>{name}</p>
+          <p
+            className={classNames('truncate text-sm font-medium leading-5 text-primary', {
+              '!text-[#aaa]': notificationStatus === NOTIFICATION_STATUS.READ
+            })}
+          >
+            {name}
+          </p>
           {subtitle && (
-            <p className='max-w-full truncate text-[12px] font-normal leading-[1rem] text-secondary'>{subtitle}</p>
+            <p
+              className={classNames('max-w-full text-[12px] font-normal leading-[1rem] text-secondary', {
+                'line-clamp-2': Boolean(notificationStatus),
+                truncate: !Boolean(notificationStatus),
+                '!text-[#aaa]': notificationStatus === NOTIFICATION_STATUS.READ
+              })}
+            >
+              {subtitle}
+            </p>
+          )}
+          {notificationCreatedAt && (
+            <p
+              className={classNames('max-w-full text-[12px] font-normal leading-[1rem] text-secondary', {
+                truncate: !Boolean(notificationStatus),
+                '!text-[#aaa]': notificationStatus === NOTIFICATION_STATUS.READ,
+                '!text-blue !font-medium': notificationStatus === NOTIFICATION_STATUS.UNREAD
+              })}
+            >
+              {calculateTimeDifference(new Date(notificationCreatedAt))}
+            </p>
           )}
         </div>
       </div>

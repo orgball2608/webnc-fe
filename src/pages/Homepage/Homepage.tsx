@@ -1,10 +1,8 @@
 import { useQuery } from '@tanstack/react-query'
-// import { useEffect, useState } from 'react'
 import { Helmet } from 'react-helmet'
 import Skeleton from 'react-loading-skeleton'
 import courseApi from 'src/apis/courses.api'
 import ClassCard from 'src/components/ClassCard'
-// import { CourseItem } from 'src/types/class.type'
 
 function Homepage() {
   const courseData = useQuery({
