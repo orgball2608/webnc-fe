@@ -7,6 +7,7 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { ThemeProvider } from '@material-tailwind/react'
 import { Provider } from 'react-redux'
 import store from './app/store'
+import 'nprogress/nprogress.css'
 
 // Create a client
 const queryClient = new QueryClient({

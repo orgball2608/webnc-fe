@@ -34,8 +34,8 @@ function ModalManageClass({ open, handler }: Props) {
 
   const onSubmit = handleSubmit((data) => {
     createClassMutation.mutate(data, {
-      onSuccess: () => {
-        queryClient.invalidateQueries({
+      onSuccess: async () => {
+        await queryClient.invalidateQueries({
           queryKey: ['classes']
         })
         handler()
@@ -110,7 +110,13 @@ function ModalManageClass({ open, handler }: Props) {
             <Button variant='outlined' className='flex-1 text-sm' onClick={handler} fullWidth>
               Hủy
             </Button>
-            <Button variant='filled' className='flex-1 bg-primary text-sm' onClick={onSubmit} fullWidth>
+            <Button
+              variant='filled'
+              className='flex-1 bg-primary text-sm'
+              onClick={onSubmit}
+              fullWidth
+              disabled={createClassMutation.isPending}
+            >
               Tạo
             </Button>
           </CardFooter>

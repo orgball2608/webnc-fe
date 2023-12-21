@@ -12,7 +12,7 @@ import MoreIcon from '@mui/icons-material/MoreVert'
 import { Link, useMatch } from 'react-router-dom'
 import MenuMobile from './MenuMobile'
 import MenuDesktop from './MenuDesktop'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import authApi from 'src/apis/auth.api'
 import { useAppDispatch, useAppSelector } from 'src/app/store'
 import { signout as signoutAction } from 'src/slices/auth.slice'
@@ -21,6 +21,12 @@ import { FaPlus } from 'react-icons/fa6'
 import Dropdown, { DropdownItem } from '../Dropdown'
 import { Button } from '@material-tailwind/react'
 import ModalManageClass from '../ModalManageClass'
+import notificationApi from 'src/apis/notification.api'
+import { NotificationItem } from 'src/types/notification.type'
+import { NOTIFICATION_STATUS } from 'src/constants/enums'
+import AccountItem from '../AccountItem'
+import classNames from 'classnames'
+import { toast } from 'react-toastify'
 
 export default function Header() {
   const homepageMatch = useMatch(path.home)
@@ -40,6 +46,22 @@ export default function Header() {
     onSuccess: () => {
       dispatch(signoutAction())
     }
+  })
+
+  const getNotificationsQuery = useQuery({
+    queryKey: ['notifications'],
+    queryFn: notificationApi.getNotifications
+  })
+
+  const notifications = getNotificationsQuery.data?.data.data
+  const unreadNotifications = React.useMemo<NotificationItem[]>(() => {
+    if (notifications && notifications.length > 0)
+      return notifications.filter((notification) => notification.status === NOTIFICATION_STATUS.UNREAD)
+    return []
+  }, [notifications])
+
+  const markNotificationAsReadMutation = useMutation({
+    mutationFn: notificationApi.markAsRead
   })
 
   const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
@@ -76,15 +98,28 @@ export default function Header() {
     handleProfileMenuOpen
   })
 
-  const headerStyle = {
-    minHeight: '64px'
+  const markNotificationAsRead = (id: number) => {
+    markNotificationAsReadMutation.mutate(id, {
+      onSuccess: () => {
+        getNotificationsQuery.refetch()
+      }
+    })
+  }
+
+  const markAllNotificationAsRead = async () => {
+    if (!unreadNotifications || unreadNotifications.length === 0) return
+
+    await Promise.all(unreadNotifications.map((item) => markNotificationAsReadMutation.mutateAsync(item.id)))
+    await getNotificationsQuery.refetch()
+
+    toast.success('Đánh dấu tất cả là đã đọc thành công!')
   }
 
   return (
     <>
       <Box sx={{ flexGrow: 1 }}>
         <AppBar position='fixed'>
-          <Toolbar className='bg-primary' style={headerStyle}>
+          <Toolbar className='bg-primary' style={{ minHeight: '64px' }}>
             {isAuthenticated && (
               <>
                 <IconButton size='large' edge='start' color='inherit' aria-label='open drawer' sx={{ mr: 2 }}>
@@ -142,11 +177,63 @@ export default function Header() {
                   </Dropdown>
                 )}
 
-                <IconButton size='large' aria-label='show 17 new notifications' color='inherit'>
-                  <Badge badgeContent={17} color='error'>
-                    <NotificationsIcon />
-                  </Badge>
-                </IconButton>
+                {notifications && notifications.length > 0 ? (
+                  <Dropdown
+                    placement='bottom-end'
+                    offset={{
+                      crossAxis: 30
+                    }}
+                    classNameContent='w-[360px] max-h-[calc(100vh-100px)] overflow-y-auto'
+                    render={() => (
+                      <>
+                        <div className='flex justify-end px-5 py-1'>
+                          <Button
+                            variant='text'
+                            className={classNames('px-3 py-2 text-[14px] font-normal normal-case', {
+                              '!text-primary !opacity-80': unreadNotifications.length === 0,
+                              'text-blue': unreadNotifications.length > 0
+                            })}
+                            disabled={!unreadNotifications || unreadNotifications.length === 0}
+                            onClick={markAllNotificationAsRead}
+                          >
+                            Đánh dấu tất cả là đã đọc
+                          </Button>
+                        </div>
+                        {notifications?.map((notification) => (
+                          <DropdownItem
+                            key={notification.id}
+                            onClick={() => markNotificationAsRead(notification.id)}
+                            disabled={notification.status === NOTIFICATION_STATUS.READ}
+                          >
+                            <AccountItem
+                              className='h-fit !px-0 py-3'
+                              alt=''
+                              avatarUrl=''
+                              name={notification.title}
+                              subtitle={notification.body}
+                              notificationStatus={notification.status}
+                              notificationCreatedAt={notification.createdAt}
+                              disabled={notification.status === NOTIFICATION_STATUS.READ}
+                            />
+                          </DropdownItem>
+                        ))}
+                      </>
+                    )}
+                  >
+                    <IconButton size='large' color='inherit'>
+                      <Badge badgeContent={unreadNotifications?.length} color='error'>
+                        <NotificationsIcon />
+                      </Badge>
+                    </IconButton>
+                  </Dropdown>
+                ) : (
+                  <>
+                    <IconButton size='large' color='inherit'>
+                      <NotificationsIcon />
+                    </IconButton>
+                  </>
+                )}
+
                 <IconButton
                   size='large'
                   edge='end'
