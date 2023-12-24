@@ -1,7 +1,7 @@
 import React from 'react'
-import { Dialog, Card, CardBody } from '@material-tailwind/react'
-import { LuX } from 'react-icons/lu'
-import IconButton from 'src/components/IconButton'
+import { Dialog, Card, CardBody, Button } from '@material-tailwind/react'
+// import { LuX } from 'react-icons/lu'
+// import IconButton from 'src/components/IconButton'
 import { Member } from 'src/apis/courses.api'
 
 interface Props {
@@ -18,17 +18,14 @@ interface Props {
 function UserInfoModal({ isInfoModalOpen, setIsInfoModalOpen, UserData, isRole, role }: Props) {
   return (
     <Dialog
-      size='sm'
+      size='md'
       open={isInfoModalOpen}
       handler={() => setIsInfoModalOpen(false)}
-      className='bg-transparent shadow-none'
+      className='border-10 bg-transparent shadow-none'
     >
-      <Card className='mx-auto w-full'>
-        <CardBody className='mb-8 ml-4 break-words text-lg'>
-          <div className='flex justify-end'>
-            <IconButton Icon={<LuX />} mode='dark' onClick={() => setIsInfoModalOpen(false)} />
-          </div>
-          <h4 className='mb-7 text-2xl font-bold text-primary'>{`${UserData?.firstName} ${UserData?.lastName}`}</h4>
+      <Card className='mx-auto w-full' tabIndex={0}>
+        <CardBody className='mb-8 ml-4 break-words text-base'>
+          <h4 className='mb-7 mt-3 text-2xl font-bold text-primary'>{`${UserData?.firstName} ${UserData?.lastName}`}</h4>
           <table className='mb-4 w-full table-auto'>
             <tbody>
               {isRole === role.students && (
@@ -52,6 +49,12 @@ function UserInfoModal({ isInfoModalOpen, setIsInfoModalOpen, UserData, isRole, 
             </tbody>
           </table>
         </CardBody>
+        {/* <Button variant='text' className='border-0 hover:bg-blue-300' onClick={() => setIsInfoModalOpen(false)}>
+          Close
+        </Button> */}
+        <Button variant='text' size='md' tabIndex={-3} onClick={() => setIsInfoModalOpen(false)}>
+          close
+        </Button>
       </Card>
     </Dialog>
   )
