@@ -92,6 +92,13 @@ function createHttpInstance() {
         const data: any | undefined = error.response?.data
         const message = data?.message || error.message
         toast.error(message)
+        if (message === 'User is banned') {
+          accessToken = ''
+          refreshToken = ''
+          profile = null
+          clearLS()
+          store.dispatch(signout())
+        }
       }
 
       if (isAxiosUnauthorized<ErrorResponseApi<{ name: string; message: string }>>(error)) {

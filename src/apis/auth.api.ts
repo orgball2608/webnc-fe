@@ -24,6 +24,8 @@ const authApi = {
     return http.delete<ResponseApi<null>>(URL_SIGNOUT)
   },
   getMe: () => {
+    console.log('getMe')
+
     return http.get<GetMeResponse>(URL_GETME)
   },
   refreshToken: (refreshToken: string) => {
