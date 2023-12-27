@@ -15,31 +15,25 @@ const courseApi = {
   getCoursesOfMe: () => {
     return http.get<ResponseApi<CourseItem[]>>(URL_GETCOURSEOFME)
   },
-
   //get list student and teacher in class
   getUserInClass: (classId: string) => {
     return http.get<
       ResponseApi<[{ createdById: number; enrollments: { student: Member }[]; courseTeachers: { teacher: Member }[] }]>
     >(`courses/${classId}/users`)
   },
-
   checkEnrolled: (classId: string) => {
     return http.get(`courses/checkEnrolled/${classId}`)
   },
-
   //add user to class
   addUserToClass: (classId: string) => {
     return http.patch<ResponseApi<CourseItem>>(`courses/${classId}/enroll`)
   },
-
   createCourse: (body: ClassSchema) => http.post<ResponseApi<CourseItem>>(URL_CREATE_COURSE, body),
   getCourseDetail: (courseId: string) => http.get<ResponseApi<CourseItem>>(PREFIX + courseId),
-
   // invite user by email
   inviteUserByEmail: (body: InvitationSchema) => {
     return http.post<ResponseApi<null>>(URL_INVITE_BY_EMAIL, body)
   },
-
   acceptInvitation: (token: string) => {
     return http.post<ResponseApi<CourseStudentTeacher>>(`courses/join/${token}`)
   },
@@ -50,7 +44,6 @@ const courseApi = {
         'Content-Type': 'multipart/form-data'
       }
     }),
-
   deleteMember: ({ courseId, userId }: { courseId: string; userId: string }) => {
     return http.delete<ResponseApi<CourseItem>>(PREFIX + `${courseId}/users/${userId}`)
   }
