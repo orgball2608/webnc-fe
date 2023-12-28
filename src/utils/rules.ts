@@ -86,7 +86,24 @@ export const invitationSchema = zod.object({
 export const gradeCompositionSchema = zod.object({
   id: zod.optional(zod.number()),
   name: zod.string().min(1, 'Name is required').max(100, 'Maximum length is 100 characters'),
-  scale: zod.string().min(1, 'Scale is required').max(100, 'Maximum length is 100 characters')
+  scale: zod
+    .string()
+    .min(1, 'Scale is required')
+    .max(100, 'Maximum length is 100 characters')
+    // .regex(/^\d+$/, 'Scale must be a number')
+    .refine(
+      (data) => {
+        if (/^\d+$/.test(data)) {
+          const scaleNumber = +data
+
+          if (scaleNumber > 0) return true
+        }
+        return false
+      },
+      {
+        message: 'Scale must be a number and greater than 0'
+      }
+    )
 })
 
 export const gradeCompositionsSchema = zod

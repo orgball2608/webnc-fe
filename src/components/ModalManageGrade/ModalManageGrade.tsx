@@ -18,11 +18,12 @@ interface Props {
   open: boolean
   handler: () => void
   gradeCompositions?: GradeComposition[]
+  setNewGradeCompositions?: (data: GradeComposition[]) => void
 }
 
 type FormData = GradeCompositionsSchema
 
-function ModalManageGrade({ type, classId, open, handler, gradeCompositions }: Props) {
+function ModalManageGrade({ type, classId, open, handler, gradeCompositions, setNewGradeCompositions }: Props) {
   const queryClient = useQueryClient()
 
   const {
@@ -82,6 +83,7 @@ function ModalManageGrade({ type, classId, open, handler, gradeCompositions }: P
       }))
 
       setValue('grades', grades as GradeCompositionSchema[])
+      console.log(grades)
     }
   }, [gradeCompositions, open])
 
@@ -92,8 +94,27 @@ function ModalManageGrade({ type, classId, open, handler, gradeCompositions }: P
   }, [(errors as any).ununiqueGradeCompositionName])
 
   const onSortEnd = ({ oldIndex, newIndex }: { oldIndex: number; newIndex: number }) => {
+    if (newIndex === oldIndex) return
+
+    setIsLoading(true)
+
+    sortGradeCompositionsMutation.mutate(
+      {
+        firstId: fields[oldIndex].id as number,
+        secondId: fields[newIndex].id as number
+      },
+      {
+        onSuccess: (res) => {
+          setNewGradeCompositions && setNewGradeCompositions(res.data.data)
+          toast.success('Sắp xếp điểm thành phần thành công!')
+        },
+        onSettled: () => {
+          setIsLoading(false)
+        }
+      }
+    )
+
     move(oldIndex, newIndex)
-    toast.info('Inprogress')
   }
 
   const handleDeleteGrade = ({ gradeIndex, gradeId }: { gradeIndex: number; gradeId?: number }) => {
@@ -127,50 +148,46 @@ function ModalManageGrade({ type, classId, open, handler, gradeCompositions }: P
           }
         }
 
-        // await Promise.all(
-        //   data.grades.map((gradeComposition) =>
-        //     createGradeCompositionMutation.mutateAsync({ name: gradeComposition.name, scale: +gradeComposition.scale })
-        //   )
-        // )
-
         await queryClient.invalidateQueries({ queryKey: ['courses', classId, 'grade-compositions'] })
         handler()
         toast.success('Thêm điểm thành phần thành công!')
       } else if (type === 'EDIT') {
-        const promises: Promise<any>[] = []
         if (deleteIds.length > 0) {
-          deleteIds.forEach((gradeCompositionDeleteId) => {
-            promises.push(deleteGradeCompositionMutation.mutateAsync(gradeCompositionDeleteId))
-          })
+          for (const deleteId of deleteIds) {
+            await deleteGradeCompositionMutation.mutateAsync(deleteId)
+          }
         }
 
-        data.grades
+        const updateGradeCompositionsPromises = data.grades
           .filter((gradeComposition) => !deleteIds.includes(gradeComposition.id as number))
           .map((gradeComposition) => {
-            promises.push(
-              updateGradeCompositionMutation.mutateAsync({
-                name: gradeComposition.name,
-                scale: +gradeComposition.scale,
-                id: gradeComposition.id as number
-              })
-            )
+            return updateGradeCompositionMutation.mutateAsync({
+              name: gradeComposition.name,
+              scale: +gradeComposition.scale,
+              id: gradeComposition.id as number
+            })
           })
 
-        await Promise.all(promises)
+        await Promise.all(updateGradeCompositionsPromises)
 
         await queryClient.invalidateQueries({ queryKey: ['courses', classId, 'grade-compositions'] })
         handler()
         toast.success('Cập nhật điểm thành phần thành công!')
-        setIsLoading(false)
       }
-    } catch (error) {
+    } finally {
       setIsLoading(false)
     }
   })
 
   return (
     <>
-      <Dialog size='sm' open={open} handler={handler} className='bg-transparent shadow-none'>
+      <Dialog
+        size='sm'
+        open={open}
+        handler={handler}
+        className='bg-transparent shadow-none'
+        dismiss={{ escapeKey: !isLoading }}
+      >
         <Card className='mx-auto w-full'>
           <CardBody className='flex max-h-[calc(100vh-200px)] flex-col gap-4 overflow-auto'>
             <h4 className='mb-4 text-base font-medium text-primary'>
@@ -221,9 +238,11 @@ function ModalManageGrade({ type, classId, open, handler, gradeCompositions }: P
                   return (
                     <DndItem index={index} key={field._id} className='mb-2 grid grid-cols-12 gap-2'>
                       <div className='col-span-7 flex'>
-                        <DndTrigger className='mr-2 mt-[14px] min-w-[20px] cursor-move text-xl'>
-                          {type === 'SORT' && <MdDragIndicator />}
-                        </DndTrigger>
+                        {type === 'SORT' && (
+                          <DndTrigger className='mr-2 mt-[14px] min-w-[20px] cursor-move text-xl'>
+                            <MdDragIndicator />
+                          </DndTrigger>
+                        )}
                         <div>
                           <Input
                             {...register(`grades.${index}.name`, { required: true })}
@@ -271,7 +290,7 @@ function ModalManageGrade({ type, classId, open, handler, gradeCompositions }: P
               {/* Placeholder */}
               <div className='mb-2 grid grid-cols-12 gap-2'>
                 <div className='col-span-7'>
-                  <div className='mb-[20px] ml-[28px] w-[200px]'>
+                  <div className='mb-[20px] w-[200px]'>
                     {type === 'ADD' && (
                       <button
                         type='button'

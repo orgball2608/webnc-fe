@@ -21,7 +21,7 @@ const gradeCompositionApi = {
     return http.delete<ResponseApi<GradeComposition>>(`${PREFIX}${courseId}/grade-compositions/${gradeCompositionId}`)
   },
   sortGradeCompositions: (courseId: string, firstGradeCompositionId: number, secondGradeCompositionId: number) => {
-    return http.post<ResponseApi<GradeComposition>>(
+    return http.post<ResponseApi<GradeComposition[]>>(
       `${PREFIX}${courseId}/grade-compositions/${firstGradeCompositionId}/switch-index/${secondGradeCompositionId}`
     )
   }

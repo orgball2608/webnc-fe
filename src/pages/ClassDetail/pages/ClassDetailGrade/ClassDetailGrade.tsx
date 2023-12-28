@@ -11,7 +11,7 @@ import {
   IconButton,
   Tooltip
 } from '@material-tailwind/react'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import ModalManageGrade from 'src/components/ModalManageGrade'
 import { useQuery } from '@tanstack/react-query'
 import { useParams } from 'react-router-dom'
@@ -49,14 +49,13 @@ export default function ClassDetailGrade() {
   const [isOpenModalEditGradeCompositions, setIsOpenModalEditGradeCompositions] = useState(false)
   const [isOpenModalAddGradeCompositions, setIsOpenModalAddGradeCompositions] = useState(false)
   const [isOpenModalSortGradeCompositions, setIsOpenModalSortGradeCompositions] = useState(false)
+  const [gradeCompositions, setGradeCompositions] = useState<GradeComposition[]>([])
 
   const getGradeCompositionsQuery = useQuery({
     queryKey: ['courses', classId, 'grade-compositions'],
     queryFn: () => gradeCompositionApi.getGradeCompositions(classId as string),
     enabled: Boolean(classId)
   })
-
-  const gradeCompositions = getGradeCompositionsQuery.data?.data.data
 
   const totalScale = useMemo(() => {
     if (gradeCompositions && gradeCompositions.length > 0) {
@@ -68,6 +67,18 @@ export default function ClassDetailGrade() {
     }
     return 0
   }, [gradeCompositions])
+
+  useEffect(() => {
+    const gradeCompositions = getGradeCompositionsQuery.data?.data.data
+
+    if (gradeCompositions && gradeCompositions.length > 0) {
+      setNewGradeCompositions(gradeCompositions)
+    }
+  }, [getGradeCompositionsQuery.data?.data.data])
+
+  const setNewGradeCompositions = (newData: GradeComposition[]) => {
+    setGradeCompositions(newData)
+  }
 
   return !classId ? (
     <div>Something wrong</div>
@@ -86,14 +97,10 @@ export default function ClassDetailGrade() {
             </div>
             <div className='flex shrink-0 flex-col gap-2 sm:flex-row'>
               <Button variant='outlined' size='sm'>
-                view all
+                Import
               </Button>
-              <Button
-                className='flex items-center gap-3'
-                size='sm'
-                onClick={() => setIsOpenModalAddGradeCompositions(true)}
-              >
-                Add grade compositions
+              <Button className='flex items-center gap-3' size='sm'>
+                Export
               </Button>
             </div>
           </div>
@@ -253,6 +260,7 @@ export default function ClassDetailGrade() {
         open={isOpenModalSortGradeCompositions}
         handler={() => setIsOpenModalSortGradeCompositions(false)}
         gradeCompositions={gradeCompositions as GradeComposition[]}
+        setNewGradeCompositions={setNewGradeCompositions}
       />
     </>
   )
