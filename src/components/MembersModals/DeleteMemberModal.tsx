@@ -28,8 +28,8 @@ function DeleteMemberModal({ isDeleteModalOpen, setIsDeleteModalOpen, UserData }
     deleteMemberMutation.mutate(
       { courseId, userId },
       {
-        onSuccess: () => {
-          queryClient.invalidateQueries({
+        onSuccess: async () => {
+          await queryClient.invalidateQueries({
             queryKey: ['members']
           })
 

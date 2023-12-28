@@ -28,7 +28,8 @@ import AccountItem from '../AccountItem'
 import classNames from 'classnames'
 import { toast } from 'react-toastify'
 
-export default function Header() {
+// eslint-disable-next-line prettier/prettier, @typescript-eslint/no-explicit-any
+export default function Header({ onToggleSidebar }: { onToggleSidebar: any }) {
   const homepageMatch = useMatch(path.home)
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
@@ -50,8 +51,16 @@ export default function Header() {
 
   const getNotificationsQuery = useQuery({
     queryKey: ['notifications'],
-    queryFn: notificationApi.getNotifications
+    queryFn: notificationApi.getNotifications,
+    enabled: isAuthenticated
   })
+
+  React.useEffect(() => {
+    if (isAuthenticated) {
+      getNotificationsQuery.refetch()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isAuthenticated])
 
   const notifications = getNotificationsQuery.data?.data.data
   const unreadNotifications = React.useMemo<NotificationItem[]>(() => {
@@ -122,7 +131,14 @@ export default function Header() {
           <Toolbar className='bg-primary' style={{ minHeight: '64px' }}>
             {isAuthenticated && (
               <>
-                <IconButton size='large' edge='start' color='inherit' aria-label='open drawer' sx={{ mr: 2 }}>
+                <IconButton
+                  size='large'
+                  edge='start'
+                  color='inherit'
+                  aria-label='open drawer'
+                  sx={{ mr: 2 }}
+                  onClick={onToggleSidebar}
+                >
                   <MenuIcon />
                 </IconButton>
               </>

@@ -1,10 +1,16 @@
 import { useQuery } from '@tanstack/react-query'
+import { useEffect } from 'react'
 import { Helmet } from 'react-helmet'
 import Skeleton from 'react-loading-skeleton'
 import courseApi from 'src/apis/courses.api'
+import { useAppDispatch } from 'src/app/store'
 import ClassCard from 'src/components/ClassCard'
+import { setMyClass } from 'src/slices/class.slice'
+import { CourseItem } from 'src/types/course.type'
 
 function Homepage() {
+  const dispatch = useAppDispatch()
+
   const courseData = useQuery({
     queryKey: ['classes'],
     queryFn: () => {
@@ -12,7 +18,14 @@ function Homepage() {
     }
   })
 
-  const courseList = courseData?.data?.data.data
+  const courseList = courseData?.data?.data.data as CourseItem[]
+
+  useEffect(() => {
+    if (courseData.isSuccess) {
+      dispatch(setMyClass({ courseList }))
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [courseList])
 
   return (
     <>
