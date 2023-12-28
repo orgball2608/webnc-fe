@@ -12,7 +12,7 @@ interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 function IconButton({ mode = 'light', tooltip, to, className, disabled, Icon, ...passProps }: Props) {
   const classes = classNames(
-    'transition-all relative overflow-hidden flex h-[48px] w-[48px] items-center justify-center rounded-full bg-transparent text-2xl active:bg-gray-900/20',
+    'cursor-pointer transition-all relative overflow-hidden flex h-[48px] w-[48px] items-center justify-center rounded-full bg-transparent text-2xl active:bg-gray-900/20',
     {
       'text-white hover:bg-[#0000000a]': mode === 'light',
       'text-primary hover:bg-[#f5f5f5]': mode === 'dark',

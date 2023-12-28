@@ -13,7 +13,7 @@ const path = {
   classDetail: {
     prefix: classDetailPrefix,
     news: classDetailPrefix + '/news',
-    excercises: classDetailPrefix + '/excercises',
+    grade: classDetailPrefix + '/grade',
     people: classDetailPrefix + '/people'
   },
   invite: classDetailPrefix + '/invite',

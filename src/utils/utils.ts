@@ -64,6 +64,9 @@ export const calculateTimeDifference = (timestampStr: Date) => {
   } else if (minsDifference > 0) {
     return minsDifference + ' phút trước'
   }
-
   return secondsDifference + ' giây trước'
+}
+
+export const swapArrayLocs = (arr: any[], index1: number, index2: number) => {
+  ;[arr[index1], arr[index2]] = [arr[index2], arr[index1]]
 }
