@@ -5,7 +5,7 @@ import { UpdateProfileSchema, ChangePasswordSchema } from 'src/utils/rules'
 
 const PREFIX = 'users/'
 const URL_GETPROFILE = PREFIX + ''
-const URL_UPDATEPROFILE = PREFIX + 'me'
+const URL_UPDATEPROFILE = PREFIX + 'me/update'
 const URL_UPLOADAVATAR = PREFIX + 'me/avatar'
 const URL_CHANGEPASSWORD = PREFIX + 'change-password'
 const URL_FORGOTPASSWORD = PREFIX + 'forgot-password'
