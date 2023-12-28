@@ -9,8 +9,8 @@ function ClassDetail() {
       path: `/class/${classId}/news`
     },
     {
-      title: 'Bài tập trên lớp',
-      path: `/class/${classId}/excercises`
+      title: 'Điểm',
+      path: `/class/${classId}/grade`
     },
     {
       title: 'Mọi người',

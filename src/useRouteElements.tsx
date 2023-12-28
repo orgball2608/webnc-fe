@@ -16,7 +16,7 @@ import NotFound from './pages/NotFound'
 import HeaderOnly from './layouts/HeaderOnly'
 import InvitationEmail from './pages/ClassDetail/pages/ClassDetailInvite/InvitationEmail'
 import ClassDetail, {
-  ClassDetailExcercises,
+  ClassDetailGrade,
   ClassDetailNews,
   ClassDetailPeople,
   ClassDetailInvite
@@ -104,8 +104,8 @@ function useRouteElements() {
                   element: <ClassDetailNews />
                 },
                 {
-                  path: path.classDetail.excercises,
-                  element: <ClassDetailExcercises />
+                  path: path.classDetail.grade,
+                  element: <ClassDetailGrade />
                 },
                 {
                   path: path.classDetail.people,
