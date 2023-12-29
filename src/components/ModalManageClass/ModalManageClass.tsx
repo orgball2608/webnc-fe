@@ -38,6 +38,14 @@ function ModalManageClass({ open, handler }: Props) {
         await queryClient.invalidateQueries({
           queryKey: ['classes']
         })
+
+        await queryClient.invalidateQueries({
+          queryKey: ['teaching-list']
+        })
+
+        await queryClient.invalidateQueries({
+          queryKey: ['enrolled-list']
+        })
         handler()
         reset()
         toast.success('Tạo lớp học thành công!')

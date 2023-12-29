@@ -49,15 +49,15 @@ function MainLayout() {
     <>
       <Header onToggleSidebar={handleToggleSidebar} />
       <aside
-        className={`fixed bottom-0 left-0 top-[64px] z-10 w-[300px] transform border-r border-r-primary bg-white transition-transform duration-300 ease-in-out  ${
+        className={`fixed bottom-0 left-0 top-[64px] z-10 w-[300px] transform border-r border-r-primary bg-white transition-transform duration-300 ease-in-out ${
           isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
         }  `}
       >
         <Sidebar onToggleSidebar={setIsSidebarOpen} />
       </aside>
       <main
-        className={`transition-margin mt-[64px] duration-300 ease-in-out md:ml-[300px] ${
-          isSidebarOpen ? 'blur md:ml-0 md:blur-0' : 'md:ml-[100px]'
+        className={`transition-margin mt-[64px] duration-300 ease-in-out ${
+          isSidebarOpen ? 'blur md:ml-[300px] md:blur-0' : 'md:ml-[100px] '
         }`}
       >
         <Outlet />

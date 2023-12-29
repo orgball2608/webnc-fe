@@ -46,6 +46,14 @@ const courseApi = {
     }),
   deleteMember: ({ courseId, userId }: { courseId: string; userId: string }) => {
     return http.delete<ResponseApi<CourseItem>>(PREFIX + `${courseId}/users/${userId}`)
+  },
+
+  getTeachingCourse: (userId: string) => {
+    return http.get<ResponseApi<CourseItem[]>>(PREFIX + `teacher/${userId}`)
+  },
+
+  getEnrolledCourse: (userId: string) => {
+    return http.get<ResponseApi<CourseItem[]>>(PREFIX + `student/${userId}`)
   }
 }
 

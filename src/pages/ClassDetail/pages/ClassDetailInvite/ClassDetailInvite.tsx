@@ -4,7 +4,7 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import path from 'src/constants/path'
 import { replace } from 'lodash'
 import courseApi from 'src/apis/courses.api'
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'react-toastify'
 import { useAppDispatch, useAppSelector } from 'src/app/store'
 import { setInvitationLink } from 'src/slices/class.slice'
@@ -12,6 +12,7 @@ import { setInvitationLink } from 'src/slices/class.slice'
 export default function ClassDetailInvite() {
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
+  const queryClient = useQueryClient()
   const { invitationLink } = useAppSelector((state) => state.class)
 
   const currentURL = useLocation().pathname
@@ -56,7 +57,14 @@ export default function ClassDetailInvite() {
 
   const handleConfirm = async () => {
     setIsLoading(true)
-    await dataCourse.refetch().then(() => {
+    await dataCourse.refetch().then(async () => {
+      await queryClient.invalidateQueries({
+        queryKey: ['teaching-list']
+      })
+
+      await queryClient.invalidateQueries({
+        queryKey: ['enrolled-list']
+      })
       toast.success('Tham gia lớp học thành công!')
       navigate(classURL)
       setIsLoading(false)
