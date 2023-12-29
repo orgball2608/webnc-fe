@@ -52,12 +52,10 @@ export default function JoinClassModal({ open, handler }: Props) {
           })
         ])
         const course = res.data.data
-        console.log(course)
         const classURL = currentURL.replace(`/home`, `class/${course?.courseId}/news`)
         handler()
         reset()
         toast.success('Tham gia lớp học thành công!')
-        console.log(classURL)
         navigate(classURL)
       },
       onError: (error) => {

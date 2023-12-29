@@ -27,11 +27,7 @@ function ClassDetailNews() {
   const param = useParams()
   const classId = param?.classId
   const { roleInCourse } = useAppSelector((state) => state.class)
-  // const currentURL = window.location.href
-  // const inviteLink = currentURL.replace('/people', `/invite?userId=${profile.id}`)
   const [isCopied, setIsCopied] = useState(false)
-
-  // console.log(roleInCourse)
 
   const getCourseDetailQuery = useQuery({
     queryKey: ['course-detail', classId],

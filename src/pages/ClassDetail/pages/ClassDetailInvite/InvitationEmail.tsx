@@ -44,6 +44,7 @@ export default function InvitationEmail() {
 
   useEffect(() => {
     hanlde()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (
