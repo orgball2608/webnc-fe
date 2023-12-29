@@ -32,14 +32,19 @@ function HomeItem({
         className={classNames(
           `flex w-full items-center px-3 text-start leading-tight outline-none ${className || ''}`,
           {
-            'h-[35px]': size === 'sm',
-            'h-[40px]': size === 'md',
+            'h-[25px]': size === 'sm',
+            'h-[30px]': size === 'md',
             'cursor-default': disabled
           }
         )}
       >
         <div className='mr-4 grid w-10 place-items-center'>
-          <Image src={avatarUrl as string} alt={alt} className='rounded-full' />
+          <Image
+            src={avatarUrl as string}
+            alt={alt}
+            className='rounded-full'
+            style={{ width: '80%', height: 'auto' }}
+          />
         </div>
         <div className='max-w-[75%] flex-1'>
           <p

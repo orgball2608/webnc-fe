@@ -6,25 +6,43 @@ import { useQuery } from '@tanstack/react-query'
 import courseApi from 'src/apis/courses.api'
 import HomeItem from 'src/components/ClassItem/HomeItem'
 import ClassItem from 'src/components/ClassItem/ClassItem'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
+import { useAppSelector } from 'src/app/store'
+import DropdownButton from 'src/components/ClassItem/DropdownButton'
 
 const weightMD = 720
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function Sidebar({ onToggleSidebar }: { onToggleSidebar: any }) {
   const { classId } = useParams()
   const location = useLocation()
+  const store = useAppSelector((state) => state.auth)
+  const profile = store?.profile
 
-  const courseData = useQuery({
-    queryKey: ['classes'],
-    queryFn: () => {
-      return courseApi.getCoursesOfMe()
-    }
+  const [teachingDropdownOpen, setTeachingDropdownOpen] = useState(false)
+  const [enrolledDropdownOpen, setEnrolledDropdownOpen] = useState(false)
+
+  const toggleTeachingDropdown = () => {
+    setTeachingDropdownOpen(!teachingDropdownOpen)
+  }
+
+  const toggleEnrolledDropdown = () => {
+    setEnrolledDropdownOpen(!enrolledDropdownOpen)
+  }
+
+  const teachingData = useQuery({
+    queryKey: ['teaching-list'],
+    queryFn: () => courseApi.getTeachingCourse(String(profile?.id))
   })
 
-  const courseList = courseData?.data?.data.data
+  const enrolledData = useQuery({
+    queryKey: ['enrolled-list'],
+    queryFn: () => courseApi.getEnrolledCourse(String(profile?.id))
+  })
+
+  const teachingList = teachingData?.data?.data.data
+  const enrolledList = enrolledData?.data?.data.data
 
   useEffect(() => {
-    console.log(window.innerWidth)
     const handleResize = () => {
       if (window.innerWidth < weightMD) {
         onToggleSidebar(false)
@@ -33,7 +51,6 @@ function Sidebar({ onToggleSidebar }: { onToggleSidebar: any }) {
       }
     }
     if (window.innerWidth < weightMD) {
-      console.log(1)
       onToggleSidebar()
     }
     window.addEventListener('resize', handleResize)
@@ -45,12 +62,12 @@ function Sidebar({ onToggleSidebar }: { onToggleSidebar: any }) {
 
   return (
     <>
-      <nav className='flex max-h-[100%] flex-col gap-1 overflow-y-auto p-2 font-sans text-base font-normal text-blue-gray-700'>
+      <nav className='flex max-h-[100%] flex-col gap-1 overflow-y-auto p-1 font-sans text-base font-normal text-blue-gray-700'>
         <NavLink
           to={path.home}
           className={({ isActive }) =>
             classNames(
-              'my-3 rounded-lg py-2 transition-all hover:bg-blue-gray-50 hover:bg-opacity-80 hover:text-blue-gray-900 focus:bg-blue-gray-50 focus:bg-opacity-80 focus:text-blue-gray-900 active:bg-blue-gray-50 active:bg-opacity-80 active:text-blue-gray-900',
+              'my-2 rounded-lg py-2 transition-all hover:bg-blue-gray-50 hover:bg-opacity-80 hover:text-blue-gray-900 focus:bg-blue-gray-50 focus:bg-opacity-80 focus:text-blue-gray-900 active:bg-blue-gray-50 active:bg-opacity-80 active:text-blue-gray-900',
               {
                 'bg-[#1a73e81f]': isActive
               }
@@ -59,23 +76,54 @@ function Sidebar({ onToggleSidebar }: { onToggleSidebar: any }) {
         >
           <HomeItem avatarUrl={homeIcon} alt={'home'} name={'Home'} />
         </NavLink>
-        <hr className='my-1 border-t border-blue-gray-200' />
-        {courseList?.map((item, index) => (
-          <NavLink
-            key={index}
-            to={`class/${item.id}/news`}
-            className={() =>
-              classNames(
-                'rounded-lg py-3 transition-all hover:bg-blue-gray-50 hover:bg-opacity-80 hover:text-blue-gray-900 focus:bg-blue-gray-50 focus:bg-opacity-80 focus:text-blue-gray-900 active:bg-blue-gray-50 active:bg-opacity-80 active:text-blue-gray-900',
-                {
-                  'bg-[#1a73e81f]': classId === String(item?.id)
+        <hr className=' border-t border-blue-gray-200' />
+        {/* <div className='my-2 rounded-lg py-3 transition-all hover:bg-blue-gray-50 hover:bg-opacity-80 hover:text-blue-gray-900 focus:bg-blue-gray-50 focus:bg-opacity-80 focus:text-blue-gray-900'> */}
+        <DropdownButton name='Teaching' checkOpen={teachingDropdownOpen} onClick={toggleTeachingDropdown} />
+        {/* </div> */}
+        {teachingDropdownOpen && (
+          <>
+            {teachingList?.map((item, index) => (
+              <NavLink
+                key={index}
+                to={`class/${item.id}/news`}
+                className={() =>
+                  classNames(
+                    'rounded-lg py-3 transition-all hover:bg-blue-gray-50 hover:bg-opacity-80 hover:text-blue-gray-900 focus:bg-blue-gray-50 focus:bg-opacity-80 focus:text-blue-gray-900 active:bg-blue-gray-50 active:bg-opacity-80 active:text-blue-gray-900',
+                    {
+                      'bg-[#1a73e81f]': classId === String(item?.id)
+                    }
+                  )
                 }
-              )
-            }
-          >
-            <ClassItem key={index} topic={item?.topic as string} name={item?.name} />
-          </NavLink>
-        ))}
+              >
+                <ClassItem key={index} topic={item?.topic as string} name={item?.name} />
+              </NavLink>
+            ))}
+          </>
+        )}
+
+        <hr className='my-1 border-t border-blue-gray-200' />
+
+        <DropdownButton name='Enrolled' checkOpen={enrolledDropdownOpen} onClick={toggleEnrolledDropdown} />
+        {enrolledDropdownOpen && (
+          <>
+            {enrolledList?.map((item, index) => (
+              <NavLink
+                key={index}
+                to={`class/${item.id}/news`}
+                className={() =>
+                  classNames(
+                    'rounded-lg py-3 transition-all hover:bg-blue-gray-50 hover:bg-opacity-80 hover:text-blue-gray-900 focus:bg-blue-gray-50 focus:bg-opacity-80 focus:text-blue-gray-900 active:bg-blue-gray-50 active:bg-opacity-80 active:text-blue-gray-900',
+                    {
+                      'bg-[#1a73e81f]': classId === String(item?.id)
+                    }
+                  )
+                }
+              >
+                <ClassItem key={index} topic={item?.topic as string} name={item?.name} />
+              </NavLink>
+            ))}
+          </>
+        )}
       </nav>
     </>
   )

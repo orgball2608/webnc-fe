@@ -39,20 +39,24 @@ function ClassItem({
       <div
         role='button'
         className={classNames(
-          `flex w-full items-center px-3 text-start leading-tight outline-none ${className || ''}`,
+          `flex w-full items-center px-3 py-3 text-start leading-tight outline-none ${className || ''}`,
           {
-            'h-[35px]': size === 'sm',
-            'h-[40px]': size === 'md',
+            'h-[20px]': size === 'sm',
+            'h-[25px]': size === 'md',
             'cursor-default': disabled
           }
         )}
       >
-        <div className='mr-4 grid w-10 place-items-center'>
+        <div className='mr-4 grid h-10 w-10 place-items-center'>
           <Avatar
+            sizes='small' // Adjusted the sizes prop to 'small'
             alt={name}
             src={' '}
             sx={{
-              bgcolor: colorAvatar.current
+              bgcolor: colorAvatar.current,
+              width: '80%',
+              height: '80%'
+              // Added height to maintain the aspect ratio
             }}
           >
             {name.charAt(0).toUpperCase()}
