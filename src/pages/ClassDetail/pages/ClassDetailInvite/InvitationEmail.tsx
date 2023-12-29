@@ -1,33 +1,50 @@
-import { useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import path from 'src/constants/path'
 import courseApi from 'src/apis/courses.api'
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import useQueryString from 'src/hooks/useQueryString'
+import { useEffect } from 'react'
 
 export default function InvitationEmail() {
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
 
   const currentURL = useLocation().pathname
   const { token } = useQueryString()
 
-  const dataCourse = useQuery({
-    queryKey: ['invite-email'],
-    queryFn: () => {
-      return courseApi.acceptInvitation(token as string)
-    }
+  const dataCourse = useMutation({
+    mutationKey: ['invite-email'],
+    mutationFn: courseApi.acceptInvitation
   })
-  const course = dataCourse.data?.data.data
 
-  const classURL = currentURL.replace(`/join`, `/${course?.courseId}/news`)
+  const hanlde = () => {
+    dataCourse.mutate(token, {
+      onSuccess: async (res) => {
+        const course = res.data.data
+        console.log(course)
+        const classURL = currentURL.replace(`/join`, `/${course?.courseId}/news`)
+        await Promise.all([
+          queryClient.invalidateQueries({
+            queryKey: ['teaching-list']
+          }),
+          queryClient.invalidateQueries({
+            queryKey: ['enrolled-list']
+          }),
+          queryClient.invalidateQueries({
+            queryKey: ['classes']
+          })
+        ])
+        navigate(classURL)
+      },
+      onError: () => {
+        navigate(path.home)
+      }
+    })
+  }
 
   useEffect(() => {
-    if (dataCourse.isSuccess) {
-      navigate(classURL)
-    } else if (dataCourse.isError) {
-      navigate(path.home)
-    }
-  }, [dataCourse, navigate, dataCourse.isSuccess, dataCourse.isError, classURL])
+    hanlde()
+  }, [])
 
   return <></>
 }

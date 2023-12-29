@@ -35,9 +35,18 @@ function ModalManageClass({ open, handler }: Props) {
   const onSubmit = handleSubmit((data) => {
     createClassMutation.mutate(data, {
       onSuccess: async () => {
-        await queryClient.invalidateQueries({
-          queryKey: ['classes']
-        })
+        await Promise.all([
+          queryClient.invalidateQueries({
+            queryKey: ['teaching-list']
+          }),
+
+          queryClient.invalidateQueries({
+            queryKey: ['enrolled-list']
+          }),
+          queryClient.invalidateQueries({
+            queryKey: ['classes']
+          })
+        ])
         handler()
         reset()
         toast.success('Tạo lớp học thành công!')
