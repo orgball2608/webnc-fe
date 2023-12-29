@@ -8,6 +8,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'react-toastify'
 import { useAppDispatch, useAppSelector } from 'src/app/store'
 import { setInvitationLink } from 'src/slices/class.slice'
+import { Box, CircularProgress } from '@mui/material'
 
 export default function ClassDetailInvite() {
   const navigate = useNavigate()
@@ -79,34 +80,48 @@ export default function ClassDetailInvite() {
 
   return (
     <div className='mt-36 flex w-full justify-center'>
-      <Card className='w-[50em] rounded-md border-2 border-solid border-[#cbd3e1] font-medium'>
-        <CardBody>
-          <h1 className='mb-4 mt-4 text-center'>Xác nhận tham gia lớp {checkEnrolled?.course?.data?.name}</h1>
-          {/* Hiển thị thông điệp và các thông tin khác */}
-        </CardBody>
-        <CardFooter>
-          <div className='mb-4 flex flex-col items-center justify-center gap-4 md:flex-row md:items-stretch'>
-            <Button
-              color='gray'
-              fullWidth={true}
-              className='md:w-[120px]'
-              onClick={handleConfirm}
-              disabled={isLoading === true}
-            >
-              Xác nhận
-            </Button>
-            <Button
-              color='white'
-              fullWidth={true}
-              className='mt-2 border-2 md:mt-0 md:w-[120px]'
-              onClick={handleCancle}
-              disabled={isLoading === true}
-            >
-              Hủy
-            </Button>
-          </div>
-        </CardFooter>
-      </Card>
+      <Box
+        marginTop={32}
+        sx={{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          display: dataCheck.isLoading ? 'flex' : 'none' // Hiển thị khi isLoading là true
+        }}
+      >
+        <CircularProgress />
+      </Box>
+      {!dataCheck.isLoading && (
+        <Card className='w-[50em] rounded-md border-2 border-solid border-[#cbd3e1] font-medium'>
+          <CardBody>
+            <h1 className='mb-4 mt-4 text-center'>Xác nhận tham gia lớp {checkEnrolled?.course?.data?.name}</h1>
+            {/* Hiển thị thông điệp và các thông tin khác */}
+          </CardBody>
+          <CardFooter>
+            <div className='mb-4 flex flex-col items-center justify-center gap-4 md:flex-row md:items-stretch'>
+              <Button
+                color='gray'
+                fullWidth={true}
+                className='md:w-[120px]'
+                onClick={handleConfirm}
+                disabled={isLoading === true}
+              >
+                Xác nhận
+              </Button>
+              <Button
+                color='white'
+                fullWidth={true}
+                className='mt-2 border-2 md:mt-0 md:w-[120px]'
+                onClick={handleCancle}
+                disabled={isLoading === true}
+              >
+                Hủy
+              </Button>
+            </div>
+          </CardFooter>
+        </Card>
+      )}
     </div>
   )
 }

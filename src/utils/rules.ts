@@ -83,6 +83,13 @@ export const invitationSchema = zod.object({
   role: zod.string().min(1)
 })
 
+export const classCodeSchema = zod.object({
+  classCode: zod
+    .string()
+    .min(5, 'The class code must be at least 5 characters')
+    .max(7, 'The class code has a maximum of 5 characters')
+})
+
 export const gradeCompositionSchema = zod.object({
   id: zod.optional(zod.number()),
   name: zod.string().min(1, 'Name is required').max(100, 'Maximum length is 100 characters'),
@@ -147,6 +154,7 @@ export const gradeCompositionsSchema = zod
 export type InvitationSchema = zod.infer<typeof invitationSchema>
 export type LoginSchema = zod.infer<typeof loginSchema>
 export type RegisterSchema = zod.infer<typeof registerSchema>
+export type ClassCodeSchema = zod.infer<typeof classCodeSchema>
 
 export type UpdateProfileSchema = zod.infer<typeof updateProfileSchema>
 export type ChangePasswordSchema = zod.infer<typeof changePasswordSchema>
