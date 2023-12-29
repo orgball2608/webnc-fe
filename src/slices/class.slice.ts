@@ -1,13 +1,16 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
+import { CourseItem } from 'src/types/course.type'
 
 // Define a type for the slice state
 interface ClassState {
   invitationLink: string
+  courseList: CourseItem[]
 }
 
 // Define the initial state using that type
 const initialState: ClassState = {
-  invitationLink: ''
+  invitationLink: '',
+  courseList: []
 }
 
 export const classSlice = createSlice({
@@ -17,10 +20,15 @@ export const classSlice = createSlice({
   reducers: {
     setInvitationLink: (state: ClassState, action: PayloadAction<string>) => {
       state.invitationLink = action.payload
+    },
+
+    setMyClass: (state: ClassState, action: PayloadAction<{ courseList: CourseItem[] }>) => {
+      const { courseList } = action.payload
+      state.courseList = courseList
     }
   }
 })
 
-export const { setInvitationLink } = classSlice.actions
+export const { setInvitationLink, setMyClass } = classSlice.actions
 
 export default classSlice.reducer

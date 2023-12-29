@@ -1,31 +1,39 @@
 import classNames from 'classnames'
-import Image from '../Image'
 import { NOTIFICATION_STATUS } from 'src/constants/enums'
 import { calculateTimeDifference } from 'src/utils/utils'
-
+import Avatar from '@mui/material/Avatar'
+import randomColor from 'randomcolor'
+import React from 'react'
 interface Props {
   size?: 'sm' | 'md'
-  avatarUrl: string
-  alt: string
   name: string
   subtitle?: string
   className?: string
   notificationStatus?: NOTIFICATION_STATUS
   notificationCreatedAt?: string
   disabled?: boolean
+  topic?: string
 }
 
-function AccountItem({
-  avatarUrl,
-  alt,
+function ClassItem({
   subtitle,
   name,
   size = 'sm',
   className,
   disabled,
   notificationStatus,
-  notificationCreatedAt
+  notificationCreatedAt,
+  topic
 }: Props) {
+  const colorAvatar = React.useRef(
+    randomColor({
+      luminosity: 'dark',
+      hue: 'blue',
+      format: 'rgba',
+      alpha: 0.9 // e.g. 'rgba(9, 1, 107, 0.6482447960879654)'
+    })
+  )
+
   return (
     <>
       <div
@@ -33,14 +41,22 @@ function AccountItem({
         className={classNames(
           `flex w-full items-center px-3 text-start leading-tight outline-none ${className || ''}`,
           {
-            'h-[40px]': size === 'sm',
-            'h-[48px]': size === 'md',
+            'h-[35px]': size === 'sm',
+            'h-[40px]': size === 'md',
             'cursor-default': disabled
           }
         )}
       >
         <div className='mr-4 grid w-10 place-items-center'>
-          <Image src={avatarUrl} className='h-6 w-6' alt={alt} />
+          <Avatar
+            alt={name}
+            src={' '}
+            sx={{
+              bgcolor: colorAvatar.current
+            }}
+          >
+            {name.charAt(0).toUpperCase()}
+          </Avatar>
         </div>
         <div className='max-w-[75%] flex-1'>
           <p
@@ -48,7 +64,14 @@ function AccountItem({
               '!text-[#aaa]': notificationStatus === NOTIFICATION_STATUS.READ
             })}
           >
-            {name}
+            <b>{name}</b>
+          </p>
+          <p
+            className={classNames('truncate text-sm leading-5 text-primary', {
+              '!text-[#aaa]': notificationStatus === NOTIFICATION_STATUS.READ
+            })}
+          >
+            {topic}
           </p>
           {subtitle && (
             <p
@@ -78,4 +101,4 @@ function AccountItem({
   )
 }
 
-export default AccountItem
+export default ClassItem

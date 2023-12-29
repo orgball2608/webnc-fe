@@ -2,10 +2,9 @@ import classNames from 'classnames'
 import Image from '../Image'
 import { NOTIFICATION_STATUS } from 'src/constants/enums'
 import { calculateTimeDifference } from 'src/utils/utils'
-
 interface Props {
   size?: 'sm' | 'md'
-  avatarUrl: string
+  avatarUrl?: string
   alt: string
   name: string
   subtitle?: string
@@ -15,7 +14,7 @@ interface Props {
   disabled?: boolean
 }
 
-function AccountItem({
+function HomeItem({
   avatarUrl,
   alt,
   subtitle,
@@ -33,14 +32,14 @@ function AccountItem({
         className={classNames(
           `flex w-full items-center px-3 text-start leading-tight outline-none ${className || ''}`,
           {
-            'h-[40px]': size === 'sm',
-            'h-[48px]': size === 'md',
+            'h-[35px]': size === 'sm',
+            'h-[40px]': size === 'md',
             'cursor-default': disabled
           }
         )}
       >
         <div className='mr-4 grid w-10 place-items-center'>
-          <Image src={avatarUrl} className='h-6 w-6' alt={alt} />
+          <Image src={avatarUrl as string} alt={alt} className='rounded-full' />
         </div>
         <div className='max-w-[75%] flex-1'>
           <p
@@ -78,4 +77,4 @@ function AccountItem({
   )
 }
 
-export default AccountItem
+export default HomeItem
