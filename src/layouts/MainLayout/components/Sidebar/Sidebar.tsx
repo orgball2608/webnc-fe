@@ -18,8 +18,8 @@ function Sidebar({ onToggleSidebar }: { onToggleSidebar: any }) {
   const store = useAppSelector((state) => state.auth)
   const profile = store?.profile
 
-  const [teachingDropdownOpen, setTeachingDropdownOpen] = useState(false)
-  const [enrolledDropdownOpen, setEnrolledDropdownOpen] = useState(false)
+  const [teachingDropdownOpen, setTeachingDropdownOpen] = useState(true)
+  const [enrolledDropdownOpen, setEnrolledDropdownOpen] = useState(true)
 
   const toggleTeachingDropdown = () => {
     setTeachingDropdownOpen(!teachingDropdownOpen)

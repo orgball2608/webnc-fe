@@ -58,13 +58,18 @@ export default function ClassDetailInvite() {
   const handleConfirm = async () => {
     setIsLoading(true)
     await dataCourse.refetch().then(async () => {
-      await queryClient.invalidateQueries({
-        queryKey: ['teaching-list']
-      })
+      await Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: ['teaching-list']
+        }),
 
-      await queryClient.invalidateQueries({
-        queryKey: ['enrolled-list']
-      })
+        queryClient.invalidateQueries({
+          queryKey: ['enrolled-list']
+        }),
+        queryClient.invalidateQueries({
+          queryKey: ['classes']
+        })
+      ])
       toast.success('Tham gia lớp học thành công!')
       navigate(classURL)
       setIsLoading(false)

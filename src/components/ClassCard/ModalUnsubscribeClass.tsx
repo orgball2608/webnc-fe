@@ -20,13 +20,22 @@ function ModalUnsubscribeClass({ open, handler, courseData }: Props) {
 
   const onSubmit = () => {
     unsubscribeClassMutation.mutate(String(courseData.id), {
-      onSuccess: () => {
-        queryClient.invalidateQueries({
-          queryKey: ['classes']
-        })
+      onSuccess: async () => {
+        await Promise.all([
+          queryClient.invalidateQueries({
+            queryKey: ['teaching-list']
+          }),
+
+          queryClient.invalidateQueries({
+            queryKey: ['enrolled-list']
+          }),
+          queryClient.invalidateQueries({
+            queryKey: ['classes']
+          })
+        ])
 
         handler()
-        toast.success('Tạo lớp học thành công!')
+        toast.success('Xóa lớp học thành công!')
       }
     })
   }
