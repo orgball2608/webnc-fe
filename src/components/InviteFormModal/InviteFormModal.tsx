@@ -16,7 +16,7 @@ type FormData = InvitationSchema
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default function InviteFormModal({ isInviteModalOpen, setIsInviteModalOpen, isRole, role, profile }: any) {
   const currentURL = window.location.href
-  const inviteLink = currentURL.replace('/people', `/invite?userId=${profile.id}`)
+  const inviteLink = currentURL.replace('/people', `/invite?scr=${profile.id}`)
   const [isCopied, setIsCopied] = useState(false)
   const { classId } = useParams()
   const formSchema = invitationSchema.pick({ email: true })

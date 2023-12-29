@@ -1,8 +1,20 @@
+import { useQuery } from '@tanstack/react-query'
 import classNames from 'classnames'
-import { NavLink, Outlet, useParams } from 'react-router-dom'
+import { useEffect } from 'react'
+import { NavLink, Outlet, useNavigate, useParams } from 'react-router-dom'
+import courseApi from 'src/apis/courses.api'
+import { useAppDispatch, useAppSelector } from 'src/app/store'
+import { Role } from 'src/constants/enums'
+import path from 'src/constants/path'
+import { setRoleInCourses } from 'src/slices/class.slice'
 
 function ClassDetail() {
-  const { classId } = useParams()
+  const param = useParams()
+  const classId = param?.classId
+  const dispatch = useAppDispatch()
+  const { profile } = useAppSelector((state) => state.auth)
+  const navigate = useNavigate()
+
   const tabs = [
     {
       title: 'Bảng tin',
@@ -17,6 +29,31 @@ function ClassDetail() {
       path: `/class/${classId}/people`
     }
   ]
+
+  const membersData = useQuery({
+    queryKey: ['members', classId],
+    queryFn: () => {
+      return courseApi.getUserInClass(classId as string)
+    },
+    enabled: Boolean(classId)
+  })
+
+  const members = membersData.data?.data.data[0]
+
+  useEffect(() => {
+    dispatch(setRoleInCourses({ classId: classId as string, role: '' }))
+    if (membersData.isError) {
+      navigate(path.home)
+    } else if (membersData.isSuccess) {
+      const isTeacher = members?.courseTeachers?.some((teacher) => teacher.teacher.id === profile?.id)
+      if (isTeacher) {
+        dispatch(setRoleInCourses({ classId: classId as string, role: Role.TEACHER }))
+      } else {
+        dispatch(setRoleInCourses({ classId: classId as string, role: Role.STUDENT }))
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [membersData, navigate, members, profile, classId])
 
   return (
     <>

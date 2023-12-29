@@ -11,6 +11,8 @@ import courseApi from 'src/apis/courses.api'
 import Skeleton from 'react-loading-skeleton'
 import { FaPencilAlt } from 'react-icons/fa'
 import { toast } from 'react-toastify'
+import { LuCheck, LuCopy } from 'react-icons/lu'
+import { Role } from 'src/constants/enums'
 // src/Tiptap.jsx
 // import { EditorProvider, FloatingMenu, BubbleMenu } from '@tiptap/react'
 // eslint-disable-next-line import/no-named-as-default
@@ -22,7 +24,10 @@ import { toast } from 'react-toastify'
 // const content = '<p>Hello World!</p>'
 
 function ClassDetailNews() {
-  const { classId } = useParams()
+  const param = useParams()
+  const classId = param?.classId
+  const { roleInCourse } = useAppSelector((state) => state.class)
+  const [isCopied, setIsCopied] = useState(false)
 
   const getCourseDetailQuery = useQuery({
     queryKey: ['course-detail', classId],
@@ -50,6 +55,14 @@ function ClassDetailNews() {
       body.append('avatar', file)
       uploadBackgroundMutation.mutate(body)
     }
+  }
+
+  const handleClickCopy = () => {
+    setIsCopied(true)
+    navigator.clipboard.writeText(courseDetailData?.code as string)
+    setTimeout(() => {
+      setIsCopied(false)
+    }, 2000)
   }
 
   return (
@@ -116,13 +129,29 @@ function ClassDetailNews() {
       )}
 
       <div className='mt-6 flex gap-6'>
-        <div className='w-48 rounded-lg border border-primary px-4 pb-2 pt-4'>
-          <h2 className='mb-4 text-sm font-medium text-primary'>Sắp đến hạn</h2>
-          <p className='text-[13px] leading-5 text-fourth'>Tuyệt vời, không có bài tập nào sắp đến hạn!</p>
-          <div className='mt-2 flex justify-end'>
-            <Button variant='text' className='px-3 text-third' size='md'>
-              Xem tất cả
-            </Button>
+        <div>
+          {roleInCourse.role === Role.TEACHER && !getCourseDetailQuery.isPending && (
+            <div className='mb-3 w-48 rounded-lg border border-primary px-4 pb-2 pt-4'>
+              <h2 className='mb-2 text-sm font-medium text-primary'>Class code</h2>
+              <div className='mb-2 flex items-center'>
+                <p className='= w-full overflow-hidden text-ellipsis text-2xl font-bold'>{courseDetailData?.code}</p>
+                <IconButton
+                  Icon={isCopied ? <LuCheck /> : <LuCopy />}
+                  tooltip='copy link'
+                  mode='dark'
+                  onClick={handleClickCopy}
+                />
+              </div>
+            </div>
+          )}
+          <div className='w-48 rounded-lg border border-primary px-4 pb-2 pt-4'>
+            <h2 className='mb-4 text-sm font-medium text-primary'>Sắp đến hạn</h2>
+            <p className='text-[13px] leading-5 text-fourth'>Tuyệt vời, không có bài tập nào sắp đến hạn!</p>
+            <div className='mt-2 flex justify-end'>
+              <Button variant='text' className='px-3 text-third' size='md'>
+                Xem tất cả
+              </Button>
+            </div>
           </div>
         </div>
 

@@ -2,7 +2,7 @@ import { CourseItem, CourseStudentTeacher } from 'src/types/course.type'
 import { User } from 'src/types/user.type'
 import { ResponseApi } from 'src/types/utils.type'
 import http from 'src/utils/http'
-import { ClassSchema, InvitationSchema } from 'src/utils/rules'
+import { ClassCodeSchema, ClassSchema, InvitationSchema } from 'src/utils/rules'
 
 const PREFIX = 'courses/'
 const URL_GETCOURSEOFME = PREFIX + 'my-courses/list'
@@ -54,6 +54,10 @@ const courseApi = {
 
   getEnrolledCourse: (userId: string) => {
     return http.get<ResponseApi<CourseItem[]>>(PREFIX + `student/${userId}`)
+  },
+
+  joinCourseByCode: (body: ClassCodeSchema) => {
+    return http.post<ResponseApi<CourseStudentTeacher>>(PREFIX + 'join-by-code', body)
   }
 }
 

@@ -5,12 +5,14 @@ import { CourseItem } from 'src/types/course.type'
 interface ClassState {
   invitationLink: string
   courseList: CourseItem[]
+  roleInCourse: { classId: string; role: string }
 }
 
 // Define the initial state using that type
 const initialState: ClassState = {
   invitationLink: '',
-  courseList: []
+  courseList: [],
+  roleInCourse: { classId: '', role: '' }
 }
 
 export const classSlice = createSlice({
@@ -25,10 +27,15 @@ export const classSlice = createSlice({
     setMyClass: (state: ClassState, action: PayloadAction<{ courseList: CourseItem[] }>) => {
       const { courseList } = action.payload
       state.courseList = courseList
+    },
+
+    setRoleInCourses: (state: ClassState, action: PayloadAction<{ classId: string; role: string }>) => {
+      const { classId, role } = action.payload
+      state.roleInCourse = { classId, role }
     }
   }
 })
 
-export const { setInvitationLink, setMyClass } = classSlice.actions
+export const { setInvitationLink, setMyClass, setRoleInCourses } = classSlice.actions
 
 export default classSlice.reducer

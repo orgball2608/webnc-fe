@@ -4,6 +4,7 @@ import courseApi from 'src/apis/courses.api'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import useQueryString from 'src/hooks/useQueryString'
 import { useEffect } from 'react'
+import { Box, CircularProgress } from '@mui/material'
 
 export default function InvitationEmail() {
   const navigate = useNavigate()
@@ -21,7 +22,6 @@ export default function InvitationEmail() {
     dataCourse.mutate(token, {
       onSuccess: async (res) => {
         const course = res.data.data
-        console.log(course)
         const classURL = currentURL.replace(`/join`, `/${course?.courseId}/news`)
         await Promise.all([
           queryClient.invalidateQueries({
@@ -44,7 +44,23 @@ export default function InvitationEmail() {
 
   useEffect(() => {
     hanlde()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  return <></>
+  return (
+    <>
+      <Box
+        marginTop={32}
+        sx={{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          display: dataCourse.isPending ? 'flex' : 'none' // Hiển thị khi isLoading là true
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    </>
+  )
 }

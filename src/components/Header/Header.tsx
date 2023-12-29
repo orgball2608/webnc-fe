@@ -20,7 +20,7 @@ import path from 'src/constants/path'
 import { FaPlus } from 'react-icons/fa6'
 import Dropdown, { DropdownItem } from '../Dropdown'
 import { Button } from '@material-tailwind/react'
-import ModalManageClass from '../ModalManageClass'
+import ModalManageClass, { JoinClassModal } from '../ModalManageClass'
 import notificationApi from 'src/apis/notification.api'
 import { NotificationItem } from 'src/types/notification.type'
 import { NOTIFICATION_STATUS } from 'src/constants/enums'
@@ -35,6 +35,7 @@ export default function Header({ onToggleSidebar }: { onToggleSidebar: any }) {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState<null | HTMLElement>(null)
   const [isOpenCreateClassModal, setIsOpenCreateClassModal] = React.useState(false)
+  const [isOpenJoinClassModal, setIsOpenJoinClassModal] = React.useState(false)
 
   const dispatch = useAppDispatch()
   const { profile, isAuthenticated } = useAppSelector((state) => state.auth)
@@ -182,7 +183,7 @@ export default function Header({ onToggleSidebar }: { onToggleSidebar: any }) {
                     placement='bottom-end'
                     render={() => (
                       <>
-                        <DropdownItem>Tham gia lớp học</DropdownItem>
+                        <DropdownItem onClick={() => setIsOpenJoinClassModal(true)}>Tham gia lớp học</DropdownItem>
                         <DropdownItem onClick={() => setIsOpenCreateClassModal(true)}>Tạo lớp học</DropdownItem>
                       </>
                     )}
@@ -294,6 +295,7 @@ export default function Header({ onToggleSidebar }: { onToggleSidebar: any }) {
       </Box>
 
       <ModalManageClass open={isOpenCreateClassModal} handler={() => setIsOpenCreateClassModal((prev) => !prev)} />
+      <JoinClassModal open={isOpenJoinClassModal} handler={() => setIsOpenJoinClassModal((prev) => !prev)} />
     </>
   )
 }
