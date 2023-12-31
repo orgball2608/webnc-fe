@@ -10,6 +10,6 @@ updates:
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 0 # Disable dependabot, renovate is used instead
-    target-branch: "main"
+    target-branch: "master"
     reviewers:
       - "orgball2608"

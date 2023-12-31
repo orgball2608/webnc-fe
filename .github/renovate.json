@@ -11,7 +11,7 @@
     "lockFileMaintenance": {
         "enabled": true
     },
-    "baseBranches": ["main"],
+    "baseBranches": ["master"],
     "separateMajorMinor": false,
     "rangeStrategy": "pin",
     "prHourlyLimit": 100,
