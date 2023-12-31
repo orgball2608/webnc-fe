@@ -23,7 +23,7 @@ import { BsThreeDotsVertical } from 'react-icons/bs'
 import UserInfoModal from '../../../../components/MembersModals/UserInfoModal'
 import DeleteMemberModal from 'src/components/MembersModals/DeleteMemberModal'
 import { useCourseDetail } from '../../ClassDetail'
-import { ROLE } from 'src/constants/enums'
+import { Role } from 'src/constants/enums'
 
 function ClassDetailPeople() {
   const { profile } = useAppSelector((state) => state.auth)
@@ -71,13 +71,13 @@ function ClassDetailPeople() {
     <>
       <div className='mb-10'>
         <div className='mb-1 flex h-[72px] items-center justify-between border-b border-b-[#4285f4]'>
-          <h2 className='pl-4 text-[32px] font-normal leading-10 text-third'>{ROLE.TEACHER}</h2>
-          {myRole === ROLE.TEACHER && (
+          <h2 className='pl-4 text-[32px] font-normal leading-10 text-third'>{Role.TEACHER}</h2>
+          {myRole === Role.TEACHER && (
             <IconButton
               Icon={<LuUserPlus />}
               mode='dark'
               tooltip='Mời giáo viên'
-              onClick={() => handleClick(ROLE.TEACHER)}
+              onClick={() => handleClick(Role.TEACHER)}
             />
           )}
         </div>
@@ -100,7 +100,7 @@ function ClassDetailPeople() {
                     render={() => (
                       <>
                         {
-                          <DropdownItem onClick={() => handleClickInfo(member?.teacher, ROLE.TEACHER)}>
+                          <DropdownItem onClick={() => handleClickInfo(member?.teacher, Role.TEACHER)}>
                             Thông tin
                           </DropdownItem>
                         }
@@ -125,22 +125,22 @@ function ClassDetailPeople() {
 
       <div>
         <div className='mb-1 flex h-[72px] items-center justify-between border-b border-b-[#4285f4]'>
-          <h2 className='pl-4 text-[32px] font-normal leading-10 text-third'>{ROLE.STUDENT}</h2>
+          <h2 className='pl-4 text-[32px] font-normal leading-10 text-third'>{Role.STUDENT}</h2>
 
           <div className='flex items-center'>
             <span className='pr-6 text-sm font-medium text-third'>{members?.enrollments?.length || 0} Sinh viên</span>
-            {myRole === ROLE.TEACHER && (
+            {myRole === Role.TEACHER && (
               <IconButton
                 Icon={<LuUserPlus />}
                 tooltip='Mời học sinh'
                 mode='dark'
-                onClick={() => handleClick(ROLE.STUDENT)}
+                onClick={() => handleClick(Role.STUDENT)}
               />
             )}
           </div>
         </div>
         <ul>
-          {members?.enrollments && members.enrollments.length > 0 && myRole === ROLE.TEACHER
+          {members?.enrollments && members.enrollments.length > 0 && myRole === Role.TEACHER
             ? members.enrollments.map((member, index) => (
                 <li
                   key={index}
@@ -156,7 +156,7 @@ function ClassDetailPeople() {
                     render={() => (
                       <>
                         {
-                          <DropdownItem onClick={() => handleClickInfo(member?.student, ROLE.STUDENT)}>
+                          <DropdownItem onClick={() => handleClickInfo(member?.student, Role.STUDENT)}>
                             Thông tin
                           </DropdownItem>
                         }
