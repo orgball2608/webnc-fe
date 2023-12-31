@@ -1,50 +1,19 @@
-import { IoSearchOutline, IoPencil } from 'react-icons/io5'
-
-import {
-  Card,
-  CardHeader,
-  Input,
-  Typography,
-  Button,
-  CardBody,
-  CardFooter,
-  IconButton,
-  Tooltip
-} from '@material-tailwind/react'
+import { IoSearchOutline } from 'react-icons/io5'
+import { Card, CardHeader, Input, Typography, Button, CardBody, CardFooter } from '@material-tailwind/react'
 import { useEffect, useMemo, useState } from 'react'
 import ModalManageGrade from 'src/components/ModalManageGrade'
 import { useQuery } from '@tanstack/react-query'
-import { useParams } from 'react-router-dom'
 import gradeCompositionApi from 'src/apis/grade-composition.api'
 import { GradeComposition } from 'src/types/grade-composition.type'
-import { BsThreeDotsVertical } from 'react-icons/bs'
-import Dropdown, { DropdownItem } from 'src/components/Dropdown'
-
-const TABLE_ROWS = [
-  {
-    name: 'John Michael',
-    email: 'john@creative-tim.com'
-  },
-  {
-    name: 'Alexa Liras',
-    email: 'alexa@creative-tim.com'
-  },
-  {
-    name: 'Laurent Perrier',
-    email: 'laurent@creative-tim.com'
-  },
-  {
-    name: 'Michael Levi',
-    email: 'michael@creative-tim.com'
-  },
-  {
-    name: 'Richard Gran',
-    email: 'richard@creative-tim.com'
-  }
-]
+import { CSVLink } from 'react-csv'
+import { useCourseDetail } from '../../ClassDetail'
+import Papa from 'papaparse'
+import { CgExport, CgImport } from 'react-icons/cg'
+import ModalPreviewCSV from './ModalPreviewCSV'
+import GradeBoardTable from './GradeBoardTable'
 
 export default function ClassDetailGrade() {
-  const { classId } = useParams()
+  const { id: classId, data: courseDetailData } = useCourseDetail()
 
   const [isOpenModalEditGradeCompositions, setIsOpenModalEditGradeCompositions] = useState(false)
   const [isOpenModalAddGradeCompositions, setIsOpenModalAddGradeCompositions] = useState(false)
@@ -57,15 +26,15 @@ export default function ClassDetailGrade() {
     enabled: Boolean(classId)
   })
 
-  const totalScale = useMemo(() => {
+  const gradeCompositionsCSVDataExport = useMemo(() => {
     if (gradeCompositions && gradeCompositions.length > 0) {
-      return gradeCompositions.reduce((total, gradeComposition) => {
-        const scale = +gradeComposition.scale
-        if (isNaN(scale)) return total
-        return total + scale
-      }, 0)
+      const headers = gradeCompositions.map((gradeComposition) => {
+        return gradeComposition.name
+      })
+
+      return [headers]
     }
-    return 0
+    return []
   }, [gradeCompositions])
 
   useEffect(() => {
@@ -80,6 +49,39 @@ export default function ClassDetailGrade() {
     setGradeCompositions(newData)
   }
 
+  // Import CSV
+  const changeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    if (file) {
+      Papa.parse(file, {
+        header: true,
+        skipEmptyLines: true,
+        complete: function (results) {
+          const rowsArray = []
+          const valuesArray = []
+
+          console.log(results)
+
+          // Iterating data to get column name and their values
+          // results.data.map((d) => {
+          //   rowsArray.push(Object.keys(d));
+          //   valuesArray.push(Object.values(d));
+          // });
+          // console.log(rowsArray, valuesArray);
+
+          // // Parsed Data Response in array format
+          // setParsedData(results.data);
+
+          // // Filtered Column Names
+          // setTableRows(rowsArray[0]);
+
+          // // Filtered Values
+          // setValues(valuesArray);
+        }
+      })
+    }
+  }
+
   return !classId ? (
     <div>Something wrong</div>
   ) : (
@@ -88,137 +90,49 @@ export default function ClassDetailGrade() {
         <CardHeader floated={false} shadow={false} className='rounded-none'>
           <div className='mb-8 flex items-center justify-between gap-8'>
             <div>
-              <Typography variant='h5' color='blue-gray'>
-                Students list
+              <Typography variant='h2' color='blue-gray'>
+                Bảng điểm
               </Typography>
-              <Typography color='gray' className='mt-1 font-normal'>
-                See information about all students
-              </Typography>
-            </div>
-            <div className='flex shrink-0 flex-col gap-2 sm:flex-row'>
-              <Button variant='outlined' size='sm'>
-                Import
-              </Button>
-              <Button className='flex items-center gap-3' size='sm'>
-                Export
-              </Button>
             </div>
           </div>
           <div className='flex flex-col items-center justify-between gap-4 md:flex-row'>
             <div className='w-full md:w-72'>
               <Input label='Search' icon={<IoSearchOutline className='h-5 w-5' />} />
             </div>
+
+            <div className='flex shrink-0 flex-col items-center gap-2 sm:flex-row'>
+              <div>
+                <input hidden id='read-csv-input' type='file' name='file' accept='.csv' onChange={changeHandler} />
+
+                <label
+                  className='flex h-[42px] cursor-pointer select-none items-center gap-2 rounded-lg border border-gray-900 px-6 py-3 text-center align-middle font-sans text-xs font-bold uppercase text-gray-900 transition-all hover:opacity-75 focus:ring focus:ring-gray-300 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none'
+                  htmlFor='read-csv-input'
+                >
+                  <span className='relative top-[-1px] text-lg'>
+                    <CgImport />
+                  </span>
+                  Import
+                </label>
+              </div>
+
+              <CSVLink data={gradeCompositionsCSVDataExport} filename={`${courseDetailData?.name}.csv`}>
+                <Button className='flex items-center gap-2' size='md'>
+                  <span className='relative top-[-1px] text-lg'>
+                    <CgExport />
+                  </span>
+                  Export
+                </Button>
+              </CSVLink>
+            </div>
           </div>
         </CardHeader>
         <CardBody className='overflow-auto px-0'>
-          <table className='mt-4 w-full min-w-max table-auto text-left'>
-            <thead>
-              <tr>
-                {/* {TABLE_HEAD.map((head, index) => (
-                  <th
-                    key={head}
-                    className={classNames('border-y border-blue-gray-100 bg-blue-gray-50/50 p-4', {
-                      'text-center': index !== 0
-                    })}
-                  >
-                    <Typography variant='small' color='blue-gray' className='font-normal leading-none opacity-70'>
-                      {head || (
-                        <Tooltip content='Thay đổi điểm thành phần'>
-                          <IconButton variant='text' onClick={() => setIsOpenModalEditGradeCompositions(true)}>
-                            <IoPencil className='h-4 w-4' />
-                          </IconButton>
-                        </Tooltip>
-                      )}
-                    </Typography>
-                  </th>
-                ))} */}
-                <th className='border-y border-blue-gray-100 bg-blue-gray-50/50 p-4'>
-                  <Typography variant='small' color='blue-gray' className='font-normal leading-none opacity-70'>
-                    Học sinh
-                  </Typography>
-                </th>
-                {gradeCompositions &&
-                  gradeCompositions.length > 0 &&
-                  gradeCompositions.map((gradeComposition) => (
-                    <th key={gradeComposition.id} className='border-y border-blue-gray-100 bg-blue-gray-50/50 p-4'>
-                      <Typography variant='small' color='blue-gray' className='font-normal leading-none opacity-70'>
-                        {gradeComposition.name} ({gradeComposition.scale}%)
-                      </Typography>
-                    </th>
-                  ))}
-                <th className='border-y border-blue-gray-100 bg-blue-gray-50/50 p-4'>
-                  <Typography variant='small' color='blue-gray' className='font-normal leading-none opacity-70'>
-                    Tổng điểm ({totalScale}%)
-                  </Typography>
-                </th>
-                <th className='border-y border-blue-gray-100 bg-blue-gray-50/50 p-4'>
-                  <Dropdown
-                    placement='bottom-start'
-                    render={() => (
-                      <>
-                        <DropdownItem onClick={() => setIsOpenModalAddGradeCompositions(true)}>Thêm</DropdownItem>
-                        <DropdownItem onClick={() => setIsOpenModalEditGradeCompositions(true)}>Chỉnh sửa</DropdownItem>
-                        <DropdownItem onClick={() => setIsOpenModalSortGradeCompositions(true)}>Sắp xếp</DropdownItem>
-                      </>
-                    )}
-                  >
-                    <Typography variant='small' color='blue-gray' className='font-normal leading-none opacity-70'>
-                      <IconButton variant='text'>
-                        <BsThreeDotsVertical className='h-4 w-4' />
-                      </IconButton>
-                    </Typography>
-                  </Dropdown>
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {TABLE_ROWS.map((student, index) => {
-                const isLast = index === TABLE_ROWS.length - 1
-                const classes = isLast ? 'p-4 text-center' : 'p-4 border-b border-blue-gray-50 text-center'
-
-                return (
-                  <tr key={index}>
-                    <td className={`${classes} !text-left`}>
-                      <div className='flex items-center gap-3'>
-                        <div className='flex flex-col'>
-                          <Typography variant='small' color='blue-gray' className='font-normal'>
-                            {student.name}
-                          </Typography>
-                          <Typography variant='small' color='blue-gray' className='font-normal opacity-70'>
-                            {student.email}
-                          </Typography>
-                        </div>
-                      </div>
-                    </td>
-                    <td className={classes}>
-                      <div className='flex flex-col'>
-                        <Typography variant='small' color='blue-gray' className='font-normal'>
-                          {index}
-                        </Typography>
-                      </div>
-                    </td>
-                    <td className={classes}>
-                      <Typography variant='small' color='blue-gray' className='font-normal'>
-                        {index}
-                      </Typography>
-                    </td>
-                    <td className={classes}>
-                      <Typography variant='small' color='blue-gray' className='font-normal'>
-                        {index}
-                      </Typography>
-                    </td>
-                    <td className={classes}>
-                      <Tooltip content='Edit User'>
-                        <IconButton variant='text'>
-                          <IoPencil className='h-4 w-4' />
-                        </IconButton>
-                      </Tooltip>
-                    </td>
-                  </tr>
-                )
-              })}
-            </tbody>
-          </table>
+          <GradeBoardTable
+            gradeCompositions={gradeCompositions}
+            setIsOpenModalAddGradeCompositions={setIsOpenModalAddGradeCompositions}
+            setIsOpenModalEditGradeCompositions={setIsOpenModalEditGradeCompositions}
+            setIsOpenModalSortGradeCompositions={setIsOpenModalSortGradeCompositions}
+          />
         </CardBody>
         <CardFooter className='flex items-center justify-between border-t border-blue-gray-50 p-4'>
           <Typography variant='small' color='blue-gray' className='font-normal'>
@@ -262,6 +176,8 @@ export default function ClassDetailGrade() {
         gradeCompositions={gradeCompositions as GradeComposition[]}
         setNewGradeCompositions={setNewGradeCompositions}
       />
+
+      <ModalPreviewCSV />
     </>
   )
 }

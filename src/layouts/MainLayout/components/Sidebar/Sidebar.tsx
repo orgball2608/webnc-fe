@@ -74,7 +74,7 @@ function Sidebar({ onToggleSidebar }: { onToggleSidebar: any }) {
             )
           }
         >
-          <HomeItem avatarUrl={homeIcon} alt={'home'} name={'Home'} />
+          <HomeItem avatarUrl={homeIcon} alt={'home'} name={'Màn hình chính'} />
         </NavLink>
         <hr className=' border-t border-blue-gray-200' />
         {/* <div className='my-2 rounded-lg py-3 transition-all hover:bg-blue-gray-50 hover:bg-opacity-80 hover:text-blue-gray-900 focus:bg-blue-gray-50 focus:bg-opacity-80 focus:text-blue-gray-900'> */}

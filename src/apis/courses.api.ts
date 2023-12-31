@@ -1,3 +1,4 @@
+import { CourseItem, CourseStudentTeacher, MembersList } from 'src/types/course.type'
 import { ClassCodeSchema, ClassSchema, InvitationSchema } from 'src/utils/rules'
 import { CourseItem, CourseStudentTeacher } from 'src/types/course.type'
 
@@ -10,17 +11,13 @@ const URL_GETCOURSEOFME = PREFIX + 'my-courses'
 const URL_CREATE_COURSE = PREFIX
 const URL_INVITE_BY_EMAIL = PREFIX + 'invite/email'
 
-export type Member = Pick<User, 'id' | 'email' | 'avatar' | 'firstName' | 'lastName' | 'address' | 'phoneNumber'>
-
 const courseApi = {
   getCoursesOfMe: () => {
     return http.get<ResponseApi<CourseItem[]>>(URL_GETCOURSEOFME)
   },
   //get list student and teacher in class
   getUserInClass: (classId: string) => {
-    return http.get<
-      ResponseApi<[{ createdById: number; enrollments: { student: Member }[]; courseTeachers: { teacher: Member }[] }]>
-    >(`courses/${classId}/users`)
+    return http.get<ResponseApi<MembersList[]>>(`courses/${classId}/users`)
   },
   checkEnrolled: (classId: string) => {
     return http.get(`courses/enrollment-status/${classId}`)

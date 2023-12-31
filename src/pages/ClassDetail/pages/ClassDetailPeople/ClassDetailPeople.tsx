@@ -4,10 +4,9 @@ import courseApi, { Member } from 'src/apis/courses.api'
 import AccountItem from 'src/components/AccountItem'
 import { LuUserPlus } from 'react-icons/lu'
 import IconButton from 'src/components/IconButton'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import InviteFormModal from 'src/components/InviteFormModal'
 import { useAppSelector } from 'src/app/store'
-import path from 'src/constants/path'
 
 const role = {
   teachers: 'Giáo viên',
@@ -23,40 +22,19 @@ import Dropdown, { DropdownItem } from 'src/components/Dropdown'
 import { BsThreeDotsVertical } from 'react-icons/bs'
 import UserInfoModal from '../../../../components/MembersModals/UserInfoModal'
 import DeleteMemberModal from 'src/components/MembersModals/DeleteMemberModal'
+import { useCourseDetail } from '../../ClassDetail'
+import { ROLE } from 'src/constants/enums'
 
 function ClassDetailPeople() {
   const { profile } = useAppSelector((state) => state.auth)
-  const { classId } = useParams()
-  const navigate = useNavigate()
+  const { members, myRole, isLoading } = useCourseDetail()
 
   const [isRole, setIsRole] = useState('')
-  const [myRole, setMyRole] = useState<string>(role.students)
   const [isInviteModalOpen, setIsInviteModalOpen] = useState(false)
 
   const [selectedMember, setSelectedMember] = useState<MemberStudent>()
   const [isInfoModalOpen, setIsInfoModalOpen] = useState(false)
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
-
-  const membersData = useQuery({
-    queryKey: ['members', classId],
-    queryFn: () => {
-      return courseApi.getUserInClass(classId as string)
-    },
-    enabled: Boolean(classId)
-  })
-
-  const members = membersData.data?.data.data[0]
-
-  useEffect(() => {
-    if (membersData.isError) {
-      navigate(path.home)
-    } else if (membersData.isSuccess) {
-      const isTeacher = members?.courseTeachers?.some((teacher) => teacher.teacher.id === profile?.id)
-      if (isTeacher) {
-        setMyRole(role.teachers)
-      }
-    }
-  }, [membersData, navigate, members, profile])
 
   const handleClick = (role: string) => {
     setIsInviteModalOpen(true)
@@ -93,13 +71,13 @@ function ClassDetailPeople() {
     <>
       <div className='mb-10'>
         <div className='mb-1 flex h-[72px] items-center justify-between border-b border-b-[#4285f4]'>
-          <h2 className='pl-4 text-[32px] font-normal leading-10 text-third'>{role.teachers}</h2>
-          {myRole === role.teachers && (
+          <h2 className='pl-4 text-[32px] font-normal leading-10 text-third'>{ROLE.TEACHER}</h2>
+          {myRole === ROLE.TEACHER && (
             <IconButton
               Icon={<LuUserPlus />}
               mode='dark'
               tooltip='Mời giáo viên'
-              onClick={() => handleClick(role.teachers)}
+              onClick={() => handleClick(ROLE.TEACHER)}
             />
           )}
         </div>
@@ -122,7 +100,7 @@ function ClassDetailPeople() {
                     render={() => (
                       <>
                         {
-                          <DropdownItem onClick={() => handleClickInfo(member?.teacher, role.teachers)}>
+                          <DropdownItem onClick={() => handleClickInfo(member?.teacher, ROLE.TEACHER)}>
                             Thông tin
                           </DropdownItem>
                         }
@@ -138,7 +116,7 @@ function ClassDetailPeople() {
               </li>
             ))}
           {(!members?.courseTeachers || members.courseTeachers.length === 0) &&
-            membersData.isLoading &&
+            isLoading &&
             Array(2)
               .fill(0)
               .map((_, index) => <Skeleton key={index} className='h-[54px]' />)}
@@ -147,22 +125,22 @@ function ClassDetailPeople() {
 
       <div>
         <div className='mb-1 flex h-[72px] items-center justify-between border-b border-b-[#4285f4]'>
-          <h2 className='pl-4 text-[32px] font-normal leading-10 text-third'>{role.students}</h2>
+          <h2 className='pl-4 text-[32px] font-normal leading-10 text-third'>{ROLE.STUDENT}</h2>
 
           <div className='flex items-center'>
             <span className='pr-6 text-sm font-medium text-third'>{members?.enrollments?.length || 0} Sinh viên</span>
-            {myRole === role.teachers && (
+            {myRole === ROLE.TEACHER && (
               <IconButton
                 Icon={<LuUserPlus />}
                 tooltip='Mời học sinh'
                 mode='dark'
-                onClick={() => handleClick(role.students)}
+                onClick={() => handleClick(ROLE.STUDENT)}
               />
             )}
           </div>
         </div>
         <ul>
-          {members?.enrollments && members.enrollments.length > 0 && myRole === role.teachers
+          {members?.enrollments && members.enrollments.length > 0 && myRole === ROLE.TEACHER
             ? members.enrollments.map((member, index) => (
                 <li
                   key={index}
@@ -171,14 +149,14 @@ function ClassDetailPeople() {
                   <AccountItem
                     className='cursor-default'
                     alt={`user ${index}`}
-                    avatarUrl={member?.student.avatar as string}
-                    name={(member?.student.firstName + ' ' + member?.student.lastName) as string}
+                    avatarUrl={member?.student?.avatar as string}
+                    name={(member?.student?.firstName + ' ' + member?.student?.lastName) as string}
                   />
                   <Dropdown
                     render={() => (
                       <>
                         {
-                          <DropdownItem onClick={() => handleClickInfo(member?.student, role.students)}>
+                          <DropdownItem onClick={() => handleClickInfo(member?.student, ROLE.STUDENT)}>
                             Thông tin
                           </DropdownItem>
                         }
@@ -197,14 +175,14 @@ function ClassDetailPeople() {
                   <AccountItem
                     className='cursor-default'
                     alt={`user ${index}`}
-                    avatarUrl={member?.student.avatar as string}
-                    name={(member?.student.firstName + ' ' + member?.student.lastName) as string}
+                    avatarUrl={member?.student?.avatar as string}
+                    name={(member?.student?.firstName + ' ' + member?.student?.lastName) as string}
                   />
                 </li>
               ))}
 
           {(!members?.enrollments || members.enrollments.length === 0) &&
-            membersData.isLoading &&
+            isLoading &&
             Array(2)
               .fill(0)
               .map((_, index) => <Skeleton key={index} className='h-[56px]' />)}

@@ -1,7 +1,24 @@
 import { useQuery } from '@tanstack/react-query'
 import classNames from 'classnames'
+import isEmpty from 'lodash/isEmpty'
+import { useEffect, useMemo, useState } from 'react'
 import { useEffect } from 'react'
-import { NavLink, Outlet, useNavigate, useParams } from 'react-router-dom'
+import { NavLink, Outlet, useNavigate, useOutletContext, useNavigate, useParams } from 'react-router-dom'
+import courseApi from 'src/apis/courses.api'
+import { useAppDispatch, useAppSelector } from 'src/app/store'
+import { ROLE } from 'src/constants/enums'
+import path from 'src/constants/path'
+import { setBreadcrumbs } from 'src/slices/app.slice'
+import { CourseItem, MembersList } from 'src/types/course.type'
+
+type ContextType = {
+  id: string | undefined
+  data: CourseItem | null
+  refetch: () => void
+  members: MembersList
+  myRole: ROLE
+  isLoading: boolean
+}
 import courseApi from 'src/apis/courses.api'
 import { useAppDispatch, useAppSelector } from 'src/app/store'
 import { Role } from 'src/constants/enums'
@@ -9,6 +26,69 @@ import path from 'src/constants/path'
 import { setRoleInCourses } from 'src/slices/class.slice'
 
 function ClassDetail() {
+  const { classId } = useParams()
+
+  const dispatch = useAppDispatch()
+  const navigate = useNavigate()
+  const { profile } = useAppSelector((state) => state.auth)
+
+  const [myRole, setMyRole] = useState<string>(ROLE.STUDENT)
+
+  const tabs = useMemo(() => {
+    return [
+      {
+        title: 'Bảng tin',
+        path: `/class/${classId}/news`
+      },
+      {
+        title: 'Điểm',
+        path: `/class/${classId}/grade`
+      },
+      {
+        title: 'Mọi người',
+        path: `/class/${classId}/people`
+      }
+    ]
+  }, [classId])
+
+  const getCourseDetailQuery = useQuery({
+    queryKey: ['course-detail', classId],
+    queryFn: () => courseApi.getCourseDetail(classId as string),
+    enabled: Boolean(classId)
+  })
+
+  const courseDetailData = getCourseDetailQuery.data?.data.data
+
+  const membersData = useQuery({
+    queryKey: ['members', classId],
+    queryFn: () => {
+      return courseApi.getUserInClass(classId as string)
+    },
+    enabled: Boolean(classId)
+  })
+
+  const members = membersData.data?.data.data[0]
+
+  useEffect(() => {
+    if (!isEmpty(courseDetailData)) {
+      dispatch(setBreadcrumbs([{ name: courseDetailData.name, path: `/class/${classId}/news` }]))
+    }
+  }, [courseDetailData])
+
+  useEffect(() => {
+    if (membersData.isError) {
+      navigate(path.home)
+    } else if (membersData.isSuccess) {
+      const isTeacher = members?.courseTeachers?.some((teacher) => teacher.teacher.id === profile?.id)
+      if (isTeacher) {
+        setMyRole(ROLE.TEACHER)
+      }
+    }
+  }, [membersData, navigate, members, profile])
+
+  const refetchCourseDetail = () => {
+    getCourseDetailQuery.refetch()
+  }
   const param = useParams()
   const classId = param?.classId
   const dispatch = useAppDispatch()
@@ -79,10 +159,23 @@ function ClassDetail() {
       </nav>
 
       <div className='max-h-[calc(100vh-120px)] overflow-y-auto p-6'>
-        <Outlet />
+        <Outlet
+          context={{
+            id: classId,
+            data: courseDetailData,
+            refetch: refetchCourseDetail,
+            myRole,
+            members,
+            isLoading: getCourseDetailQuery.isLoading || membersData.isLoading
+          }}
+        />
       </div>
     </>
   )
+}
+
+export function useCourseDetail() {
+  return useOutletContext<ContextType>()
 }
 
 export default ClassDetail

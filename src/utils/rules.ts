@@ -22,6 +22,15 @@ const authValidation = {
   address: zod.string().min(1, 'Address is required').max(160, 'Maximum length is 160 characters')
 }
 
+const numberValidation = (data: string) => {
+  if (/^\d+$/.test(data)) {
+    const dataNumber = +data
+
+    if (dataNumber >= 0) return true
+  }
+  return false
+}
+
 export const loginSchema = zod.object({
   email: authValidation.email,
   password: authValidation.password
@@ -97,13 +106,12 @@ export const gradeCompositionSchema = zod.object({
     .string()
     .min(1, 'Scale is required')
     .max(100, 'Maximum length is 100 characters')
-    // .regex(/^\d+$/, 'Scale must be a number')
     .refine(
-      (data) => {
+      (data: string) => {
         if (/^\d+$/.test(data)) {
-          const scaleNumber = +data
+          const dataNumber = +data
 
-          if (scaleNumber > 0) return true
+          if (dataNumber >= 0) return true
         }
         return false
       },
@@ -151,6 +159,27 @@ export const gradeCompositionsSchema = zod
     }
   )
 
+export const gradeSchema = zod.object({
+  studentId: zod.string().min(1, 'Student ID is required').max(100, 'Maximum length is 100 characters'),
+  name: zod.string().min(1, 'Name is required').max(100, 'Maximum length is 100 characters'),
+  grade: zod
+    .string()
+    .min(1, 'Grade is required')
+    .refine(
+      (data: string) => {
+        if (/^\d+$/.test(data)) {
+          const dataNumber = +data
+
+          if (dataNumber >= 0 && dataNumber <= 10) return true
+        }
+        return false
+      },
+      {
+        message: 'Grade must be a number and range [0, 10]'
+      }
+    )
+})
+
 export type InvitationSchema = zod.infer<typeof invitationSchema>
 export type LoginSchema = zod.infer<typeof loginSchema>
 export type RegisterSchema = zod.infer<typeof registerSchema>
@@ -162,3 +191,4 @@ export type ResetPasswordSchema = zod.infer<typeof resetPasswordSchema>
 export type ClassSchema = zod.infer<typeof classSchema>
 export type GradeCompositionSchema = zod.infer<typeof gradeCompositionSchema>
 export type GradeCompositionsSchema = zod.infer<typeof gradeCompositionsSchema>
+export type GradeSchema = zod.infer<typeof gradeSchema>

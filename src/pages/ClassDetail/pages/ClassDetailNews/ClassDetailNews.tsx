@@ -5,25 +5,17 @@ import IconButton from 'src/components/IconButton'
 import { FaCircleInfo } from 'react-icons/fa6'
 import { useState } from 'react'
 import classNames from 'classnames'
-import { useParams } from 'react-router-dom'
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation } from '@tanstack/react-query'
 import courseApi from 'src/apis/courses.api'
 import Skeleton from 'react-loading-skeleton'
 import { FaPencilAlt } from 'react-icons/fa'
 import { toast } from 'react-toastify'
 import { LuCheck, LuCopy } from 'react-icons/lu'
 import { Role } from 'src/constants/enums'
-// src/Tiptap.jsx
-// import { EditorProvider, FloatingMenu, BubbleMenu } from '@tiptap/react'
-// eslint-disable-next-line import/no-named-as-default
-// import StarterKit from '@tiptap/starter-kit'
-
-// define your extension array
-// const extensions = [StarterKit]
-
-// const content = '<p>Hello World!</p>'
+import { useCourseDetail } from '../../ClassDetail'
 
 function ClassDetailNews() {
+  const { id: classId, data: courseDetailData, refetch: refetchCourseDetail } = useCourseDetail()
   const param = useParams()
   const classId = param?.classId
   const { roleInCourse } = useAppSelector((state) => state.class)
@@ -41,7 +33,7 @@ function ClassDetailNews() {
     mutationFn: (body: FormData) => courseApi.uploadBackground(classId as string, body),
     onSuccess: () => {
       toast.success('Thay đổi hình nền thành công!')
-      getCourseDetailQuery.refetch()
+      refetchCourseDetail()
     }
   })
 

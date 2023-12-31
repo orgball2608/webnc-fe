@@ -5,6 +5,7 @@ import Skeleton from 'react-loading-skeleton'
 import courseApi from 'src/apis/courses.api'
 import { useAppDispatch } from 'src/app/store'
 import ClassCard from 'src/components/ClassCard'
+import { clearBreadcrumbs } from 'src/slices/app.slice'
 import { setMyClass } from 'src/slices/class.slice'
 import { CourseItem } from 'src/types/course.type'
 
@@ -26,6 +27,10 @@ function Homepage() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [courseList])
+
+  useEffect(() => {
+    dispatch(clearBreadcrumbs())
+  }, [])
 
   return (
     <>
