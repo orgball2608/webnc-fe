@@ -1,11 +1,12 @@
-import { CourseItem, CourseStudentTeacher } from 'src/types/course.type'
-import { User } from 'src/types/user.type'
-import { ResponseApi } from 'src/types/utils.type'
-import http from 'src/utils/http'
 import { ClassCodeSchema, ClassSchema, InvitationSchema } from 'src/utils/rules'
+import { CourseItem, CourseStudentTeacher } from 'src/types/course.type'
+
+import { ResponseApi } from 'src/types/utils.type'
+import { User } from 'src/types/user.type'
+import http from 'src/utils/http'
 
 const PREFIX = 'courses/'
-const URL_GETCOURSEOFME = PREFIX + 'my-courses/list'
+const URL_GETCOURSEOFME = PREFIX + 'my-courses'
 const URL_CREATE_COURSE = PREFIX
 const URL_INVITE_BY_EMAIL = PREFIX + 'invite/email'
 
@@ -22,7 +23,7 @@ const courseApi = {
     >(`courses/${classId}/users`)
   },
   checkEnrolled: (classId: string) => {
-    return http.get(`courses/checkEnrolled/${classId}`)
+    return http.get(`courses/enrollment-status/${classId}`)
   },
   //add user to class
   addUserToClass: (classId: string) => {
