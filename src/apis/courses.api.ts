@@ -1,9 +1,7 @@
 import { CourseItem, CourseStudentTeacher, MembersList } from 'src/types/course.type'
 import { ClassCodeSchema, ClassSchema, InvitationSchema } from 'src/utils/rules'
-import { CourseItem, CourseStudentTeacher } from 'src/types/course.type'
 
 import { ResponseApi } from 'src/types/utils.type'
-import { User } from 'src/types/user.type'
 import http from 'src/utils/http'
 
 const PREFIX = 'courses/'

@@ -1,4 +1,4 @@
-import { Grade } from 'src/types/grade.type'
+import { Grade, GradeBoard } from 'src/types/grade.type'
 import { ResponseApi } from 'src/types/utils.type'
 import http from 'src/utils/http'
 import { GradeCompositionSchema } from 'src/utils/rules'
@@ -7,7 +7,7 @@ export type GradeRequestBody = Omit<GradeCompositionSchema, 'scale'> & { scale: 
 
 const PREFIX = 'courses/'
 
-const gradeCompositionApi = {
+const gradeApi = {
   getGrades: (courseId: string, compositionId: string) => {
     return http.get<ResponseApi<Grade[]>>(`${PREFIX}${courseId}/grade-compositions/${compositionId}/grades`)
   },
@@ -25,7 +25,10 @@ const gradeCompositionApi = {
   },
   deleteGrade: (courseId: string, compositionId: string, gradeId: string) => {
     return http.delete<ResponseApi<Grade>>(`${PREFIX}${courseId}/grade-compositions/${compositionId}/grades/${gradeId}`)
+  },
+  getGradeBoard: (courseId: string) => {
+    return http.get<ResponseApi<GradeBoard>>(`${PREFIX}${courseId}/grade-boards/final`)
   }
 }
 
-export default gradeCompositionApi
+export default gradeApi

@@ -11,6 +11,8 @@ import Papa from 'papaparse'
 import { CgExport, CgImport } from 'react-icons/cg'
 import ModalPreviewCSV from './ModalPreviewCSV'
 import GradeBoardTable from './GradeBoardTable'
+import gradeApi from 'src/apis/grade.api'
+import { GradeBoard } from 'src/types/grade.type'
 
 export default function ClassDetailGrade() {
   const { id: classId, data: courseDetailData } = useCourseDetail()
@@ -25,6 +27,14 @@ export default function ClassDetailGrade() {
     queryFn: () => gradeCompositionApi.getGradeCompositions(classId as string),
     enabled: Boolean(classId)
   })
+
+  const getGradeBoardQuery = useQuery({
+    queryKey: ['courses', classId, 'grade-boards/final'],
+    queryFn: () => gradeApi.getGradeBoard(classId as string),
+    enabled: Boolean(classId)
+  })
+
+  const gradeBoardData = getGradeBoardQuery.data?.data.data
 
   const gradeCompositionsCSVDataExport = useMemo(() => {
     if (gradeCompositions && gradeCompositions.length > 0) {
@@ -96,11 +106,11 @@ export default function ClassDetailGrade() {
             </div>
           </div>
           <div className='flex flex-col items-center justify-between gap-4 md:flex-row'>
-            <div className='w-full md:w-72'>
+            {/* <div className='w-full md:w-72'>
               <Input label='Search' icon={<IoSearchOutline className='h-5 w-5' />} />
-            </div>
+            </div> */}
 
-            <div className='flex shrink-0 flex-col items-center gap-2 sm:flex-row'>
+            <div className='ml-auto flex shrink-0 flex-col items-center gap-2 sm:flex-row'>
               <div>
                 <input hidden id='read-csv-input' type='file' name='file' accept='.csv' onChange={changeHandler} />
 
@@ -128,7 +138,7 @@ export default function ClassDetailGrade() {
         </CardHeader>
         <CardBody className='overflow-auto px-0'>
           <GradeBoardTable
-            gradeCompositions={gradeCompositions}
+            gradeBoardData={gradeBoardData as GradeBoard}
             setIsOpenModalAddGradeCompositions={setIsOpenModalAddGradeCompositions}
             setIsOpenModalEditGradeCompositions={setIsOpenModalEditGradeCompositions}
             setIsOpenModalSortGradeCompositions={setIsOpenModalSortGradeCompositions}
