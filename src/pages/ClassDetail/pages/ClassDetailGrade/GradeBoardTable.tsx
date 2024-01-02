@@ -135,7 +135,7 @@ function GradeBoardTable({
             const studentId = Number(row[1])
             const fullName = String(row[2])
 
-            if (extendedGradeBoardDataObject[+studentId]) {
+            if (extendedGradeBoardDataObject[studentId]) {
               const studentExistIndex = extendedGradeBoardData.rows.findIndex(
                 (row) => row.studentId === String(studentId)
               )
