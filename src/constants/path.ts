@@ -14,10 +14,12 @@ const path = {
     prefix: classDetailPrefix,
     news: classDetailPrefix + '/news',
     grade: classDetailPrefix + '/grade',
-    people: classDetailPrefix + '/people'
+    people: classDetailPrefix + '/people',
+    review: classDetailPrefix + '/review'
   },
   invite: classDetailPrefix + '/invite',
-  invitationEmail: 'class/join'
+  invitationEmail: 'class/join',
+  notFound: '/not-found'
 } as const
 
 export default path

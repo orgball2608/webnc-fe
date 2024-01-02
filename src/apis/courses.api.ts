@@ -3,6 +3,7 @@ import { ClassCodeSchema, ClassSchema, InvitationSchema } from 'src/utils/rules'
 
 import { ResponseApi } from 'src/types/utils.type'
 import http from 'src/utils/http'
+import { Role } from 'src/constants/enums'
 
 const PREFIX = 'courses/'
 const URL_GETCOURSEOFME = PREFIX + 'my-courses'
@@ -54,6 +55,10 @@ const courseApi = {
 
   joinCourseByCode: (body: ClassCodeSchema) => {
     return http.post<ResponseApi<CourseStudentTeacher>>(PREFIX + 'join-by-code', body)
+  },
+
+  getRoleInCourse: ({ courseId, userId }: { courseId: string; userId: string }) => {
+    return http.get<ResponseApi<Role>>(PREFIX + `${courseId}/get-role/${userId}`)
   }
 }
 

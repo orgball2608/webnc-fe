@@ -22,6 +22,8 @@ import ClassDetail, {
   ClassDetailInvite
 } from './pages/ClassDetail'
 import { setInvitationLink } from './slices/class.slice'
+import { ClassDetailReview } from './pages/ClassDetail/pages/ClassDetailReview'
+import { Role } from './constants/enums'
 
 function ProtectedRoutes() {
   const location = useLocation()
@@ -47,6 +49,11 @@ function RejectedRoutes() {
   const { invitationLink } = useAppSelector((state) => state.class)
 
   return !isAuthenticated ? <Outlet /> : <Navigate to={invitationLink || path.home} />
+}
+
+function ProtectedRouteOfTeacher() {
+  const { roleInCourse } = useAppSelector((state) => state.class)
+  return roleInCourse.role === Role.STUDENT ? <Navigate to={path.notFound} /> : <Outlet />
 }
 
 function useRouteElements() {
@@ -110,6 +117,16 @@ function useRouteElements() {
                 {
                   path: path.classDetail.people,
                   element: <ClassDetailPeople />
+                },
+                {
+                  path: path.classDetail.review,
+                  element: <ProtectedRouteOfTeacher />,
+                  children: [
+                    {
+                      path: path.classDetail.review,
+                      element: <ClassDetailReview />
+                    }
+                  ]
                 }
               ]
             },
