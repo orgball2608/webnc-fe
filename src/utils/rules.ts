@@ -32,15 +32,6 @@ const numberValidation = (data: string) => {
   return false
 }
 
-const numberValidation = (data: string) => {
-  if (/^\d+$/.test(data)) {
-    const dataNumber = +data
-
-    if (dataNumber >= 0) return true
-  }
-  return false
-}
-
 export const loginSchema = zod.object({
   email: authValidation.email,
   password: authValidation.password

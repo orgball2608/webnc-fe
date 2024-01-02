@@ -29,6 +29,7 @@ function ClassDetail() {
   const { profile } = useAppSelector((state) => state.auth)
 
   const [myRole, setMyRole] = useState<string>(Role.STUDENT)
+  console.log(myRole)
 
   const tabs = useMemo(() => {
     return [
