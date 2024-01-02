@@ -1,18 +1,21 @@
-import { IoSearchOutline } from 'react-icons/io5'
-import { Card, CardHeader, Input, Typography, Button, CardBody, CardFooter } from '@material-tailwind/react'
+import { Card, CardHeader, Typography, Button, CardBody, CardFooter } from '@material-tailwind/react'
 import { useEffect, useMemo, useState } from 'react'
 import ModalManageGrade from 'src/components/ModalManageGrade'
 import { useQuery } from '@tanstack/react-query'
 import gradeCompositionApi from 'src/apis/grade-composition.api'
 import { GradeComposition } from 'src/types/grade-composition.type'
-import { CSVLink } from 'react-csv'
 import { useCourseDetail } from '../../ClassDetail'
-import Papa from 'papaparse'
-import { CgExport, CgImport } from 'react-icons/cg'
+import { CgExport } from 'react-icons/cg'
 import ModalPreviewCSV from './ModalPreviewCSV'
 import GradeBoardTable from './GradeBoardTable'
 import gradeApi from 'src/apis/grade.api'
 import { GradeBoard } from 'src/types/grade.type'
+import excelApi from 'src/apis/excel.api'
+import { downloadFile } from 'src/utils/utils'
+
+export const HEADER_INDEX_KEY = 'index'
+export const HEADER_STUDENT_ID_KEY = 'studentId'
+export const HEADER_FULLNAME_KEY = 'fullName'
 
 export default function ClassDetailGrade() {
   const { id: classId, data: courseDetailData } = useCourseDetail()
@@ -36,16 +39,11 @@ export default function ClassDetailGrade() {
 
   const gradeBoardData = getGradeBoardQuery.data?.data.data
 
-  const gradeCompositionsCSVDataExport = useMemo(() => {
-    if (gradeCompositions && gradeCompositions.length > 0) {
-      const headers = gradeCompositions.map((gradeComposition) => {
-        return gradeComposition.name
-      })
-
-      return [headers]
-    }
-    return []
-  }, [gradeCompositions])
+  const downloadGradeBoardQuery = useQuery({
+    queryKey: ['grade-board'],
+    queryFn: () => excelApi.exportGradeboard(classId as string),
+    enabled: false
+  })
 
   useEffect(() => {
     const gradeCompositions = getGradeCompositionsQuery.data?.data.data
@@ -59,37 +57,15 @@ export default function ClassDetailGrade() {
     setGradeCompositions(newData)
   }
 
-  // Import CSV
-  const changeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0]
-    if (file) {
-      Papa.parse(file, {
-        header: true,
-        skipEmptyLines: true,
-        complete: function (results) {
-          const rowsArray = []
-          const valuesArray = []
+  const exportGradesBoardFile = async () => {
+    try {
+      const res = await downloadGradeBoardQuery.refetch()
 
-          console.log(results)
-
-          // Iterating data to get column name and their values
-          // results.data.map((d) => {
-          //   rowsArray.push(Object.keys(d));
-          //   valuesArray.push(Object.values(d));
-          // });
-          // console.log(rowsArray, valuesArray);
-
-          // // Parsed Data Response in array format
-          // setParsedData(results.data);
-
-          // // Filtered Column Names
-          // setTableRows(rowsArray[0]);
-
-          // // Filtered Values
-          // setValues(valuesArray);
-        }
-      })
-    }
+      if (res && res.data?.data) {
+        const outputFileName = `${courseDetailData?.name + '-' || ''}Gradeboard.xlsx`
+        downloadFile(res.data.data, outputFileName)
+      }
+    } catch (error) {}
   }
 
   return !classId ? (
@@ -111,28 +87,12 @@ export default function ClassDetailGrade() {
             </div> */}
 
             <div className='ml-auto flex shrink-0 flex-col items-center gap-2 sm:flex-row'>
-              <div>
-                <input hidden id='read-csv-input' type='file' name='file' accept='.csv' onChange={changeHandler} />
-
-                <label
-                  className='flex h-[42px] cursor-pointer select-none items-center gap-2 rounded-lg border border-gray-900 px-6 py-3 text-center align-middle font-sans text-xs font-bold uppercase text-gray-900 transition-all hover:opacity-75 focus:ring focus:ring-gray-300 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none'
-                  htmlFor='read-csv-input'
-                >
-                  <span className='relative top-[-1px] text-lg'>
-                    <CgImport />
-                  </span>
-                  Import
-                </label>
-              </div>
-
-              <CSVLink data={gradeCompositionsCSVDataExport} filename={`${courseDetailData?.name}.csv`}>
-                <Button className='flex items-center gap-2' size='md'>
-                  <span className='relative top-[-1px] text-lg'>
-                    <CgExport />
-                  </span>
-                  Export
-                </Button>
-              </CSVLink>
+              <Button className='flex items-center gap-2' size='md' onClick={exportGradesBoardFile}>
+                <span className='relative top-[-1px] text-lg'>
+                  <CgExport />
+                </span>
+                Export grade board
+              </Button>
             </div>
           </div>
         </CardHeader>
@@ -144,7 +104,7 @@ export default function ClassDetailGrade() {
             setIsOpenModalSortGradeCompositions={setIsOpenModalSortGradeCompositions}
           />
         </CardBody>
-        <CardFooter className='flex items-center justify-between border-t border-blue-gray-50 p-4'>
+        {/* <CardFooter className='flex items-center justify-between border-t border-blue-gray-50 p-4'>
           <Typography variant='small' color='blue-gray' className='font-normal'>
             Page 1 of 10
           </Typography>
@@ -156,7 +116,7 @@ export default function ClassDetailGrade() {
               Next
             </Button>
           </div>
-        </CardFooter>
+        </CardFooter> */}
       </Card>
 
       {/* Edit modal */}
@@ -186,8 +146,6 @@ export default function ClassDetailGrade() {
         gradeCompositions={gradeCompositions as GradeComposition[]}
         setNewGradeCompositions={setNewGradeCompositions}
       />
-
-      <ModalPreviewCSV />
     </>
   )
 }

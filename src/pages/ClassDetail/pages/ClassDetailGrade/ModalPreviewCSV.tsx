@@ -1,4 +1,4 @@
-import { useId, useState } from 'react'
+import { useId } from 'react'
 import {
   FloatingFocusManager,
   FloatingOverlay,
@@ -10,10 +10,23 @@ import {
   useRole
 } from '@floating-ui/react'
 import { IoClose } from 'react-icons/io5'
+import { Button, Typography } from '@material-tailwind/react'
+import { motion } from 'framer-motion'
+import { HEADER_FULLNAME_KEY, HEADER_INDEX_KEY, HEADER_STUDENT_ID_KEY } from './ClassDetailGrade'
+import { GradeBoardHeaderItem } from 'src/types/grade.type'
+import { CSVDataType } from './GradeBoardTable'
 
-function ModalPreviewCSV() {
-  const [isOpen, setIsOpen] = useState(false)
+interface Props {
+  isOpen: boolean
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>
+  CSVData: CSVDataType
+  gradeCompositions: GradeBoardHeaderItem[]
+  isLoading: boolean
+  onSubmit: () => Promise<void>
+  disabled: boolean
+}
 
+function ModalPreviewCSV({ isOpen, setIsOpen, CSVData, gradeCompositions, isLoading, disabled, onSubmit }: Props) {
   const { refs, context } = useFloating({
     open: isOpen,
     onOpenChange: setIsOpen
@@ -21,12 +34,12 @@ function ModalPreviewCSV() {
 
   const click = useClick(context)
   const dismiss = useDismiss(context, {
-    outsidePressEvent: 'mousedown'
+    outsidePress: false
   })
   const role = useRole(context)
 
   // Merge all the interactions into prop getters
-  const { getReferenceProps, getFloatingProps } = useInteractions([click, dismiss, role])
+  const { getFloatingProps } = useInteractions([click, dismiss, role])
 
   // Set up label and description ids
   const labelId = useId()
@@ -34,129 +47,158 @@ function ModalPreviewCSV() {
 
   return (
     <>
-      <button ref={refs.setReference} {...getReferenceProps()}>
-        Reference element
-      </button>
       <FloatingPortal>
         {isOpen && (
           <FloatingOverlay lockScroll className='z-[9999] bg-white'>
             <FloatingFocusManager context={context}>
-              <div
-                ref={refs.setFloating}
-                aria-labelledby={labelId}
-                aria-describedby={descriptionId}
-                {...getFloatingProps()}
-                className='h-full w-full'
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.3 }}
               >
-                <div className='overflow-x-aut o relative shadow-md sm:rounded-lg'>
-                  <table className='w-full text-left text-sm text-gray-500 rtl:text-right dark:text-gray-400'>
-                    <thead className='bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400'>
-                      <tr>
-                        <th scope='col' className='px-6 py-3'>
-                          Product name
-                        </th>
-                        <th scope='col' className='px-6 py-3'>
-                          Color
-                        </th>
-                        <th scope='col' className='px-6 py-3'>
-                          Category
-                        </th>
-                        <th scope='col' className='px-6 py-3'>
-                          Price
-                        </th>
-                        <th scope='col' className='px-6 py-3'>
-                          Action
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr className='border-b odd:bg-white even:bg-gray-50 dark:border-gray-700 odd:dark:bg-gray-900 even:dark:bg-gray-800'>
-                        <th
-                          scope='row'
-                          className='whitespace-nowrap px-6 py-4 font-medium text-gray-900 dark:text-white'
-                        >
-                          Apple MacBook Pro 17"
-                        </th>
-                        <td className='px-6 py-4'>Silver</td>
-                        <td className='px-6 py-4'>Laptop</td>
-                        <td className='px-6 py-4'>$2999</td>
-                        <td className='px-6 py-4'>
-                          <a href='#' className='text-blue-600 dark:text-blue-500 font-medium hover:underline'>
-                            Edit
-                          </a>
-                        </td>
-                      </tr>
-                      <tr className='border-b odd:bg-white even:bg-gray-50 dark:border-gray-700 odd:dark:bg-gray-900 even:dark:bg-gray-800'>
-                        <th
-                          scope='row'
-                          className='whitespace-nowrap px-6 py-4 font-medium text-gray-900 dark:text-white'
-                        >
-                          Microsoft Surface Pro
-                        </th>
-                        <td className='px-6 py-4'>White</td>
-                        <td className='px-6 py-4'>Laptop PC</td>
-                        <td className='px-6 py-4'>$1999</td>
-                        <td className='px-6 py-4'>
-                          <a href='#' className='text-blue-600 dark:text-blue-500 font-medium hover:underline'>
-                            Edit
-                          </a>
-                        </td>
-                      </tr>
-                      <tr className='border-b odd:bg-white even:bg-gray-50 dark:border-gray-700 odd:dark:bg-gray-900 even:dark:bg-gray-800'>
-                        <th
-                          scope='row'
-                          className='whitespace-nowrap px-6 py-4 font-medium text-gray-900 dark:text-white'
-                        >
-                          Magic Mouse 2
-                        </th>
-                        <td className='px-6 py-4'>Black</td>
-                        <td className='px-6 py-4'>Accessories</td>
-                        <td className='px-6 py-4'>$99</td>
-                        <td className='px-6 py-4'>
-                          <a href='#' className='text-blue-600 dark:text-blue-500 font-medium hover:underline'>
-                            Edit
-                          </a>
-                        </td>
-                      </tr>
-                      <tr className='border-b odd:bg-white even:bg-gray-50 dark:border-gray-700 odd:dark:bg-gray-900 even:dark:bg-gray-800'>
-                        <th
-                          scope='row'
-                          className='whitespace-nowrap px-6 py-4 font-medium text-gray-900 dark:text-white'
-                        >
-                          Google Pixel Phone
-                        </th>
-                        <td className='px-6 py-4'>Gray</td>
-                        <td className='px-6 py-4'>Phone</td>
-                        <td className='px-6 py-4'>$799</td>
-                        <td className='px-6 py-4'>
-                          <a href='#' className='text-blue-600 dark:text-blue-500 font-medium hover:underline'>
-                            Edit
-                          </a>
-                        </td>
-                      </tr>
-                      <tr>
-                        <th
-                          scope='row'
-                          className='whitespace-nowrap px-6 py-4 font-medium text-gray-900 dark:text-white'
-                        >
-                          Apple Watch 5
-                        </th>
-                        <td className='px-6 py-4'>Red</td>
-                        <td className='px-6 py-4'>Wearables</td>
-                        <td className='px-6 py-4'>$999</td>
-                        <td className='px-6 py-4'>
-                          <a href='#' className='text-blue-600 dark:text-blue-500 font-medium hover:underline'>
-                            Edit
-                          </a>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
+                <div
+                  ref={refs.setFloating}
+                  aria-labelledby={labelId}
+                  aria-describedby={descriptionId}
+                  {...getFloatingProps()}
+                  className='h-full w-full'
+                >
+                  <div className='my-auto flex max-h-screen flex-col items-center px-10 py-4'>
+                    <Typography variant='h2' className='mb-3 text-center text-3xl'>
+                      Preview {CSVData?.fileName}
+                    </Typography>
+
+                    <div className='relative w-full flex-1 overflow-auto shadow-md sm:rounded-lg'>
+                      {isLoading ? (
+                        <div className='text-center'>Loading...</div>
+                      ) : (
+                        <table className='mt-4 w-full min-w-max table-auto text-left'>
+                          <thead>
+                            <tr>
+                              {CSVData?.data?.headers && CSVData.data.headers.length > 0 ? (
+                                CSVData.data.headers.map((header) => {
+                                  if (header.key === HEADER_STUDENT_ID_KEY) return
+
+                                  if (header.key === HEADER_FULLNAME_KEY) {
+                                    return (
+                                      <th
+                                        key={header.key}
+                                        className='border-y border-blue-gray-100 bg-blue-gray-50/50 p-4'
+                                      >
+                                        <div className='flex gap-2'>
+                                          <Typography
+                                            variant='small'
+                                            color='blue-gray'
+                                            className='text-base font-bold leading-none'
+                                          >
+                                            Học sinh
+                                          </Typography>
+                                        </div>
+                                      </th>
+                                    )
+                                  }
+
+                                  return (
+                                    <th
+                                      key={header.key}
+                                      className='border-y border-blue-gray-100 bg-blue-gray-50/50 p-4'
+                                    >
+                                      <div className='flex gap-2'>
+                                        <Typography
+                                          variant='small'
+                                          color='blue-gray'
+                                          className='text-base font-bold leading-none'
+                                        >
+                                          {header.label}{' '}
+                                          {header.key !== HEADER_INDEX_KEY && ` (${header.metaData?.scale}%)`}
+                                        </Typography>
+                                      </div>
+                                    </th>
+                                  )
+                                })
+                              ) : (
+                                <th></th>
+                              )}
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {CSVData?.data?.rows && CSVData.data.rows.length > 0 ? (
+                              CSVData.data.rows.map((row, index) => {
+                                const isLast = index === CSVData.data.rows.length - 1
+                                const classes = isLast
+                                  ? 'p-4 text-center'
+                                  : 'p-4 border-b border-blue-gray-50 text-center'
+
+                                return (
+                                  <tr key={row.index}>
+                                    <td className={classes}>
+                                      <Typography variant='small' color='blue-gray' className='font-normal'>
+                                        {index + 1}
+                                      </Typography>
+                                    </td>
+                                    <td className={`${classes} !text-left`}>
+                                      <div className='flex items-center gap-3'>
+                                        <div className='flex flex-col'>
+                                          <Typography variant='small' color='blue-gray' className='font-normal'>
+                                            {row.studentId}
+                                          </Typography>
+                                          <Typography
+                                            variant='small'
+                                            color='blue-gray'
+                                            className='font-normal opacity-70'
+                                          >
+                                            {row.fullName}
+                                          </Typography>
+                                        </div>
+                                      </div>
+                                    </td>
+
+                                    {gradeCompositions.map((gradeComposition) => (
+                                      <td key={gradeComposition.key} className={classes}>
+                                        <div className='group flex items-center justify-center gap-2'>
+                                          <Typography variant='small' color='blue-gray' className='font-normal'>
+                                            {row?.[gradeComposition.key] || 0}
+                                          </Typography>
+                                        </div>
+                                      </td>
+                                    ))}
+                                  </tr>
+                                )
+                              })
+                            ) : (
+                              <tr className='text-center'>NO DATA</tr>
+                            )}
+                          </tbody>
+                        </table>
+                      )}
+                    </div>
+
+                    <div className='mt-8 flex w-full max-w-[400px] items-center justify-center gap-8'>
+                      <Button
+                        onClick={() => setIsOpen(false)}
+                        variant='outlined'
+                        className='flex-1 text-sm'
+                        disabled={disabled}
+                      >
+                        Hủy bỏ
+                      </Button>
+                      <Button
+                        variant='filled'
+                        className='flex-1 bg-primary text-sm'
+                        onClick={onSubmit}
+                        disabled={disabled}
+                      >
+                        Tải lên
+                      </Button>
+                    </div>
+
+                    <button onClick={() => setIsOpen(false)} className='absolute right-0 top-0 p-3 text-[36px]'>
+                      <IoClose />
+                    </button>
+                  </div>
                 </div>
-                <button onClick={() => setIsOpen(false)} className='absolute right-0 top-0 p-3 text-[36px]'>
-                  <IoClose />
-                </button>
-              </div>
+              </motion.div>
             </FloatingFocusManager>
           </FloatingOverlay>
         )}

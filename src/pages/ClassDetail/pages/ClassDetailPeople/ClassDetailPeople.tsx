@@ -92,8 +92,8 @@ function ClassDetailPeople() {
                 <AccountItem
                   className='cursor-default'
                   alt={`teacher ${index}`}
-                  avatarUrl={member?.teacher.avatar as string}
-                  name={(member?.teacher.firstName + ' ' + member?.teacher.lastName) as string}
+                  avatarUrl={member?.teacher?.avatar as string}
+                  name={(member?.teacher?.firstName + ' ' + member?.teacher?.lastName) as string}
                 />
                 {members.createdById === profile?.id && member.teacher.id !== profile?.id && (
                   <Dropdown
