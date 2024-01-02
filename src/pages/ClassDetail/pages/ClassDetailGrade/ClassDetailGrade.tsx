@@ -146,6 +146,8 @@ export default function ClassDetailGrade() {
         gradeCompositions={gradeCompositions as GradeComposition[]}
         setNewGradeCompositions={setNewGradeCompositions}
       />
+
+      <ModalPreviewCSV />
     </>
   )
 }
