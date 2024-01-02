@@ -30,6 +30,7 @@ type DataGradeUpdate = GradeBoardHeaderItem & {
 export type CSVDataType = {
   fileName: string
   data: GradeBoard
+  gradeCompositionId?: number
 }
 
 function GradeBoardTable({
@@ -47,6 +48,7 @@ function GradeBoardTable({
   const [isOpenModalPreviewCSV, setIsOpenModalPreviewCSV] = useState(false)
   const [isLoadingCSV, setIsLoadingCSV] = useState(false)
   const [studentsFile, setStudentsFile] = useState<File | null>(null)
+  const [gradesFile, setGradesFile] = useState<File | null>(null)
 
   const totalScale = useMemo(() => {
     if (gradeBoardData && gradeBoardData.headers && gradeBoardData.headers.length > 0) {
@@ -74,12 +76,17 @@ function GradeBoardTable({
 
   const downloadGradesTemplateQuery = useQuery({
     queryKey: ['grades-template'],
-    queryFn: () => excelApi.exportGradesTemplate(courseDetailData?.id.toString() as string),
+    queryFn: () => excelApi.exportGradesTemplate(String(courseDetailData?.id)),
     enabled: false
   })
 
   const uploadStudentsFileMutation = useMutation({
-    mutationFn: (body: FormData) => excelApi.importStudentsFile(courseDetailData?.id.toString() as string, body)
+    mutationFn: (body: FormData) => excelApi.importStudentsFile(String(courseDetailData?.id), body)
+  })
+
+  const uploadGradesFileMutation = useMutation({
+    mutationFn: ({ gradeCompositionId, body }: { gradeCompositionId: number; body: FormData }) =>
+      excelApi.importGrades(String(courseDetailData?.id), gradeCompositionId, body)
   })
 
   useEffect(() => {
@@ -94,18 +101,18 @@ function GradeBoardTable({
       const res = await downloadStudentsTemplateQuery.refetch()
 
       if (res && res.data?.data) {
-        const outputFileName = `${courseDetailData?.name + '-' || ''}Students-Template.xlsx`
+        const outputFileName = `${courseDetailData?.name}Students-Template.xlsx`
         downloadFile(res.data.data, outputFileName)
       }
     } catch (error) {}
   }
 
-  const exportGradesTemplateFile = async () => {
+  const exportGradesTemplateFile = async (compositionName: string) => {
     try {
       const res = await downloadGradesTemplateQuery.refetch()
 
       if (res && res.data?.data) {
-        const outputFileName = `${courseDetailData?.name + '-' || ''}Grades-Template.xlsx`
+        const outputFileName = `${courseDetailData?.name}-${compositionName}-Template.xlsx`
         downloadFile(res.data.data, outputFileName)
       }
     } catch (error) {}
@@ -129,13 +136,13 @@ function GradeBoardTable({
         const extendedGradeBoardDataObject = keyBy(gradeBoardData?.rows, 'studentId')
 
         setDataCSVPreview(() => {
-          let extendedGradeBoardData = cloneDeep(gradeBoardData)
+          const extendedGradeBoardData = cloneDeep(gradeBoardData)
 
           fileRows.slice(1).forEach((row) => {
             const studentId = Number(row[1])
             const fullName = String(row[2])
 
-            if (extendedGradeBoardDataObject[+studentId]) {
+            if (extendedGradeBoardDataObject[studentId]) {
               const studentExistIndex = extendedGradeBoardData.rows.findIndex(
                 (row) => row.studentId === String(studentId)
               )
@@ -168,7 +175,7 @@ function GradeBoardTable({
     }
   }
 
-  const onSubmitUploadStudenstFile = async () => {
+  const onSubmitUploadFile = async () => {
     if (studentsFile) {
       const body = new FormData()
       body.append('file', studentsFile)
@@ -179,8 +186,67 @@ function GradeBoardTable({
         queryKey: ['courses', courseDetailData?.id.toString(), 'grade-boards/final']
       })
       toast.success('Tải lên danh sách sinh viên thành công!')
+    } else if (gradesFile && dataCSVPreview?.gradeCompositionId) {
+      const body = new FormData()
+      body.append('file', gradesFile)
+      await uploadGradesFileMutation.mutateAsync({ gradeCompositionId: dataCSVPreview.gradeCompositionId, body })
+      setIsOpenModalPreviewCSV(false)
+
+      await queryClient.invalidateQueries({
+        queryKey: ['courses', courseDetailData?.id.toString(), 'grade-boards/final']
+      })
+      toast.success('Tải lên danh sách điểm thành công!')
     }
   }
+
+  const onChangeGradesInputFile =
+    (gradeCompositionId: number) => async (event: React.ChangeEvent<HTMLInputElement>) => {
+      console.log(gradeCompositionId)
+
+      const file = event.target.files?.[0]
+
+      if (file) {
+        const ext = getExtension(file.name)
+        const compositionName = gradeBoardData.headers.find((header) => header.metaData?.id === gradeCompositionId)
+          ?.key as string
+
+        console.log(compositionName)
+
+        setGradesFile(file)
+
+        if (!['xlsx', 'xls', 'csv'].includes(ext)) {
+          toast.error('Vui lòng tải file đúng định dạng!')
+          return
+        }
+
+        setIsOpenModalPreviewCSV(true)
+
+        const fileRows = await readXlsxFile(file)
+
+        setDataCSVPreview(() => {
+          const extendedGradeBoardData = cloneDeep(gradeBoardData)
+
+          for (const row of extendedGradeBoardData.rows) {
+            for (let i = 1; i < fileRows.length; i++) {
+              const grade = Number(fileRows[i][2])
+              const studentId = String(fileRows[i][1])
+
+              if (row.studentId === studentId) {
+                row[compositionName] = grade
+                break
+              }
+            }
+          }
+
+          return { gradeCompositionId, fileName: file.name, data: extendedGradeBoardData }
+        })
+
+        try {
+        } catch (error) {
+          if (error instanceof Error) toast.error(error.message)
+        }
+      }
+    }
 
   return (
     <>
@@ -255,7 +321,7 @@ function GradeBoardTable({
 
                           <Tooltip content='Tải xuống mẫu điểm thành phần'>
                             <button
-                              onClick={exportGradesTemplateFile}
+                              onClick={() => exportGradesTemplateFile(header.label)}
                               className='relative top-[-3px] cursor-pointer text-lg transition-all duration-300 hover:text-blue-gray-400'
                             >
                               <CgExport />
@@ -267,7 +333,7 @@ function GradeBoardTable({
                             type='file'
                             accept='.csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel'
                             hidden
-                            onChange={onChangeStudentsInputFile}
+                            onChange={onChangeGradesInputFile(header.metaData?.id as number)}
                             onClick={(event) => {
                               ;(event.target as any).value = null
                             }}
@@ -408,8 +474,8 @@ function GradeBoardTable({
         isOpen={isOpenModalPreviewCSV}
         setIsOpen={setIsOpenModalPreviewCSV}
         isLoading={isLoadingCSV}
-        onSubmit={onSubmitUploadStudenstFile}
-        disabled={uploadStudentsFileMutation.isPending}
+        onSubmit={onSubmitUploadFile}
+        disabled={uploadStudentsFileMutation.isPending || uploadGradesFileMutation.isPending}
       />
     </>
   )
