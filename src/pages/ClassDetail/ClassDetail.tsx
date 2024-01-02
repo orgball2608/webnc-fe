@@ -6,7 +6,7 @@ import { NavLink, Outlet, useNavigate, useOutletContext, useParams } from 'react
 import courseApi from 'src/apis/courses.api'
 import { useAppDispatch, useAppSelector } from 'src/app/store'
 import path from 'src/constants/path'
-import { setBreadcrumbs } from 'src/slices/app.slice'
+import { clearBreadcrumbs, setBreadcrumbs } from 'src/slices/app.slice'
 import { CourseItem, MembersList } from 'src/types/course.type'
 import { Role } from 'src/constants/enums'
 import { setRoleInCourses } from 'src/slices/class.slice'
@@ -81,6 +81,12 @@ function ClassDetail() {
       }
     }
   }, [membersData, navigate, members, profile])
+
+  useEffect(() => {
+    return () => {
+      dispatch(clearBreadcrumbs())
+    }
+  }, [])
 
   const refetchCourseDetail = () => {
     getCourseDetailQuery.refetch()

@@ -29,12 +29,12 @@ function DeleteMemberModal({ isDeleteModalOpen, setIsDeleteModalOpen, UserData }
       { courseId, userId },
       {
         onSuccess: async () => {
+          handler()
           await queryClient.invalidateQueries({
             queryKey: ['members']
           })
 
           toast.success('Xóa thành viên thành công!')
-          handler()
         }
       }
     )

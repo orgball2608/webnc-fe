@@ -28,6 +28,9 @@ const gradeApi = {
   },
   getGradeBoard: (courseId: string) => {
     return http.get<ResponseApi<GradeBoard>>(`${PREFIX}${courseId}/grade-boards/final`)
+  },
+  getGradeBoardTemplate: (courseId: string) => {
+    return http.get<ResponseApi<GradeBoard>>(`${PREFIX}${courseId}/grade-boards/template`)
   }
 }
 

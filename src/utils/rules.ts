@@ -16,10 +16,20 @@ const authValidation = {
     .min(1, 'Confirm password is required')
     .min(5, 'Length from 5 to 160 characters')
     .max(160, 'Length from 5 to 160 characters'),
-  firstName: zod.string().min(1, 'First name is required').max(160, 'Maximum length is 160 characters'),
-  lastName: zod.string().min(1, 'Last name is required').max(160, 'Maximum length is 160 characters'),
-  phoneNumber: zod.string().min(1, 'Phone number is required').max(20, 'Maximum length is 20 characters'),
-  address: zod.string().min(1, 'Address is required').max(160, 'Maximum length is 160 characters')
+  firstName: zod.string().min(1, 'First name is required').max(160, 'Maximum length is 160 characters').trim(),
+  lastName: zod.string().min(1, 'Last name is required').max(160, 'Maximum length is 160 characters').trim(),
+  phoneNumber: zod.string().min(1, 'Phone number is required').max(20, 'Maximum length is 20 characters').trim(),
+  address: zod.string().min(1, 'Address is required').max(160, 'Maximum length is 160 characters').trim(),
+  studentId: zod.optional(zod.string().max(30, 'Student ID has a maximum of 30 characters').trim())
+}
+
+const numberValidation = (data: string) => {
+  if (/^\d+$/.test(data)) {
+    const dataNumber = +data
+
+    if (dataNumber >= 0) return true
+  }
+  return false
 }
 
 const numberValidation = (data: string) => {
@@ -55,7 +65,8 @@ export const updateProfileSchema = zod.object({
   firstName: authValidation.firstName,
   lastName: authValidation.lastName,
   phoneNumber: authValidation.phoneNumber,
-  address: authValidation.address
+  address: authValidation.address,
+  studentId: authValidation.studentId
 })
 
 export const changePasswordSchema = zod

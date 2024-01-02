@@ -15,5 +15,8 @@ export default defineConfig({
     alias: {
       src: path.resolve(__dirname, './src')
     }
+  },
+  optimizeDeps: {
+    exclude: ['read-excel-file']
   }
 })
