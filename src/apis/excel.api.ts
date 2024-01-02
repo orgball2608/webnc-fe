@@ -21,7 +21,7 @@ const excelApi = {
       }
     })
   },
-  importGrades: (courseId: string, gradeCompositionId: string, body: FormData) => {
+  importGrades: (courseId: string, gradeCompositionId: string | number, body: FormData) => {
     return http.post(`${PREFIX}courses/${courseId}/grade-compositions/${gradeCompositionId}/grades/upload`, body, {
       headers: {
         'Content-Type': 'multipart/form-data'
