@@ -10,14 +10,10 @@ import userApi, { UpdateProfileRequest } from 'src/apis/user.api'
 import { useAppDispatch, useAppSelector } from 'src/app/store'
 import path from 'src/constants/path'
 import { updateProfile } from 'src/slices/auth.slice'
-import { updateProfileSchema } from 'src/utils/rules'
+import { updateProfileSchema, UpdateProfileSchema } from 'src/utils/rules'
 
-type FormData = {
-  firstName: string
-  lastName: string
-  phoneNumber: string
-  address: string
-  avatar: File // Thêm trường avatar với kiểu dữ liệu phù hợp (có thể là string hoặc một kiểu dữ liệu khác)
+type FormData = UpdateProfileSchema & {
+  avatar: File
 }
 
 function Profile() {
@@ -64,6 +60,9 @@ function Profile() {
   })
 
   const onSubmit = handleSubmit(async (data) => {
+    if (profileUser?.studentId || !data.studentId) {
+      delete data.studentId
+    }
     data.avatar = fileAvatar as File
     const res = await updateProfileMutation.mutateAsync(data)
 
@@ -96,10 +95,33 @@ function Profile() {
 
   return (
     <div className=' mt-20 flex flex-col items-center justify-center'>
-      <div className='mb-5 text-5xl font-bold uppercase text-primary  '>Profile</div>
+      <div className='text-5xl font-bold uppercase text-primary md:my-10  '>Profile</div>
       <form className='w-4/5 md:w-3/5' onSubmit={onSubmit}>
         <div className='mt-8 flex flex-col-reverse md:flex-row md:items-start'>
           <div className='grid grid-cols-6 gap-2 px-10 md:w-2/3'>
+            <div className='col-span-12'>
+              <Input
+                label='Student Id'
+                defaultValue={profileUser?.studentId}
+                containerProps={{ className: 'min-w-min' }}
+                disabled={profileUser?.studentId ? true : false}
+                {...register('studentId')}
+              />
+              <p className='ml-1 flex min-h-[20px] items-center gap-1 text-xs font-normal text-red-400'>
+                {errors.studentId?.message}
+              </p>
+            </div>
+
+            <div className='col-span-12'>
+              <Input
+                label='Email'
+                defaultValue={profileUser?.email}
+                containerProps={{ className: 'min-w-min' }}
+                disabled
+              />
+              <p className='ml-1 flex min-h-[20px] items-center gap-1 text-xs font-normal text-red-400'></p>
+            </div>
+
             <div className='col-span-12 grid w-full grid-cols-12 gap-2'>
               <div className='col-span-12 md:col-span-6'>
                 <Input label='First name' {...register('firstName')} containerProps={{ className: 'min-w-min' }} />
@@ -117,16 +139,6 @@ function Profile() {
             </div>
 
             <div className='col-span-12'>
-              <Input
-                label='Email'
-                defaultValue={profileUser?.email}
-                containerProps={{ className: 'min-w-min' }}
-                readOnly
-              />
-              <p className='ml-1 flex min-h-[20px] items-center gap-1 text-xs font-normal text-red-400'></p>
-            </div>
-
-            <div className='col-span-12'>
               <Input label='Phone number' {...register('phoneNumber')} containerProps={{ className: 'min-w-min' }} />
               <p className='ml-1 flex min-h-[20px] items-center gap-1 text-xs font-normal text-red-400'>
                 {errors.phoneNumber?.message}
@@ -141,7 +153,7 @@ function Profile() {
             </div>
           </div>
 
-          <div className='flex justify-center pb-5 md:w-1/3 md:border-l md:border-l-gray-200'>
+          <div className='mt-6 flex justify-center pb-5 md:w-1/3 md:border-l md:border-l-gray-200'>
             <div className='flex flex-col items-center'>
               <div className='my-5 h-24 w-24'>
                 {previewAvatar ? (

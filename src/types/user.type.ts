@@ -1,5 +1,6 @@
 export interface User {
   id: number
+  studentId?: string
   createdAt: string
   updatedAt: string
   firstName: string
