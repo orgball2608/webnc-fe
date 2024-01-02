@@ -95,7 +95,7 @@ function ClassDetailPeople() {
                   avatarUrl={member?.teacher?.avatar as string}
                   name={(member?.teacher?.firstName + ' ' + member?.teacher?.lastName) as string}
                 />
-                {members.createdById === profile?.id && member.teacher.id !== profile?.id && (
+                {members.createdById === profile?.id && member.teacher?.id !== profile?.id && (
                   <Dropdown
                     render={() => (
                       <>
