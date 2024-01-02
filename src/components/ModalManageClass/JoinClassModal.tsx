@@ -37,6 +37,7 @@ export default function JoinClassModal({ open, handler }: Props) {
   })
 
   const onSubmit = handleSubmit((data) => {
+    if (joinClassMutation.isPending) return
     joinClassMutation.mutate(data, {
       onSuccess: async (res) => {
         await Promise.all([

@@ -114,10 +114,10 @@ function ClassDetailPeople() {
                 <AccountItem
                   className='cursor-default'
                   alt={`teacher ${index}`}
-                  avatarUrl={member?.teacher.avatar as string}
-                  name={(member?.teacher.firstName + ' ' + member?.teacher.lastName) as string}
+                  avatarUrl={member?.teacher?.avatar as string}
+                  name={(member?.teacher?.firstName + ' ' + member?.teacher?.lastName) as string}
                 />
-                {members.createdById === profile?.id && member.teacher.id !== profile?.id && (
+                {members.createdById === profile?.id && member.teacher?.id !== profile?.id && (
                   <Dropdown
                     render={() => (
                       <>
@@ -137,7 +137,7 @@ function ClassDetailPeople() {
                 )}
               </li>
             ))}
-          {(!members?.courseTeachers || members.courseTeachers.length === 0) &&
+          {(!members?.courseTeachers || members?.courseTeachers?.length === 0) &&
             membersData.isLoading &&
             Array(2)
               .fill(0)
@@ -171,8 +171,8 @@ function ClassDetailPeople() {
                   <AccountItem
                     className='cursor-default'
                     alt={`user ${index}`}
-                    avatarUrl={member?.student.avatar as string}
-                    name={(member?.student.firstName + ' ' + member?.student.lastName) as string}
+                    avatarUrl={member?.student?.avatar as string}
+                    name={(member?.student?.firstName + ' ' + member?.student?.lastName) as string}
                   />
                   <Dropdown
                     render={() => (
@@ -197,8 +197,8 @@ function ClassDetailPeople() {
                   <AccountItem
                     className='cursor-default'
                     alt={`user ${index}`}
-                    avatarUrl={member?.student.avatar as string}
-                    name={(member?.student.firstName + ' ' + member?.student.lastName) as string}
+                    avatarUrl={member?.student?.avatar as string}
+                    name={(member?.student?.firstName + ' ' + member?.student?.lastName) as string}
                   />
                 </li>
               ))}
