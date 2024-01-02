@@ -27,10 +27,12 @@ import { NOTIFICATION_STATUS } from 'src/constants/enums'
 import AccountItem from '../AccountItem'
 import classNames from 'classnames'
 import { toast } from 'react-toastify'
+import { BsChevronLeft } from 'react-icons/bs'
 
 // eslint-disable-next-line prettier/prettier, @typescript-eslint/no-explicit-any
 export default function Header({ onToggleSidebar }: { onToggleSidebar: any }) {
   const homepageMatch = useMatch(path.home)
+  const breadcrumbs = useAppSelector((state) => state.app.breadcrumbs)
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState<null | HTMLElement>(null)
@@ -144,11 +146,28 @@ export default function Header({ onToggleSidebar }: { onToggleSidebar: any }) {
                 </IconButton>
               </>
             )}
-            <Link to={path.home} style={{ textDecoration: 'none', color: 'inherit' }}>
-              <Typography variant='h6' component='div' style={{ cursor: 'pointer' }}>
-                Lớp học
-              </Typography>
-            </Link>
+            <div>
+              <Link to={path.home} style={{ textDecoration: 'none', color: 'inherit' }}>
+                <Typography variant='h6' component='div' style={{ cursor: 'pointer' }} className='hover:underline'>
+                  Lớp học
+                </Typography>
+              </Link>
+            </div>
+
+            {breadcrumbs &&
+              breadcrumbs.length > 0 &&
+              breadcrumbs.map((breadcrumb) => (
+                <div key={breadcrumb.path} className='ml-2 flex items-center gap-2'>
+                  <span className='text-xl'>
+                    <BsChevronLeft />
+                  </span>
+                  <Link to={breadcrumb.path} style={{ textDecoration: 'none', color: 'inherit' }}>
+                    <Typography variant='h6' component='div' style={{ cursor: 'pointer' }} className='hover:underline'>
+                      {breadcrumb.name}
+                    </Typography>
+                  </Link>
+                </div>
+              ))}
 
             <Box sx={{ flexGrow: 1 }} />
             {/* <Box sx={{ display: { xs: 'none', md: 'flex' } }}>

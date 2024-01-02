@@ -5,43 +5,26 @@ import IconButton from 'src/components/IconButton'
 import { FaCircleInfo } from 'react-icons/fa6'
 import { useState } from 'react'
 import classNames from 'classnames'
-import { useParams } from 'react-router-dom'
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation } from '@tanstack/react-query'
 import courseApi from 'src/apis/courses.api'
 import Skeleton from 'react-loading-skeleton'
 import { FaPencilAlt } from 'react-icons/fa'
 import { toast } from 'react-toastify'
 import { LuCheck, LuCopy } from 'react-icons/lu'
 import { Role } from 'src/constants/enums'
-// src/Tiptap.jsx
-// import { EditorProvider, FloatingMenu, BubbleMenu } from '@tiptap/react'
-// eslint-disable-next-line import/no-named-as-default
-// import StarterKit from '@tiptap/starter-kit'
-
-// define your extension array
-// const extensions = [StarterKit]
-
-// const content = '<p>Hello World!</p>'
+import { useCourseDetail } from '../../ClassDetail'
 
 function ClassDetailNews() {
-  const param = useParams()
-  const classId = param?.classId
+  const { id: classId, data: courseDetailData, refetch: refetchCourseDetail, isPending } = useCourseDetail()
   const { roleInCourse } = useAppSelector((state) => state.class)
   const [isCopied, setIsCopied] = useState(false)
-
-  const getCourseDetailQuery = useQuery({
-    queryKey: ['course-detail', classId],
-    queryFn: () => courseApi.getCourseDetail(classId as string),
-    enabled: Boolean(classId)
-  })
-  const courseDetailData = getCourseDetailQuery.data?.data.data
 
   const uploadBackgroundMutation = useMutation({
     mutationKey: ['upload-course-background', classId],
     mutationFn: (body: FormData) => courseApi.uploadBackground(classId as string, body),
     onSuccess: () => {
       toast.success('Thay đổi hình nền thành công!')
-      getCourseDetailQuery.refetch()
+      refetchCourseDetail()
     }
   })
 
@@ -130,7 +113,7 @@ function ClassDetailNews() {
 
       <div className='mt-6 flex gap-6'>
         <div>
-          {roleInCourse.role === Role.TEACHER && !getCourseDetailQuery.isPending && (
+          {roleInCourse.role === Role.TEACHER && !isPending && (
             <div className='mb-3 w-48 rounded-lg border border-primary px-4 pb-2 pt-4'>
               <h2 className='mb-2 text-sm font-medium text-primary'>Class code</h2>
               <div className='mb-2 flex items-center'>

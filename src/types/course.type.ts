@@ -1,3 +1,5 @@
+import { User } from './user.type'
+
 export interface CourseItem {
   id: number
   name: string
@@ -32,17 +34,9 @@ export interface CourseStudentTeacher {
   courseId: number
 }
 
-const a = {
-  enrollments: [
-    {
-      studentId: 4,
-      createdAt: '2023-12-17T03:08:29.771Z'
-    }
-  ],
-  courseTeachers: [
-    {
-      teacherId: 3,
-      createdAt: '2023-12-17T02:47:24.951Z'
-    }
-  ]
+export type Member = Pick<User, 'id' | 'email' | 'avatar' | 'firstName' | 'lastName' | 'address' | 'phoneNumber'>
+export type MembersList = {
+  createdById: number
+  enrollments: { student: Member }[]
+  courseTeachers: { teacher: Member }[]
 }

@@ -67,6 +67,23 @@ export const calculateTimeDifference = (timestampStr: Date) => {
   return secondsDifference + ' giây trước'
 }
 
-export const swapArrayLocs = (arr: any[], index1: number, index2: number) => {
-  ;[arr[index1], arr[index2]] = [arr[index2], arr[index1]]
+export const downloadFile = (file: Blob, outputFilename: string = 'data.xlsx') => {
+  // Create download link
+  const url = window.URL.createObjectURL(file)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = outputFilename
+
+  // Trigger download
+  document.body.appendChild(a)
+  a.click()
+
+  // Cleanup
+  document.body.removeChild(a)
+  window.URL.revokeObjectURL(url)
+}
+
+export const getExtension = (filename: string) => {
+  const parts = filename.split('.')
+  return parts[parts.length - 1]
 }

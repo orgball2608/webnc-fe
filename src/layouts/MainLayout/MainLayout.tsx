@@ -8,6 +8,7 @@ import { toast } from 'react-toastify'
 import { getAccessTokenFromLS } from 'src/utils/auth'
 import { useQueryClient } from '@tanstack/react-query'
 import { NotificationSocketResponse } from 'src/types/socket.type'
+import classNames from 'classnames'
 
 function MainLayout() {
   const queryClient = useQueryClient()
@@ -57,7 +58,7 @@ function MainLayout() {
       </aside>
       <main
         className={`transition-margin mt-[64px] duration-300 ease-in-out ${
-          isSidebarOpen ? 'blur md:ml-[300px] md:blur-0' : 'md:ml-[100px] '
+          isSidebarOpen ? 'blur md:ml-[300px] md:blur-0' : 'md:ml-0 '
         }`}
       >
         <Outlet />

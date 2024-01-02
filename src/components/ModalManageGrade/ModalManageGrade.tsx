@@ -83,7 +83,6 @@ function ModalManageGrade({ type, classId, open, handler, gradeCompositions, set
       }))
 
       setValue('grades', grades as GradeCompositionSchema[])
-      console.log(grades)
     }
   }, [gradeCompositions, open])
 
@@ -104,8 +103,9 @@ function ModalManageGrade({ type, classId, open, handler, gradeCompositions, set
         secondId: fields[newIndex].id as number
       },
       {
-        onSuccess: (res) => {
+        onSuccess: async (res) => {
           setNewGradeCompositions && setNewGradeCompositions(res.data.data)
+          await queryClient.invalidateQueries({ queryKey: ['courses', classId, 'grade-boards/final'] })
           toast.success('Sắp xếp điểm thành phần thành công!')
         },
         onSettled: () => {
@@ -148,7 +148,11 @@ function ModalManageGrade({ type, classId, open, handler, gradeCompositions, set
           }
         }
 
-        await queryClient.invalidateQueries({ queryKey: ['courses', classId, 'grade-compositions'] })
+        await Promise.all([
+          queryClient.invalidateQueries({ queryKey: ['courses', classId, 'grade-compositions'] }),
+          queryClient.invalidateQueries({ queryKey: ['courses', classId, 'grade-boards/final'] })
+        ])
+
         handler()
         toast.success('Thêm điểm thành phần thành công!')
       } else if (type === 'EDIT') {
@@ -170,7 +174,11 @@ function ModalManageGrade({ type, classId, open, handler, gradeCompositions, set
 
         await Promise.all(updateGradeCompositionsPromises)
 
-        await queryClient.invalidateQueries({ queryKey: ['courses', classId, 'grade-compositions'] })
+        await Promise.all([
+          queryClient.invalidateQueries({ queryKey: ['courses', classId, 'grade-compositions'] }),
+          queryClient.invalidateQueries({ queryKey: ['courses', classId, 'grade-boards/final'] })
+        ])
+
         handler()
         toast.success('Cập nhật điểm thành phần thành công!')
       }
