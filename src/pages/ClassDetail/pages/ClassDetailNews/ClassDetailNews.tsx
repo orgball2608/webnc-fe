@@ -15,7 +15,7 @@ import { Role } from 'src/constants/enums'
 import { useCourseDetail } from '../../ClassDetail'
 
 function ClassDetailNews() {
-  const { id: classId, data: courseDetailData, refetch: refetchCourseDetail, isPending } = useCourseDetail()
+  const { id: classId, data: courseDetailData, refetch: refetchCourseDetail, isSuccess } = useCourseDetail()
   const { roleInCourse } = useAppSelector((state) => state.class)
   const [isCopied, setIsCopied] = useState(false)
 
@@ -113,7 +113,7 @@ function ClassDetailNews() {
 
       <div className='mt-6 flex gap-6'>
         <div>
-          {roleInCourse.role === Role.TEACHER && !isPending && (
+          {roleInCourse.role === Role.TEACHER && isSuccess && (
             <div className='mb-3 w-48 rounded-lg border border-primary px-4 pb-2 pt-4'>
               <h2 className='mb-2 text-sm font-medium text-primary'>Class code</h2>
               <div className='mb-2 flex items-center'>

@@ -7,19 +7,9 @@ import courseApi from 'src/apis/courses.api'
 import { useAppDispatch, useAppSelector } from 'src/app/store'
 import path from 'src/constants/path'
 import { clearBreadcrumbs, setBreadcrumbs } from 'src/slices/app.slice'
-import { CourseItem, MembersList } from 'src/types/course.type'
+import { ContextType } from 'src/types/course.type'
 import { Role } from 'src/constants/enums'
 import { setRoleInCourses } from 'src/slices/class.slice'
-
-type ContextType = {
-  id: string | undefined
-  data: CourseItem | null
-  refetch: () => void
-  members: MembersList
-  myRole: Role
-  isLoading: boolean
-  isPending: boolean
-}
 
 function ClassDetail() {
   const { classId } = useParams()
@@ -29,7 +19,6 @@ function ClassDetail() {
   const { profile } = useAppSelector((state) => state.auth)
 
   const [myRole, setMyRole] = useState<string>(Role.STUDENT)
-  console.log(myRole)
 
   const tabs = useMemo(() => {
     const myTabs = [
@@ -90,6 +79,7 @@ function ClassDetail() {
 
   useEffect(() => {
     dispatch(setRoleInCourses({ classId: classId as string, role: '' }))
+    setMyRole(Role.STUDENT)
     if (membersData.isError || getRoleInCourse.isError) {
       navigate(path.home)
     } else if (getRoleInCourse.isSuccess) {
@@ -103,7 +93,7 @@ function ClassDetail() {
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [membersData, roleinCourse, navigate, profile, classId])
+  }, [membersData, navigate, classId])
 
   useEffect(() => {
     return () => {
@@ -151,7 +141,8 @@ function ClassDetail() {
             myRole,
             members,
             isLoading: getCourseDetailQuery.isLoading || membersData.isLoading,
-            isPending: getCourseDetailQuery.isPending || membersData.isPending
+            isPending: getCourseDetailQuery.isPending || membersData.isPending,
+            isSuccess: getRoleInCourse.isSuccess
           }}
         />
       </div>

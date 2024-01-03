@@ -1,3 +1,4 @@
+import { Role } from 'src/constants/enums'
 import { User } from './user.type'
 
 export interface CourseItem {
@@ -39,4 +40,15 @@ export type MembersList = {
   createdById: number
   enrollments: { student: Member }[]
   courseTeachers: { teacher: Member }[]
+}
+
+export type ContextType = {
+  id: string | undefined
+  data: CourseItem | null
+  refetch: () => void
+  members: MembersList
+  myRole: Role
+  isLoading: boolean
+  isPending: boolean
+  isSuccess: boolean
 }
