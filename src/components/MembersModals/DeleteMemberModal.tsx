@@ -2,7 +2,8 @@ import { Button, Dialog, Card, CardBody, CardFooter } from '@material-tailwind/r
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useParams } from 'react-router'
 import { toast } from 'react-toastify'
-import courseApi, { Member } from 'src/apis/courses.api'
+import courseApi from 'src/apis/courses.api'
+import { Member } from 'src/types/course.type'
 
 interface Props {
   isDeleteModalOpen: boolean

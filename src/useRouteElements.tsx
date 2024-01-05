@@ -22,6 +22,7 @@ import ClassDetail, {
   ClassDetailInvite
 } from './pages/ClassDetail'
 import { setInvitationLink } from './slices/class.slice'
+import { ClassDetailReview } from './pages/ClassDetail/pages/ClassDetailReview'
 
 function ProtectedRoutes() {
   const location = useLocation()
@@ -110,7 +111,21 @@ function useRouteElements() {
                 {
                   path: path.classDetail.people,
                   element: <ClassDetailPeople />
+                },
+                {
+                  path: path.classDetail.review,
+                  element: <ClassDetailReview />
                 }
+                // {
+                //   path: path.classDetail.review,
+                //   element: <ProtectedRouteOfTeacher />,
+                //   children: [
+                //     {
+                //       path: path.classDetail.review,
+                //       element: <ClassDetailReview />
+                //     }
+                //   ]
+                // }
               ]
             },
             {

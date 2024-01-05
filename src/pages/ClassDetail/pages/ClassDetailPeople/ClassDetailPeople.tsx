@@ -1,6 +1,5 @@
-import { useQuery } from '@tanstack/react-query'
-import { useNavigate, useParams } from 'react-router-dom'
-import courseApi, { Member } from 'src/apis/courses.api'
+import { Member } from 'src/types/course.type'
+
 import AccountItem from 'src/components/AccountItem'
 import { LuUserPlus } from 'react-icons/lu'
 import IconButton from 'src/components/IconButton'
@@ -27,7 +26,8 @@ import { Role } from 'src/constants/enums'
 
 function ClassDetailPeople() {
   const { profile } = useAppSelector((state) => state.auth)
-  const { members, myRole, isLoading } = useCourseDetail()
+  const { members, isLoading } = useCourseDetail()
+  const { roleInCourse } = useAppSelector((state) => state.class)
 
   const [isRole, setIsRole] = useState('')
   const [isInviteModalOpen, setIsInviteModalOpen] = useState(false)
@@ -72,12 +72,12 @@ function ClassDetailPeople() {
       <div className='mb-10'>
         <div className='mb-1 flex h-[72px] items-center justify-between border-b border-b-[#4285f4]'>
           <h2 className='pl-4 text-[32px] font-normal leading-10 text-third'>{Role.TEACHER}</h2>
-          {myRole === Role.TEACHER && (
+          {roleInCourse.role === Role.TEACHER && (
             <IconButton
               Icon={<LuUserPlus />}
               mode='dark'
               tooltip='Mời giáo viên'
-              onClick={() => handleClick(Role.TEACHER)}
+              onClick={() => handleClick(role.teachers)}
             />
           )}
         </div>
@@ -100,7 +100,7 @@ function ClassDetailPeople() {
                     render={() => (
                       <>
                         {
-                          <DropdownItem onClick={() => handleClickInfo(member?.teacher, Role.TEACHER)}>
+                          <DropdownItem onClick={() => handleClickInfo(member?.teacher, role.teachers)}>
                             Thông tin
                           </DropdownItem>
                         }
@@ -129,18 +129,18 @@ function ClassDetailPeople() {
 
           <div className='flex items-center'>
             <span className='pr-6 text-sm font-medium text-third'>{members?.enrollments?.length || 0} Sinh viên</span>
-            {myRole === Role.TEACHER && (
+            {roleInCourse.role === Role.TEACHER && (
               <IconButton
                 Icon={<LuUserPlus />}
                 tooltip='Mời học sinh'
                 mode='dark'
-                onClick={() => handleClick(Role.STUDENT)}
+                onClick={() => handleClick(role.students)}
               />
             )}
           </div>
         </div>
         <ul>
-          {members?.enrollments && members.enrollments.length > 0 && myRole === Role.TEACHER
+          {members?.enrollments && members.enrollments.length > 0 && roleInCourse.role === Role.TEACHER
             ? members.enrollments.map((member, index) => (
                 <li
                   key={index}
@@ -156,7 +156,7 @@ function ClassDetailPeople() {
                     render={() => (
                       <>
                         {
-                          <DropdownItem onClick={() => handleClickInfo(member?.student, Role.STUDENT)}>
+                          <DropdownItem onClick={() => handleClickInfo(member?.student, role.students)}>
                             Thông tin
                           </DropdownItem>
                         }

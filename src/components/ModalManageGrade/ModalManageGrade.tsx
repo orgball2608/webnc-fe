@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button, Dialog, Card, CardBody, CardFooter, Input } from '@material-tailwind/react'
 import IconButton from '../IconButton'
 import { MdDragIndicator } from 'react-icons/md'
@@ -72,6 +73,7 @@ function ModalManageGrade({ type, classId, open, handler, gradeCompositions, set
       reset()
       setDeleteIds([])
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open])
 
   useEffect(() => {
@@ -84,12 +86,14 @@ function ModalManageGrade({ type, classId, open, handler, gradeCompositions, set
 
       setValue('grades', grades as GradeCompositionSchema[])
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gradeCompositions, open])
 
   useEffect(() => {
     if ((errors as any).ununiqueGradeCompositionName) {
       toast.error((errors as any).ununiqueGradeCompositionName.message)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [(errors as any).ununiqueGradeCompositionName])
 
   const onSortEnd = ({ oldIndex, newIndex }: { oldIndex: number; newIndex: number }) => {
