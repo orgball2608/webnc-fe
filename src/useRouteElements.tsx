@@ -23,7 +23,6 @@ import ClassDetail, {
 } from './pages/ClassDetail'
 import { setInvitationLink } from './slices/class.slice'
 import { ClassDetailReview } from './pages/ClassDetail/pages/ClassDetailReview'
-import ProtectedRouteOfTeacher from './pages/ClassDetail/ProtectedRouteOfTeacher'
 
 function ProtectedRoutes() {
   const location = useLocation()

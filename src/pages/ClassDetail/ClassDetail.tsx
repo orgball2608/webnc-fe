@@ -142,7 +142,8 @@ function ClassDetail() {
             members,
             isLoading: getCourseDetailQuery.isLoading || membersData.isLoading,
             isPending: getCourseDetailQuery.isPending || membersData.isPending,
-            isSuccess: getRoleInCourse.isSuccess
+            isSuccess: getRoleInCourse.isSuccess,
+            isLoadingMyrole: getRoleInCourse.isLoading
           }}
         />
       </div>

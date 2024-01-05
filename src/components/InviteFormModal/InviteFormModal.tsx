@@ -110,8 +110,8 @@ export default function InviteFormModal({ isInviteModalOpen, setIsInviteModalOpe
               Hủy
             </Button>
             <Button
-              variant='gradient'
-              className='flex-1 text-sm'
+              // variant='gradient'
+              className='flex-1 bg-primary text-sm'
               onClick={onSubmit}
               disabled={invitationMutation.isPending}
               fullWidth

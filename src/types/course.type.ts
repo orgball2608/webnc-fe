@@ -51,4 +51,5 @@ export type ContextType = {
   isLoading: boolean
   isPending: boolean
   isSuccess: boolean
+  isLoadingMyrole: boolean
 }

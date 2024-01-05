@@ -120,7 +120,7 @@ function ClassDetailNews() {
                 <p className='= w-full overflow-hidden text-ellipsis text-2xl font-bold'>{courseDetailData?.code}</p>
                 <IconButton
                   Icon={isCopied ? <LuCheck /> : <LuCopy />}
-                  tooltip='copy link'
+                  tooltip='copy code'
                   mode='dark'
                   onClick={handleClickCopy}
                 />

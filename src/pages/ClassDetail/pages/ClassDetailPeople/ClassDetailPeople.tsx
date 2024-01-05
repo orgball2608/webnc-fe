@@ -1,6 +1,3 @@
-// import { useQuery } from '@tanstack/react-query'
-// import { useNavigate, useParams } from 'react-router-dom'
-// import courseApi from 'src/apis/courses.api'
 import { Member } from 'src/types/course.type'
 
 import AccountItem from 'src/components/AccountItem'
@@ -29,7 +26,7 @@ import { Role } from 'src/constants/enums'
 
 function ClassDetailPeople() {
   const { profile } = useAppSelector((state) => state.auth)
-  const { members, myRole, isLoading } = useCourseDetail()
+  const { members, isLoading } = useCourseDetail()
   const { roleInCourse } = useAppSelector((state) => state.class)
 
   const [isRole, setIsRole] = useState('')
