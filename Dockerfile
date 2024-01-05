@@ -1,13 +1,11 @@
 # BUILD FOR PRODUCTION
-FROM node:18-alpine As build
+FROM node:18-alpine AS build
 
 WORKDIR /usr/src/app
 
 ENV PATH /usr/src/app/node_modules/.bin:$PATH
 
 COPY . .
-
-COPY .env.docker ./.env
 
 RUN npm install
 
