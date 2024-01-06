@@ -12,13 +12,17 @@ import gradeApi from 'src/apis/grade.api'
 import { GradeBoard } from 'src/types/grade.type'
 import excelApi from 'src/apis/excel.api'
 import { downloadFile } from 'src/utils/utils'
+import { Role } from 'src/constants/enums'
+import GradeStudent from './GradeStudent'
+import { useAppSelector } from 'src/app/store'
 
 export const HEADER_INDEX_KEY = 'index'
 export const HEADER_STUDENT_ID_KEY = 'studentId'
 export const HEADER_FULLNAME_KEY = 'fullName'
 
 export default function ClassDetailGrade() {
-  const { id: classId, data: courseDetailData } = useCourseDetail()
+  const { id: classId, data: courseDetailData, myRole, isLoadingMyrole } = useCourseDetail()
+  const { roleInCourse } = useAppSelector((state) => state.class)
 
   const [isOpenModalEditGradeCompositions, setIsOpenModalEditGradeCompositions] = useState(false)
   const [isOpenModalAddGradeCompositions, setIsOpenModalAddGradeCompositions] = useState(false)
@@ -81,29 +85,36 @@ export default function ClassDetailGrade() {
               </Typography>
             </div>
           </div>
-          <div className='flex flex-col items-center justify-between gap-4 md:flex-row'>
-            {/* <div className='w-full md:w-72'>
+          {myRole === Role.TEACHER && (
+            <div className='flex flex-col items-center justify-between gap-4 md:flex-row'>
+              {/* <div className='w-full md:w-72'>
               <Input label='Search' icon={<IoSearchOutline className='h-5 w-5' />} />
             </div> */}
 
-            <div className='ml-auto flex shrink-0 flex-col items-center gap-2 sm:flex-row'>
-              <Button className='flex items-center gap-2' size='md' onClick={exportGradesBoardFile}>
-                <span className='relative top-[-1px] text-lg'>
-                  <CgExport />
-                </span>
-                Export grade board
-              </Button>
+              <div className='ml-auto flex shrink-0 flex-col items-center gap-2 sm:flex-row'>
+                <Button className='flex items-center gap-2' size='md' onClick={exportGradesBoardFile}>
+                  <span className='relative top-[-1px] text-lg'>
+                    <CgExport />
+                  </span>
+                  Export grade board
+                </Button>
+              </div>
             </div>
-          </div>
+          )}
         </CardHeader>
+
         <CardBody className='overflow-auto px-0'>
-          <GradeBoardTable
-            gradeBoardData={gradeBoardData as GradeBoard}
-            setIsOpenModalAddGradeCompositions={setIsOpenModalAddGradeCompositions}
-            setIsOpenModalEditGradeCompositions={setIsOpenModalEditGradeCompositions}
-            setIsOpenModalSortGradeCompositions={setIsOpenModalSortGradeCompositions}
-          />
+          {myRole === Role.TEACHER && !isLoadingMyrole && (
+            <GradeBoardTable
+              gradeBoardData={gradeBoardData as GradeBoard}
+              setIsOpenModalAddGradeCompositions={setIsOpenModalAddGradeCompositions}
+              setIsOpenModalEditGradeCompositions={setIsOpenModalEditGradeCompositions}
+              setIsOpenModalSortGradeCompositions={setIsOpenModalSortGradeCompositions}
+            />
+          )}{' '}
+          {roleInCourse.role === Role.STUDENT && !isLoadingMyrole && <GradeStudent />}
         </CardBody>
+
         {/* <CardFooter className='flex items-center justify-between border-t border-blue-gray-50 p-4'>
           <Typography variant='small' color='blue-gray' className='font-normal'>
             Page 1 of 10

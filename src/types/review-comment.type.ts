@@ -1,4 +1,4 @@
-import { GradeReview } from './GradeReview .type'
+import { GradeReview } from './grade-review.type'
 import { User } from './user.type'
 
 export interface ReviewComment {

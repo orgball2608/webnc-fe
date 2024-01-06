@@ -53,3 +53,8 @@ export type ContextType = {
   isSuccess: boolean
   isLoadingMyrole: boolean
 }
+
+export type InfoStudent = {
+  studentId: string
+  fullName: string
+}

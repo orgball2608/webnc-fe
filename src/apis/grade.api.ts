@@ -1,9 +1,14 @@
-import { Grade, GradeBoard } from 'src/types/grade.type'
+import { InfoStudent } from 'src/types/course.type'
+import { Grade, GradeBoard, StudentGrade } from 'src/types/grade.type'
 import { ResponseApi } from 'src/types/utils.type'
 import http from 'src/utils/http'
 import { GradeCompositionSchema } from 'src/utils/rules'
 
 export type GradeRequestBody = Omit<GradeCompositionSchema, 'scale'> & { scale: number }
+export type InfoGradeBoard = {
+  gradeBoard: StudentGrade[]
+  infoStudent: InfoStudent
+}
 
 const PREFIX = 'courses/'
 
@@ -31,6 +36,9 @@ const gradeApi = {
   },
   getGradeBoardTemplate: (courseId: string) => {
     return http.get<ResponseApi<GradeBoard>>(`${PREFIX}${courseId}/grade-boards/template`)
+  },
+  getMyGrade: (courseId: string) => {
+    return http.get<ResponseApi<InfoGradeBoard>>(`${PREFIX}${courseId}/grade-boards/my-grade`)
   }
 }
 

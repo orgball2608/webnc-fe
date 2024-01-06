@@ -182,10 +182,46 @@ export const gradeSchema = zod.object({
     )
 })
 
+const gradeReview = {
+  expectedGrade: zod
+    .string()
+    .min(1, 'Grade is required')
+    .refine(
+      (data: string) => {
+        if (/^\d+$/.test(data)) {
+          const dataNumber = +data
+
+          if (dataNumber >= 0 && dataNumber <= 10) return true
+        }
+        return false
+      },
+      {
+        message: 'Grade must be a number and range [0, 10]'
+      }
+    ),
+  explanation: zod
+    .string()
+    .min(2, 'Expanation must be greater than or equal to 2.')
+    .max(1000, 'Maximum length is 1000 characters.')
+}
+
+export const gradeReviewSchema = zod.object({
+  expectedGrade: gradeReview.expectedGrade,
+  explanation: gradeReview.explanation
+})
+
+export const updateGradeSchema = zod.object({
+  grade: gradeReview.expectedGrade,
+  studentId: authValidation.studentId
+})
+
 export type InvitationSchema = zod.infer<typeof invitationSchema>
 export type LoginSchema = zod.infer<typeof loginSchema>
 export type RegisterSchema = zod.infer<typeof registerSchema>
 export type ClassCodeSchema = zod.infer<typeof classCodeSchema>
+
+export type GradeReviewSchema = zod.infer<typeof gradeReviewSchema>
+export type UpdateGradeSchema = zod.infer<typeof updateGradeSchema>
 
 export type UpdateProfileSchema = zod.infer<typeof updateProfileSchema>
 export type ChangePasswordSchema = zod.infer<typeof changePasswordSchema>
