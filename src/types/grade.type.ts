@@ -1,3 +1,5 @@
+import { GradeReview } from './grade-review.type'
+
 export interface Grade {
   id: number
   studentId: string
@@ -7,6 +9,7 @@ export interface Grade {
   createdById: number
   createdAt: string
   updatedAt: string
+  GradeReview: GradeReview[]
 }
 
 export interface GradeBoardHeaderItem {
@@ -35,4 +38,18 @@ export type GradeBoardRowItem = {
 export interface GradeBoard {
   headers: GradeBoardHeaderItem[]
   rows: GradeBoardRowItem[]
+}
+
+export interface StudentGrade {
+  id: number
+  courseId: number
+  studentId: string
+  createdById: number
+  name: string
+  scale: number
+  index: number
+  isFinalized: boolean
+  createdAt: string
+  updatedAt: string
+  grades: Grade[]
 }

@@ -6,4 +6,5 @@ export interface GradeComposition {
   name: string
   scale: number
   createdBy: {}
+  isFinalized?: boolean
 }

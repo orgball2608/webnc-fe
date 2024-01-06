@@ -1,4 +1,4 @@
-import { ReviewComment } from './ReviewComment.type'
+import { ReviewComment } from './review-comment.type'
 import { Grade } from './grade.type'
 import { User } from './user.type'
 
@@ -9,10 +9,18 @@ export interface GradeReview {
   explanation: string
   isResolve: boolean
   createdById: number
-  reviewComments?: ReviewComment[]
+  ReviewComments?: ReviewComment[]
   grade: Grade
   createdBy: User
 
   createdAt: string
   updatedAt: string
+}
+
+export interface ReviewFull extends GradeReview {
+  studentId?: string
+  fullName?: string
+  gradeName?: string
+  compositionId?: number
+  courseId?: number
 }

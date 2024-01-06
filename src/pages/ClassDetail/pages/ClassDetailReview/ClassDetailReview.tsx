@@ -12,51 +12,53 @@ import { useCourseDetail } from '../../ClassDetail'
 import { Role } from 'src/constants/enums'
 import { useAppSelector } from 'src/app/store'
 import { ReviewDetailModal } from 'src/components/ModalReview'
-import { GradeReview } from 'src/types/GradeReview .type'
-
-// const reviewFake = {
-//   id: 1,
-//   gradeId: 1,
-//   expectedGrade: 10,
-//   explanation: "lam tot",
-//   isResolve: false,
-//   createdById: 1,
-//   grade: Grade
-//   createdBy: User
-
-//   createdAt: string
-//   updatedAt: string
-// }
+import { GradeReview, ReviewFull } from 'src/types/grade-review.type'
+import gradeReviewApi from 'src/apis/review-grade.api'
+import { useQuery } from '@tanstack/react-query'
+import { Box, CircularProgress } from '@mui/material'
 
 export default function ClassDetailReview() {
   const navigate = useNavigate()
+
   const courseContext = useCourseDetail()
   const { roleInCourse } = useAppSelector((state) => state.class)
-  useEffect(() => {
-    if (courseContext.isSuccess && roleInCourse.role === Role.STUDENT) {
-      navigate(path.notFound)
-    }
-  }, [courseContext, roleInCourse])
 
-  // const { profile } = useAppSelector((state) => state.auth)
-  const { members, isLoading } = useCourseDetail()
-  const [reviewSelected, setReviewSelected] = useState<GradeReview>()
+  const { isLoading, data: courseData } = useCourseDetail()
+  const [reviewSelected, setReviewSelected] = useState<ReviewFull>()
 
   const [isOpenNewReviews, setIsOpenNewReviews] = useState(true)
   const [isOpenCompleted, setIsOpenCompleted] = useState(true)
 
   const [isOpenReviewModal, setIsOpenReviewModal] = useState(false)
 
-  const handleClick = (review: GradeReview) => {
+  const handleClick = (review: ReviewFull) => {
     setReviewSelected(review)
     setIsOpenReviewModal(true)
   }
+  useEffect(() => {
+    if (courseContext.isSuccess && roleInCourse.role === Role.STUDENT) {
+      navigate(path.notFound)
+    }
+  }, [courseContext, roleInCourse])
+
+  const reviewListQuery = useQuery({
+    queryKey: ['review-list', courseData?.id],
+    queryFn: () => gradeReviewApi.getReviewList(courseData?.id as number),
+    enabled: Boolean(courseData?.id)
+  })
+
+  const listReviewData = reviewListQuery?.data?.data?.data
+
+  const listCompletedReview = listReviewData?.filter((review) => review.isResolve)
+  const listNewReview = listReviewData?.filter((review) => !review.isResolve)
+  console.log(listCompletedReview)
 
   const reviewDetailModal = ReviewDetailModal({
     isOpen: isOpenReviewModal,
     onOpen: () => setIsOpenReviewModal(true),
-    onClose: () => setIsOpenReviewModal(false)
-    // review: reviewSelected
+    onClose: () => setIsOpenReviewModal(false),
+    reviewData: reviewSelected,
+    myRole: roleInCourse.role
   })
 
   return (
@@ -68,7 +70,7 @@ export default function ClassDetailReview() {
               <h2 className='text-[32px] font-normal leading-10 text-third'>New Reviews</h2>
               <div className='flex items-center'>
                 <span className='hidden pr-1 text-sm font-medium text-third md:flex'>
-                  {isOpenNewReviews && (members?.enrollments?.length || 0) + ' New Reviews'}
+                  {isOpenNewReviews && (listNewReview?.length || 0) + ' New Reviews'}
                 </span>
                 <IconButton
                   Icon={isOpenNewReviews ? <IoIosArrowDown /> : <IoIosArrowBack />}
@@ -81,29 +83,29 @@ export default function ClassDetailReview() {
 
             {isOpenNewReviews ? (
               <ul>
-                {members?.courseTeachers &&
-                  members.courseTeachers.length > 0 &&
-                  members.courseTeachers.map((member, index) => (
+                {listNewReview &&
+                  listNewReview?.length > 0 &&
+                  listNewReview?.map((review, index) => (
                     <li key={index}>
                       <button
                         className={`min-h my-1 flex w-full items-center justify-between rounded-md  
-                        border-b bg-opacity-60 p-6 last:border-b-0 hover:bg-lightBlue-100 md:h-16 
-                        ${index % 2 === 0 ? 'bg-blue-50' : ''} `}
-                        onClick={() => handleClick(member)}
+                      border-b bg-opacity-60 p-6 last:border-b-0 hover:bg-lightBlue-100 md:h-16 
+                      ${index % 2 === 0 ? 'bg-blue-50' : ''} `}
+                        onClick={() => handleClick(review)}
                       >
                         <div className='flex space-x-2 tracking-wide'>
                           <Icon icon='material-symbols:rate-review-outline' width='30' height='30' />
                           <div className='h-100 flex pl-4 font-bold tracking-wide'>
                             {/* <div> */}
                             {/* </div>{' '} */}
-                            20120443 - {member?.teacher?.firstName + ' ' + member?.teacher?.lastName + ' '}
+                            {review?.studentId + ' - ' + review?.fullName}
                           </div>
-                          <div className='tracking-wide'> đã yêu cầu phúc khảo cột điểm giữa kỳ</div>
+                          <div className='tracking-wide'> đã yêu cầu phúc khảo cột điểm {review?.gradeName}</div>
                         </div>
                       </button>
                     </li>
                   ))}
-                {(!members?.courseTeachers || members.courseTeachers.length === 0) &&
+                {(!listNewReview || listNewReview.length === 0) &&
                   isLoading &&
                   Array(2)
                     .fill(0)
@@ -111,12 +113,12 @@ export default function ClassDetailReview() {
               </ul>
             ) : (
               <div
-                className={`cursor my-1 flex h-16 w-full items-center rounded-md border-b border-b-primary
-               bg-lightBlue-100 p-3 last:border-b-0`}
+                className={`cursor my-1 flex h-16 w-full items-center space-x-2 rounded-md border-b
+               border-b-primary bg-lightBlue-100 p-6 last:border-b-0`}
               >
                 <Icon icon='material-symbols:rate-review-outline' width='30' height='30' />
                 <div className='h-100 flex pl-4 font-bold tracking-wide'>
-                  {(members?.enrollments?.length || 0) + ' New Reviews'}
+                  {(listNewReview?.length || 0) + ' New Reviews'}
                 </div>
               </div>
             )}
@@ -128,7 +130,7 @@ export default function ClassDetailReview() {
 
               <div className='flex items-center'>
                 <span className='hidden pr-1 text-sm font-medium text-third md:flex'>
-                  {isOpenCompleted && (members?.enrollments?.length || 0) + ' Reviews Completed'}
+                  {isOpenCompleted && (listCompletedReview?.length || 0) + ' Reviews Completed'}
                 </span>
                 <IconButton
                   Icon={isOpenCompleted ? <IoIosArrowDown /> : <IoIosArrowBack />}
@@ -140,26 +142,26 @@ export default function ClassDetailReview() {
             </div>
             {isOpenCompleted ? (
               <ul>
-                {members?.enrollments &&
-                  members.enrollments.length > 0 &&
-                  members.enrollments.map((member, index) => (
+                {listCompletedReview &&
+                  listCompletedReview?.length > 0 &&
+                  listCompletedReview?.map((review, index) => (
                     <li key={index}>
                       <button
                         className={`min-h my-1 flex w-full items-center justify-between rounded-md border-b border-b-primary bg-gray-300 p-6 last:border-b-0 hover:bg-blue-gray-50 md:h-16 `}
-                        onClick={() => handleClick(member)}
+                        onClick={() => handleClick(review)}
                       >
                         <div className='flex space-x-2 tracking-wide'>
                           <Icon icon='material-symbols-light:download-done' width='30' height='30' />
                           <div className='flex pl-4 font-bold tracking-wide'>
-                            20120443 - {member?.teacher?.firstName + ' ' + member?.teacher?.lastName + ' '}
+                            {review?.studentId + ' - ' + review?.fullName}
                           </div>
-                          <div className='tracking-wide'> đã yêu cầu phúc khảo cột điểm giữa kỳ</div>
+                          <div className='tracking-wide'> đã yêu cầu phúc khảo cột điểm {review?.gradeName}</div>
                         </div>
                       </button>
                     </li>
                   ))}
 
-                {(!members?.enrollments || members.enrollments.length === 0) &&
+                {(!listCompletedReview || listCompletedReview.length === 0) &&
                   isLoading &&
                   Array(2)
                     .fill(0)
@@ -168,11 +170,11 @@ export default function ClassDetailReview() {
             ) : (
               <div
                 className={`cursor rounded-mdlast:border-b-0 my-1 flex h-16 w-full items-center
-                border-b border-b-primary bg-gray-300 p-3`}
+                border-b border-b-primary bg-gray-300 p-6`}
               >
                 <Icon icon='material-symbols-light:download-done' width='30' height='30' />
                 <div className='flex pl-6 font-bold tracking-wide'>
-                  {(members?.enrollments?.length || 0) + ' Reviews Completed'}
+                  {(listCompletedReview?.length || 0) + ' Reviews Completed'}
                 </div>
               </div>
             )}

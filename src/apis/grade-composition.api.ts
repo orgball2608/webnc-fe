@@ -24,6 +24,14 @@ const gradeCompositionApi = {
     return http.post<ResponseApi<GradeComposition[]>>(
       `${PREFIX}${courseId}/grade-compositions/${firstGradeCompositionId}/switch-index/${secondGradeCompositionId}`
     )
+  },
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  markFinalize: (courseId: string, gradeCompositionId: number, body: any) => {
+    return http.patch<ResponseApi<GradeComposition>>(
+      `${PREFIX}${courseId}/grade-compositions/${gradeCompositionId}/finalize`,
+      body
+    )
   }
 }
 

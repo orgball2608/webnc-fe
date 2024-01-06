@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { IoPencil } from 'react-icons/io5'
 import { Typography, IconButton, Tooltip } from '@material-tailwind/react'
 import { BsThreeDotsVertical } from 'react-icons/bs'
@@ -15,6 +16,8 @@ import { toast } from 'react-toastify'
 import ModalPreviewCSV from './ModalPreviewCSV'
 import { HEADER_FULLNAME_KEY, HEADER_INDEX_KEY, HEADER_STUDENT_ID_KEY } from './ClassDetailGrade'
 import { cloneDeep, keyBy, orderBy } from 'lodash'
+import courseApi from 'src/apis/courses.api'
+import gradeCompositionApi from 'src/apis/grade-composition.api'
 
 interface Props {
   gradeBoardData: GradeBoard
@@ -87,6 +90,11 @@ function GradeBoardTable({
   const uploadGradesFileMutation = useMutation({
     mutationFn: ({ gradeCompositionId, body }: { gradeCompositionId: number; body: FormData }) =>
       excelApi.importGrades(String(courseDetailData?.id), gradeCompositionId, body)
+  })
+
+  const markFinalizeMutation = useMutation({
+    mutationFn: ({ gradeCompositionId, body }: { gradeCompositionId: number; body: any }) =>
+      gradeCompositionApi.markFinalize(String(courseDetailData?.id), gradeCompositionId, body)
   })
 
   useEffect(() => {
@@ -201,16 +209,12 @@ function GradeBoardTable({
 
   const onChangeGradesInputFile =
     (gradeCompositionId: number) => async (event: React.ChangeEvent<HTMLInputElement>) => {
-      console.log(gradeCompositionId)
-
       const file = event.target.files?.[0]
 
       if (file) {
         const ext = getExtension(file.name)
         const compositionName = gradeBoardData.headers.find((header) => header.metaData?.id === gradeCompositionId)
           ?.key as string
-
-        console.log(compositionName)
 
         setGradesFile(file)
 
@@ -248,6 +252,19 @@ function GradeBoardTable({
       }
     }
 
+  const [isChecked, setIsChecked] = useState(false)
+  const handleCheckboxChange = async (gradeCompositionId: number, e: any) => {
+    try {
+      const value = e.target.checked
+      // console.log('vale: ' + value)
+      const body = {
+        isFinalized: value
+      }
+      const result = await markFinalizeMutation.mutateAsync({ gradeCompositionId, body })
+      // console.log(result.data.data.isFinalized)
+    } catch (error) {}
+  }
+  // console.log(gradeBoardData?.headers)
   return (
     <>
       <table className='mt-4 w-full min-w-max table-auto text-left'>
@@ -314,7 +331,9 @@ function GradeBoardTable({
                         <>
                           <Tooltip content='Đánh dấu là đã hoàn tất'>
                             <input
+                              onChange={(e) => handleCheckboxChange(header?.metaData?.id as number, e)}
                               type='checkbox'
+                              defaultChecked={header?.metaData?.isFinalized}
                               className='text-blue-600 h-4 w-4 rounded border-gray-300 bg-gray-100 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600'
                             />
                           </Tooltip>
