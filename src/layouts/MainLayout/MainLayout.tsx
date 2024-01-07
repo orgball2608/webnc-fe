@@ -8,7 +8,6 @@ import { toast } from 'react-toastify'
 import { getAccessTokenFromLS } from 'src/utils/auth'
 import { useQueryClient } from '@tanstack/react-query'
 import { NotificationSocketResponse } from 'src/types/socket.type'
-import classNames from 'classnames'
 
 function MainLayout() {
   const queryClient = useQueryClient()
