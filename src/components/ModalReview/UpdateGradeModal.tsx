@@ -49,7 +49,7 @@ export default function UpdateGradeModal({ isOpen, onCloseUpdateModal, onCloseRe
       studentId: reviewData?.studentId
     }
 
-    await (updateGradeMutation.mutateAsync(body), markCompletedMutation.mutateAsync())
+    await Promise.all([updateGradeMutation.mutateAsync(body), markCompletedMutation.mutateAsync()])
     await queryClient.invalidateQueries({
       queryKey: ['review-list']
     })
@@ -114,7 +114,7 @@ export default function UpdateGradeModal({ isOpen, onCloseUpdateModal, onCloseRe
                 <strong>New Grade: </strong>
               </Typography>
             </Grid>
-            <Grid item>
+            <Grid item className='pt-4'>
               <TextField type='number' variant='standard' {...register('grade')} />
               <p className='ml-1 flex min-h-[20px] items-center gap-1 text-xs font-normal text-red-400'>
                 {errors.grade?.message as string}

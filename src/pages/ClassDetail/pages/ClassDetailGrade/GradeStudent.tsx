@@ -52,7 +52,7 @@ export default function GradeStudent() {
 
   const reviewModal = ReviewDetailModal({
     isOpen: isOpenReviewModal,
-    onClose: () => setIsOpeReviewModal(false),
+    setIsOpenReviewModal: setIsOpeReviewModal,
     reviewData: {
       id: selected?.grades[0]?.GradeReview[0]?.id,
       explanation: selected?.grades[0]?.GradeReview[0]?.explanation,
@@ -62,7 +62,8 @@ export default function GradeStudent() {
       grade: selected?.grades[0]?.grade,
       gradeName: selected?.name,
       fullName: infoSutdent?.fullName,
-      studentId: infoSutdent?.studentId
+      studentId: infoSutdent?.studentId,
+      courseId: selected?.courseId
     },
     myRole
   })

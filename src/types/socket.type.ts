@@ -1,4 +1,5 @@
 import { SOCKET_MESSAGES } from 'src/constants/constants'
+import { ReviewComment } from './review-comment.type'
 
 export interface NotificationSocketResponse {
   id: number
@@ -13,4 +14,5 @@ export interface NotificationSocketResponse {
 
 export interface ServerToClientEvents {
   [SOCKET_MESSAGES.NOTIFICATION_CREATED]: (data: NotificationSocketResponse) => void
+  [SOCKET_MESSAGES.REVIEW_COMMENTED]: (data: ReviewComment) => void
 }

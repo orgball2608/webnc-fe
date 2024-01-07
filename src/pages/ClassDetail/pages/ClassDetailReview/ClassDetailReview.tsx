@@ -51,12 +51,10 @@ export default function ClassDetailReview() {
 
   const listCompletedReview = listReviewData?.filter((review) => review.isResolve)
   const listNewReview = listReviewData?.filter((review) => !review.isResolve)
-  console.log(listCompletedReview)
 
   const reviewDetailModal = ReviewDetailModal({
     isOpen: isOpenReviewModal,
-    onOpen: () => setIsOpenReviewModal(true),
-    onClose: () => setIsOpenReviewModal(false),
+    setIsOpenReviewModal,
     reviewData: reviewSelected,
     myRole: roleInCourse.role
   })
@@ -89,8 +87,8 @@ export default function ClassDetailReview() {
                     <li key={index}>
                       <button
                         className={`min-h my-1 flex w-full items-center justify-between rounded-md  
-                      border-b bg-opacity-60 p-6 last:border-b-0 hover:bg-lightBlue-100 md:h-16 
-                      ${index % 2 === 0 ? 'bg-blue-50' : ''} `}
+                      border-b bg-opacity-60 p-6 last:border-b-0 hover:bg-lightBlue-200 md:h-16 
+                      ${index % 2 === 0 ? 'bg-blue-100' : ''} `}
                         onClick={() => handleClick(review)}
                       >
                         <div className='flex space-x-2 tracking-wide'>
@@ -105,8 +103,7 @@ export default function ClassDetailReview() {
                       </button>
                     </li>
                   ))}
-                {(!listNewReview || listNewReview.length === 0) &&
-                  isLoading &&
+                {(!listNewReview || isLoading) &&
                   Array(2)
                     .fill(0)
                     .map((_, index) => <Skeleton key={index} className='h-[54px]' />)}
@@ -161,8 +158,7 @@ export default function ClassDetailReview() {
                     </li>
                   ))}
 
-                {(!listCompletedReview || listCompletedReview.length === 0) &&
-                  isLoading &&
+                {(!listCompletedReview || isLoading) &&
                   Array(2)
                     .fill(0)
                     .map((_, index) => <Skeleton key={index} className='h-[56px]' />)}
