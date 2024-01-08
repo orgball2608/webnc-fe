@@ -20,3 +20,7 @@ body {
   --base-color: rgb(235 235 235 / 20%);
   --highlight-color: rgb(245 245 245 / 20%);
 }
+
+.css-fix {
+  white-space: pre-wrap;
+}
