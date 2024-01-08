@@ -29,6 +29,10 @@ export default function Comment({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  function replaceWithBr(str: string) {
+    return str?.replace(/\n/g, '<br />')
+  }
+
   return (
     <>
       {commentList.map((comment) => (
@@ -52,11 +56,12 @@ export default function Comment({
                     .format('HH:mm DD-MM-YYYY')}
                 </p>
               </div>
-              {comment?.body.split('\n').map((paragraph, index) => (
+              <p dangerouslySetInnerHTML={{ __html: replaceWithBr(comment?.body) }} />
+              {/* {comment?.body.split('\n').map((paragraph, index) => (
                 <p key={index} style={{ textAlign: 'justify', color: 'black' }}>
                   {paragraph}
                 </p>
-              ))}
+              ))} */}
             </Grid>
           </Grid>
         </Paper>

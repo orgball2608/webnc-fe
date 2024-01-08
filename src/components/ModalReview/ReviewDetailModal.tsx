@@ -94,6 +94,10 @@ export default function ReviewDetailModal({ isOpen, setIsOpenReviewModal, review
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [commentData])
 
+  function replaceWithBr(str: string) {
+    return str?.replace(/\n/g, '<br />')
+  }
+
   return (
     <Dialog
       open={isOpen}
@@ -164,13 +168,7 @@ export default function ReviewDetailModal({ isOpen, setIsOpenReviewModal, review
           <Stack direction='row' className='mb-2'>
             <strong>Explanation: </strong>
             <div>
-              {' '}
-              {reviewData?.explanation?.split('\n').map((p: string, index: number) => (
-                <p key={index} className='ml-2'>
-                  {' '}
-                  {p}
-                </p>
-              ))}
+              <p dangerouslySetInnerHTML={{ __html: replaceWithBr(reviewData?.explanation) }} className='ml-2' />
             </div>
           </Stack>
           <Divider sx={{ borderBottomWidth: 2 }} />
