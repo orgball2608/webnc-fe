@@ -213,39 +213,6 @@ function ModalManageGrade({ type, classId, open, handler, gradeCompositions, set
                 onSortEnd={onSortEnd}
                 helperClass='z-[9999] bg-white/80 shadow-md'
               >
-                {/* {type === 'ADD' &&
-                  gradeCompositions &&
-                  gradeCompositions.length > 0 &&
-                  gradeCompositions.map((gradeComposition) => (
-                    <div key={gradeComposition.id} className='mb-2 grid grid-cols-12 gap-2'>
-                      <div className='col-span-7 flex'>
-                        <div className='mr-2 mt-[14px] min-w-[20px] cursor-move text-xl'></div>
-                        <div>
-                          <Input
-                            className='!text-base !text-primary disabled:cursor-not-allowed disabled:border-b disabled:bg-inherit disabled:opacity-50'
-                            variant='standard'
-                            disabled
-                            defaultValue={gradeComposition.name}
-                          />
-                          <p className='ml-1 flex min-h-[20px] items-center gap-1 text-xs font-normal text-red-400'></p>
-                        </div>
-                      </div>
-                      <div className='col-span-3'>
-                        <Input
-                          className='!text-base !text-primary disabled:cursor-not-allowed disabled:border-b disabled:bg-inherit disabled:opacity-50'
-                          containerProps={{ className: 'min-w-min' }}
-                          variant='standard'
-                          disabled
-                          defaultValue={gradeComposition.scale}
-                        />
-                        <p className='ml-1 flex min-h-[20px] items-center gap-1 text-xs font-normal text-red-400'></p>
-                      </div>
-                      <div className='col-span-2 flex flex-col'>
-                        <div className='flex flex-1 items-center justify-center'></div>
-                        <div className='h-[20px] w-full'></div>
-                      </div>
-                    </div>
-                  ))} */}
                 {fields.map((field, index) => {
                   return (
                     <DndItem index={index} key={field._id} className='mb-2 grid grid-cols-12 gap-2'>
@@ -289,6 +256,7 @@ function ModalManageGrade({ type, classId, open, handler, gradeCompositions, set
                               Icon={<IoCloseOutline />}
                               mode='dark'
                               onClick={() => handleDeleteGrade({ gradeIndex: index, gradeId: field.id })}
+                              disabled={isLoading}
                             />
                           )}
                         </div>

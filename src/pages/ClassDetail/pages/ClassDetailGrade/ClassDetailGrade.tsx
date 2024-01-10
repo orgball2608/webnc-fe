@@ -1,12 +1,11 @@
-import { Card, CardHeader, Typography, Button, CardBody, CardFooter } from '@material-tailwind/react'
-import { useEffect, useMemo, useState } from 'react'
+import { Card, CardHeader, Typography, Button, CardBody } from '@material-tailwind/react'
+import { useEffect, useState } from 'react'
 import ModalManageGrade from 'src/components/ModalManageGrade'
 import { useQuery } from '@tanstack/react-query'
 import gradeCompositionApi from 'src/apis/grade-composition.api'
 import { GradeComposition } from 'src/types/grade-composition.type'
 import { useCourseDetail } from '../../ClassDetail'
 import { CgExport } from 'react-icons/cg'
-import ModalPreviewCSV from './ModalPreviewCSV'
 import GradeBoardTable from './GradeBoardTable'
 import gradeApi from 'src/apis/grade.api'
 import { GradeBoard } from 'src/types/grade.type'
@@ -114,20 +113,6 @@ export default function ClassDetailGrade() {
           )}{' '}
           {roleInCourse.role === Role.STUDENT && !isLoadingMyrole && <GradeStudent />}
         </CardBody>
-
-        {/* <CardFooter className='flex items-center justify-between border-t border-blue-gray-50 p-4'>
-          <Typography variant='small' color='blue-gray' className='font-normal'>
-            Page 1 of 10
-          </Typography>
-          <div className='flex gap-2'>
-            <Button variant='outlined' size='sm'>
-              Previous
-            </Button>
-            <Button variant='outlined' size='sm'>
-              Next
-            </Button>
-          </div>
-        </CardFooter> */}
       </Card>
 
       {/* Edit modal */}
@@ -157,8 +142,6 @@ export default function ClassDetailGrade() {
         gradeCompositions={gradeCompositions as GradeComposition[]}
         setNewGradeCompositions={setNewGradeCompositions}
       />
-
-      <ModalPreviewCSV />
     </>
   )
 }
