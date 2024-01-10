@@ -1,12 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { IoPencil } from 'react-icons/io5'
-import { Typography, IconButton, Tooltip } from '@material-tailwind/react'
+import { Typography, IconButton, Tooltip, Input } from '@material-tailwind/react'
 import { BsThreeDotsVertical } from 'react-icons/bs'
 import Dropdown, { DropdownItem } from 'src/components/Dropdown'
 import { CgExport, CgImport } from 'react-icons/cg'
 import { useEffect, useMemo, useState } from 'react'
 import { GradeBoard, GradeBoardHeaderItem, GradeBoardRowItem } from 'src/types/grade.type'
-import InputNumber from 'src/components/InputNumber'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import excelApi from 'src/apis/excel.api'
 import { downloadFile, getExtension } from 'src/utils/utils'
@@ -16,8 +15,12 @@ import { toast } from 'react-toastify'
 import ModalPreviewCSV from './ModalPreviewCSV'
 import { HEADER_FULLNAME_KEY, HEADER_INDEX_KEY, HEADER_STUDENT_ID_KEY } from './ClassDetailGrade'
 import { cloneDeep, keyBy, orderBy } from 'lodash'
-import courseApi from 'src/apis/courses.api'
 import gradeCompositionApi from 'src/apis/grade-composition.api'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { UpdateGradeSchema, updateGradeSchema } from 'src/utils/rules'
+import gradeReviewApi from 'src/apis/review-grade.api'
+import classNames from 'classnames'
 
 interface Props {
   gradeBoardData: GradeBoard
@@ -26,9 +29,7 @@ interface Props {
   setIsOpenModalSortGradeCompositions: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-type DataGradeUpdate = GradeBoardHeaderItem & {
-  studentId: string
-}
+type DataGradeUpdate = GradeBoardHeaderItem
 
 export type CSVDataType = {
   fileName: string
@@ -44,7 +45,19 @@ function GradeBoardTable({
 }: Props) {
   const queryClient = useQueryClient()
 
-  const { data: courseDetailData } = useCourseDetail()
+  const {
+    register,
+    formState: { errors },
+    setValue,
+    handleSubmit,
+    watch
+  } = useForm<UpdateGradeSchema>({
+    resolver: zodResolver(updateGradeSchema)
+  })
+
+  const studentIdUpdate = watch('studentId')
+
+  const { data: courseDetailData, id: classId } = useCourseDetail()
 
   const [dataGradeUpdate, setDataGradeUpdate] = useState<DataGradeUpdate | null>(null)
   const [dataCSVPreview, setDataCSVPreview] = useState<CSVDataType | null>(null)
@@ -95,6 +108,16 @@ function GradeBoardTable({
   const markFinalizeMutation = useMutation({
     mutationFn: ({ gradeCompositionId, body }: { gradeCompositionId: number; body: any }) =>
       gradeCompositionApi.markFinalize(String(courseDetailData?.id), gradeCompositionId, body)
+  })
+
+  const updateGradeMutation = useMutation({
+    mutationFn: (body: UpdateGradeSchema) =>
+      gradeReviewApi.updateGrade(
+        Number(dataGradeUpdate?.metaData?.courseId),
+        String(dataGradeUpdate?.metaData?.id),
+        Number(dataGradeUpdate?.metaData?.index),
+        body
+      )
   })
 
   useEffect(() => {
@@ -252,7 +275,6 @@ function GradeBoardTable({
       }
     }
 
-  const [isChecked, setIsChecked] = useState(false)
   const handleCheckboxChange = async (gradeCompositionId: number, e: any) => {
     try {
       const value = e.target.checked
@@ -260,11 +282,22 @@ function GradeBoardTable({
       const body = {
         isFinalized: value
       }
-      const result = await markFinalizeMutation.mutateAsync({ gradeCompositionId, body })
-      // console.log(result.data.data.isFinalized)
+      await markFinalizeMutation.mutateAsync({ gradeCompositionId, body })
+      await queryClient.invalidateQueries({
+        queryKey: ['courses', classId, 'grade-boards/final']
+      })
     } catch (error) {}
   }
-  // console.log(gradeBoardData?.headers)
+
+  const onSubmitUpdateGrade = handleSubmit(async (data) => {
+    await updateGradeMutation.mutateAsync(data)
+    await queryClient.invalidateQueries({
+      queryKey: ['courses', classId, 'grade-boards/final']
+    })
+    setDataGradeUpdate(null)
+    toast.success('Cập nhật điểm thành công!')
+  })
+
   return (
     <>
       <table className='mt-4 w-full min-w-max table-auto text-left'>
@@ -429,21 +462,44 @@ function GradeBoardTable({
                       <div className='group flex items-center justify-center gap-2'>
                         {dataGradeUpdate &&
                         dataGradeUpdate.key === gradeComposition.key &&
-                        dataGradeUpdate.studentId === row.studentId ? (
+                        studentIdUpdate === row.studentId ? (
                           <div className='flex'>
-                            <InputNumber
-                              type='text'
-                              value={row?.[gradeComposition.key] || 0}
-                              classNameInput='h-[34px] w-[100px] rounded-l-md border border-gray-300 px-2 py-1 outline-none'
-                            />
+                            <div>
+                              <input
+                                {...register('grade')}
+                                className={classNames(
+                                  'h-[34px] w-[100px] rounded-l-md border border-gray-300 px-2 py-1 outline-none',
+                                  {
+                                    'border-red-400': Boolean(errors.grade?.message)
+                                  }
+                                )}
+                              />
+                            </div>
 
                             <button
                               onClick={() => setDataGradeUpdate(null)}
-                              className='flex h-[34px] items-center justify-center border border-l-0 border-gray-300 bg-white px-2 text-sm text-black outline-none transition-colors duration-200 active:bg-blue-gray-50'
+                              className={classNames(
+                                'flex h-[34px] items-center justify-center border border-l-0 border-gray-300 bg-white px-2 text-sm text-black outline-none transition-colors duration-200',
+                                {
+                                  'cursor-not-allowed active:bg-none': updateGradeMutation.isPending,
+                                  'active:bg-blue-gray-50': !updateGradeMutation.isPending
+                                }
+                              )}
+                              disabled={updateGradeMutation.isPending}
                             >
                               Hủy
                             </button>
-                            <button className='flex h-[34px] items-center justify-center rounded-r-md border border-l-0 border-gray-300 bg-black px-2 text-sm text-white outline-none transition-colors duration-200 active:bg-blue-gray-800'>
+                            <button
+                              onClick={onSubmitUpdateGrade}
+                              className={classNames(
+                                'flex h-[34px] items-center justify-center rounded-r-md border border-l-0 border-gray-300 bg-black px-2 text-sm text-white outline-none transition-colors duration-200',
+                                {
+                                  'cursor-not-allowed active:bg-none': updateGradeMutation.isPending,
+                                  'active:bg-blue-gray-800': !updateGradeMutation.isPending
+                                }
+                              )}
+                              disabled={updateGradeMutation.isPending}
+                            >
                               Cập nhật
                             </button>
                           </div>
@@ -452,16 +508,24 @@ function GradeBoardTable({
                             <Typography variant='small' color='blue-gray' className='font-normal'>
                               {row?.[gradeComposition.key] || 0}
                             </Typography>
-                            <Tooltip content='Cập nhật điểm'>
-                              <IconButton
-                                variant='text'
-                                className='opacity-0 group-hover:opacity-100'
-                                size='sm'
-                                onClick={() => setDataGradeUpdate({ ...gradeComposition, studentId: row.studentId })}
-                              >
-                                <IoPencil className='h-4 w-4' />
-                              </IconButton>
-                            </Tooltip>
+                            {!gradeComposition.metaData?.isFinalized && (
+                              <Tooltip content='Cập nhật điểm'>
+                                <IconButton
+                                  variant='text'
+                                  className='opacity-0 group-hover:opacity-100'
+                                  size='sm'
+                                  onClick={() => {
+                                    const grade = String(row[gradeComposition.key])
+                                    setDataGradeUpdate(gradeComposition)
+
+                                    setValue('grade', grade)
+                                    setValue('studentId', row.studentId)
+                                  }}
+                                >
+                                  <IoPencil className='h-4 w-4' />
+                                </IconButton>
+                              </Tooltip>
+                            )}
                           </>
                         )}
                       </div>
@@ -474,13 +538,7 @@ function GradeBoardTable({
                     </Typography>
                   </td>
 
-                  <td className={classes}>
-                    {/* <Tooltip content='Edit User'>
-                     <IconButton variant='text'>
-                       <IoPencil className='h-4 w-4' />
-                     </IconButton>
-                   </Tooltip> */}
-                  </td>
+                  <td className={classes}></td>
                 </tr>
               )
             })}
