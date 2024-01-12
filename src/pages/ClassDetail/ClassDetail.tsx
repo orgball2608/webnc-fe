@@ -10,8 +10,12 @@ import { clearBreadcrumbs, setBreadcrumbs } from 'src/slices/app.slice'
 import { ContextType } from 'src/types/course.type'
 import { Role } from 'src/constants/enums'
 import { setRoleInCourses } from 'src/slices/class.slice'
+import { useTranslation } from 'react-i18next'
+
+type TabType = { title: string; path: string }
 
 function ClassDetail() {
+  const { t } = useTranslation()
   const { classId } = useParams()
 
   const dispatch = useAppDispatch()
@@ -20,30 +24,26 @@ function ClassDetail() {
 
   const [myRole, setMyRole] = useState<string>(Role.STUDENT)
 
-  const tabs = useMemo(() => {
-    const myTabs = [
-      {
-        title: 'Bảng tin',
-        path: `/class/${classId}/news`
-      },
-      {
-        title: 'Điểm',
-        path: `/class/${classId}/grade`
-      },
-      {
-        title: 'Mọi người',
-        path: `/class/${classId}/people`
-      }
-    ]
-    if (myRole === Role.TEACHER) {
-      myTabs.push({
-        title: 'Reviews',
-        path: `/class/${classId}/review`
-      })
+  const tabs: TabType[] = [
+    {
+      title: t('newsFeed'),
+      path: `/class/${classId}/news`
+    },
+    {
+      title: t('grade'),
+      path: `/class/${classId}/grade`
+    },
+    {
+      title: t('people'),
+      path: `/class/${classId}/people`
     }
-    return myTabs
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [classId, myRole])
+  ]
+  if (myRole === Role.TEACHER) {
+    tabs.push({
+      title: t('reviews'),
+      path: `/class/${classId}/review`
+    })
+  }
 
   const getCourseDetailQuery = useQuery({
     queryKey: ['course-detail', classId],

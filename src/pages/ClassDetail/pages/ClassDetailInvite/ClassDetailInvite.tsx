@@ -9,8 +9,10 @@ import { toast } from 'react-toastify'
 import { useAppDispatch, useAppSelector } from 'src/app/store'
 import { setInvitationLink } from 'src/slices/class.slice'
 import { Box, CircularProgress } from '@mui/material'
+import { useTranslation } from 'react-i18next'
 
 export default function ClassDetailInvite() {
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
   const queryClient = useQueryClient()
@@ -71,7 +73,7 @@ export default function ClassDetailInvite() {
           queryKey: ['classes']
         })
       ])
-      toast.success('Tham gia lớp học thành công!')
+      toast.success(t('joinClassSuccessfully'))
       navigate(classURL)
       setIsLoading(false)
     })
@@ -95,7 +97,9 @@ export default function ClassDetailInvite() {
       {!dataCheck.isLoading && (
         <Card className='w-[50em] rounded-md border-2 border-solid border-[#cbd3e1] font-medium'>
           <CardBody>
-            <h1 className='mb-4 mt-4 text-center'>Xác nhận tham gia lớp {checkEnrolled?.course?.data?.name}</h1>
+            <h1 className='mb-4 mt-4 text-center'>
+              {t('confirmJoinClass')} {checkEnrolled?.course?.data?.name}
+            </h1>
             {/* Hiển thị thông điệp và các thông tin khác */}
           </CardBody>
           <CardFooter>
@@ -107,7 +111,7 @@ export default function ClassDetailInvite() {
                 onClick={handleConfirm}
                 disabled={isLoading === true}
               >
-                Xác nhận
+                {t('confirm')}
               </Button>
               <Button
                 color='white'
@@ -116,7 +120,7 @@ export default function ClassDetailInvite() {
                 onClick={handleCancle}
                 disabled={isLoading === true}
               >
-                Hủy
+                {t('cancel')}
               </Button>
             </div>
           </CardFooter>

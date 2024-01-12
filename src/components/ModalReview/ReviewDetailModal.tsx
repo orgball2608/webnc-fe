@@ -18,16 +18,17 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'react-toastify'
 import { useForm } from 'react-hook-form'
 import { ReviewComment } from 'src/types/review-comment.type'
+import { useTranslation } from 'react-i18next'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default function ReviewDetailModal({ isOpen, setIsOpenReviewModal, reviewData, myRole }: any) {
   const queryClient = useQueryClient()
+  const { t } = useTranslation()
 
   const commentListRef = useRef<HTMLDivElement | null>(null)
 
   const onClose = () => {
     setIsOpenReviewModal(false)
-    // setCommentList([])
   }
 
   const [isOpenUpdateModal, setIsOpenUpdateModal] = React.useState(false)
@@ -49,12 +50,10 @@ export default function ReviewDetailModal({ isOpen, setIsOpenReviewModal, review
     }
     await createCommentMutation.mutateAsync(body)
     setValue('body', '')
-    // setCommentContent('')
   })
 
   const handleClickComplete = () => {
     setIsOpenUpdateModal(true)
-    // setCommentContent('')
   }
   const markInCompleteMutation = useMutation({
     mutationFn: () => gradeReviewApi.markInComplete(reviewData?.courseId, reviewData?.id)
@@ -66,7 +65,7 @@ export default function ReviewDetailModal({ isOpen, setIsOpenReviewModal, review
       queryKey: ['review-list']
     })
     onClose()
-    toast.success('Mở lại Review thành công!')
+    toast.success(t('reopenReviewSuccess'))
   }
 
   const updateGradeModal = UpdateGradeModal({
@@ -131,7 +130,7 @@ export default function ReviewDetailModal({ isOpen, setIsOpenReviewModal, review
         <div className='flex'>
           {' '}
           <Icon icon='material-symbols:rate-review-outline' className='mr-3 mt-1' width='30' height='30' />
-          <strong>Grade Review </strong>
+          <strong>{t('gradeReview')} </strong>
         </div>
         <IconButton
           onClick={onClose}
@@ -147,33 +146,33 @@ export default function ReviewDetailModal({ isOpen, setIsOpenReviewModal, review
           <Stack spacing={{ xs: 2, sm: 16 }} direction={'row'}>
             <Stack direction={'column'} spacing={3}>
               <Typography variant='body1' className='mb-2'>
-                <strong>Fullname: </strong> {reviewData?.fullName}
+                <strong>{t('fullname')}: </strong> {reviewData?.fullName}
               </Typography>
               <Typography variant='body1' className='mb-2'>
-                <strong>Grade Composition: </strong> {reviewData?.gradeName}
+                <strong>{t('gradeComposition')}: </strong> {reviewData?.gradeName}
               </Typography>
             </Stack>
             <Stack direction={'column'} spacing={3}>
               <Typography variant='body1' className='mb-2'>
-                <strong>Student ID: </strong> {reviewData?.studentId}
+                <strong>{t('studentId')}: </strong> {reviewData?.studentId}
               </Typography>
               <Typography variant='body1' className='mb-2'>
-                <strong>Current Grade:</strong> {reviewData?.grade}
+                <strong>{t('currentGrade')}:</strong> {reviewData?.grade}
               </Typography>
             </Stack>
           </Stack>
           <Typography variant='body1' className='mb-2'>
-            <strong>Expectation grade:</strong> {reviewData?.expectedGrade}
+            <strong>{t('expectGrade')}:</strong> {reviewData?.expectedGrade}
           </Typography>
           <Stack direction='row' className='mb-2'>
-            <strong>Explanation: </strong>
+            <strong>{t('explanation')}: </strong>
             <div>
               <p dangerouslySetInnerHTML={{ __html: replaceWithBr(reviewData?.explanation) }} className='ml-2' />
             </div>
           </Stack>
           <Divider sx={{ borderBottomWidth: 2 }} />
           <div className='text-xl'>
-            <strong>Comments</strong>
+            <strong>{t('comments')}</strong>
           </div>
           <Stack spacing={3} alignItems='center'>
             {commentQuery.isLoading && (
@@ -185,7 +184,7 @@ export default function ReviewDetailModal({ isOpen, setIsOpenReviewModal, review
           </Stack>
           {reviewData?.isResolve ? (
             <Typography textAlign='center'>
-              <strong>Review đã được giải quyết</strong>
+              <strong>{t('resolvedReview')}</strong>
             </Typography>
           ) : (
             <form onSubmit={onSubmit}>
@@ -200,10 +199,8 @@ export default function ReviewDetailModal({ isOpen, setIsOpenReviewModal, review
                       paddingX: '10px',
                       paddingY: '10px'
                     }}
-                    placeholder='Type your comment here'
+                    placeholder={t('typeComment')}
                     variant='outlined'
-                    // onChange={handleInput}
-                    // value={commentContent}
                     {...register('body')}
                     disabled={createCommentMutation.isPending || commentQuery.isLoading}
                   />
@@ -225,7 +222,7 @@ export default function ReviewDetailModal({ isOpen, setIsOpenReviewModal, review
                   </div>
                 </Stack>
                 <p className='ml-1 flex min-h-[20px] items-center gap-1 text-xs font-normal text-red-400'>
-                  {createCommentMutation.isPending && 'Đang gửi comment...'}
+                  {createCommentMutation.isPending && t('sendingComment')}
                 </p>
               </Stack>
             </form>
@@ -236,7 +233,7 @@ export default function ReviewDetailModal({ isOpen, setIsOpenReviewModal, review
         {myRole === Role.TEACHER &&
           (!reviewData?.isResolve ? (
             <Button onClick={handleClickComplete} sx={{ textTransform: 'none' }}>
-              Update grade and complete review
+              {t('updateGradeAndCompleteReview')}
             </Button>
           ) : (
             <Button
@@ -244,11 +241,11 @@ export default function ReviewDetailModal({ isOpen, setIsOpenReviewModal, review
               sx={{ textTransform: 'none' }}
               disabled={markInCompleteMutation.isPending}
             >
-              Open review
+              {t('openReview')}
             </Button>
           ))}
         <Button onClick={onClose} sx={{ textTransform: 'none' }} disabled={markInCompleteMutation.isPending}>
-          Close
+          {t('close')}
         </Button>
       </DialogActions>
       {updateGradeModal}

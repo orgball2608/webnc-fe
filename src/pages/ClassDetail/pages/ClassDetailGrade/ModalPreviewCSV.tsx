@@ -15,6 +15,7 @@ import { motion } from 'framer-motion'
 import { HEADER_FULLNAME_KEY, HEADER_INDEX_KEY, HEADER_STUDENT_ID_KEY } from './ClassDetailGrade'
 import { GradeBoardHeaderItem } from 'src/types/grade.type'
 import { CSVDataType } from './GradeBoardTable'
+import { useTranslation } from 'react-i18next'
 
 interface Props {
   isOpen: boolean
@@ -27,6 +28,8 @@ interface Props {
 }
 
 function ModalPreviewCSV({ isOpen, setIsOpen, CSVData, gradeCompositions, isLoading, disabled, onSubmit }: Props) {
+  const { t } = useTranslation()
+
   const { refs, context } = useFloating({
     open: isOpen,
     onOpenChange: setIsOpen
@@ -66,12 +69,12 @@ function ModalPreviewCSV({ isOpen, setIsOpen, CSVData, gradeCompositions, isLoad
                 >
                   <div className='my-auto flex max-h-screen flex-col items-center px-10 py-4'>
                     <Typography variant='h2' className='mb-3 text-center text-3xl'>
-                      Preview {CSVData?.fileName}
+                      {t('preview')} {CSVData?.fileName}
                     </Typography>
 
                     <div className='relative w-full flex-1 overflow-auto shadow-md sm:rounded-lg'>
                       {isLoading ? (
-                        <div className='text-center'>Loading...</div>
+                        <div className='text-center'>{t('loading')}</div>
                       ) : (
                         <table className='mt-4 w-full min-w-max table-auto text-left'>
                           <thead>
@@ -92,7 +95,7 @@ function ModalPreviewCSV({ isOpen, setIsOpen, CSVData, gradeCompositions, isLoad
                                             color='blue-gray'
                                             className='text-base font-bold leading-none'
                                           >
-                                            Học sinh
+                                            {t('student')}
                                           </Typography>
                                         </div>
                                       </th>
@@ -181,7 +184,7 @@ function ModalPreviewCSV({ isOpen, setIsOpen, CSVData, gradeCompositions, isLoad
                         className='flex-1 text-sm'
                         disabled={disabled}
                       >
-                        Hủy bỏ
+                        {t('cancel')}
                       </Button>
                       <Button
                         variant='filled'
@@ -189,7 +192,7 @@ function ModalPreviewCSV({ isOpen, setIsOpen, CSVData, gradeCompositions, isLoad
                         onClick={onSubmit}
                         disabled={disabled}
                       >
-                        Tải lên
+                        {t('upload')}
                       </Button>
                     </div>
 

@@ -2,6 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Button, Dialog, Card, CardBody, CardFooter, Input } from '@material-tailwind/react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import courseApi from 'src/apis/courses.api'
@@ -18,6 +19,7 @@ type FormData = ClassCodeSchema
 export default function JoinClassModal({ open, handler }: Props) {
   const queryClient = useQueryClient()
   const navigate = useNavigate()
+  const { t } = useTranslation()
 
   const currentURL = useLocation().pathname
 
@@ -56,7 +58,7 @@ export default function JoinClassModal({ open, handler }: Props) {
         const classURL = currentURL.replace(`/home`, `class/${course?.courseId}/news`)
         handler()
         reset()
-        toast.success('Tham gia lớp học thành công!')
+        toast.success(t('joinClassSuccessfully'))
         navigate(classURL)
       },
       onError: (error) => {
@@ -84,14 +86,14 @@ export default function JoinClassModal({ open, handler }: Props) {
       <Dialog size='sm' open={open} handler={handler} className='bg-transparent shadow-none'>
         <Card className='mx-auto w-full'>
           <CardBody className='flex flex-col gap-4'>
-            <h4 className='mb-4 text-base font-medium text-primary'>Tham gia lớp học</h4>
+            <h4 className='mb-4 text-base font-medium text-primary'>{t('joinClass')}</h4>
             <form onSubmit={onSubmit}>
               <div className='mb-2'>
                 <Input
                   {...register('classCode')}
                   className='!text-base !text-primary'
                   variant='standard'
-                  label='Class code'
+                  label={t('classCode')}
                 />
                 <p className='ml-1 flex min-h-[20px] items-center gap-1 text-xs font-normal text-red-400'>
                   {errors.classCode?.message}
@@ -101,7 +103,7 @@ export default function JoinClassModal({ open, handler }: Props) {
           </CardBody>
           <CardFooter className='flex gap-8 pt-0'>
             <Button variant='outlined' className='flex-1 text-sm' onClick={handler} fullWidth>
-              Hủy
+              {t('cancel')}
             </Button>
             <Button
               variant='filled'
@@ -110,7 +112,7 @@ export default function JoinClassModal({ open, handler }: Props) {
               fullWidth
               disabled={joinClassMutation.isPending}
             >
-              Tham gia
+              {t('join')}
             </Button>
           </CardFooter>
         </Card>

@@ -10,6 +10,7 @@ import Image from '../Image'
 import { useAppSelector } from 'src/app/store'
 import ModalUnsubscribeClass from './ModalUnsubscribeClass'
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 interface Props {
   data: CourseItem
@@ -17,6 +18,7 @@ interface Props {
 
 // eslint-disable-next-line no-empty-pattern
 function ClassCard({ data }: Props) {
+  const { t } = useTranslation()
   const { profile } = useAppSelector((state) => state.auth)
   const [isOpenModal, setIsOpenModal] = useState(false)
 
@@ -43,10 +45,10 @@ function ClassCard({ data }: Props) {
             render={() => (
               <>
                 {profile?.id === data.createdBy.id && (
-                  <DropdownItem onClick={() => setIsOpenModal(true)}>Xóa</DropdownItem>
+                  <DropdownItem onClick={() => setIsOpenModal(true)}>{t('delete')}</DropdownItem>
                 )}
                 {profile?.id !== data.createdBy.id && (
-                  <DropdownItem onClick={() => setIsOpenModal(true)}>Hủy đăng ký</DropdownItem>
+                  <DropdownItem onClick={() => setIsOpenModal(true)}>{t('unsubscribe')}</DropdownItem>
                 )}
               </>
             )}
@@ -65,7 +67,7 @@ function ClassCard({ data }: Props) {
 
         <footer className='h-14 border-t border-t-primary p-1'>
           <div className='flex justify-end'>
-            <IconButton Icon={<LuUserSquare />} mode='dark' tooltip={`Mở bài tập của bạn cho "test"`} />
+            <IconButton Icon={<LuUserSquare />} mode='dark' />
             <IconButton Icon={<LuFolder />} mode='dark' />
           </div>
         </footer>

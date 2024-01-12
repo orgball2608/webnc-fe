@@ -2,6 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Button, Dialog, Card, CardBody, CardFooter, Input } from '@material-tailwind/react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
 import courseApi from 'src/apis/courses.api'
 import { ClassSchema, classSchema } from 'src/utils/rules'
@@ -15,6 +16,7 @@ interface Props {
 type FormData = ClassSchema
 
 function ModalManageClass({ open, handler }: Props) {
+  const { t } = useTranslation()
   const queryClient = useQueryClient()
 
   const {
@@ -49,7 +51,7 @@ function ModalManageClass({ open, handler }: Props) {
         ])
         handler()
         reset()
-        toast.success('Tạo lớp học thành công!')
+        toast.success(t('createClassSuccessfully'))
       },
       onError: (error) => {
         if (
@@ -75,14 +77,14 @@ function ModalManageClass({ open, handler }: Props) {
       <Dialog size='sm' open={open} handler={handler} className='bg-transparent shadow-none'>
         <Card className='mx-auto w-full'>
           <CardBody className='flex flex-col gap-4'>
-            <h4 className='mb-4 text-base font-medium text-primary'>Tạo lớp học</h4>
+            <h4 className='mb-4 text-base font-medium text-primary'>{t('createClass')}</h4>
             <form onSubmit={onSubmit}>
               <div className='mb-2'>
                 <Input
                   {...register('name')}
                   className='!text-base !text-primary'
                   variant='standard'
-                  label='Tên lớp học (bắt buộc)'
+                  label={t('classNameRequired')}
                 />
                 <p className='ml-1 flex min-h-[20px] items-center gap-1 text-xs font-normal text-red-400'>
                   {errors.name?.message}
@@ -93,7 +95,7 @@ function ModalManageClass({ open, handler }: Props) {
                   {...register('description')}
                   className='!text-base !text-primary'
                   variant='standard'
-                  label='Phần'
+                  label={t('part')}
                 />
                 <p className='ml-1 flex min-h-[20px] items-center gap-1 text-xs font-normal text-red-400'>
                   {errors.description?.message}
@@ -101,14 +103,24 @@ function ModalManageClass({ open, handler }: Props) {
               </div>
 
               <div className='mb-2'>
-                <Input {...register('topic')} className='!text-base !text-primary' variant='standard' label='Chủ đề' />
+                <Input
+                  {...register('topic')}
+                  className='!text-base !text-primary'
+                  variant='standard'
+                  label={t('topic')}
+                />
                 <p className='ml-1 flex min-h-[20px] items-center gap-1 text-xs font-normal text-red-400'>
                   {errors.topic?.message}
                 </p>
               </div>
 
               <div className='mb-2'>
-                <Input {...register('room')} className='!text-base !text-primary' variant='standard' label='Phòng' />
+                <Input
+                  {...register('room')}
+                  className='!text-base !text-primary'
+                  variant='standard'
+                  label={t('room')}
+                />
                 <p className='ml-1 flex min-h-[20px] items-center gap-1 text-xs font-normal text-red-400'>
                   {errors.room?.message}
                 </p>
@@ -117,7 +129,7 @@ function ModalManageClass({ open, handler }: Props) {
           </CardBody>
           <CardFooter className='flex gap-8 pt-0'>
             <Button variant='outlined' className='flex-1 text-sm' onClick={handler} fullWidth>
-              Hủy
+              {t('cancel')}
             </Button>
             <Button
               variant='filled'
@@ -126,7 +138,7 @@ function ModalManageClass({ open, handler }: Props) {
               fullWidth
               disabled={createClassMutation.isPending}
             >
-              Tạo
+              {t('create')}
             </Button>
           </CardFooter>
         </Card>

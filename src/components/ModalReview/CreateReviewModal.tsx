@@ -14,11 +14,13 @@ import { GradeReviewSchema, gradeReviewSchema } from 'src/utils/rules'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import gradeReviewApi from 'src/apis/review-grade.api'
 import { toast } from 'react-toastify'
+import { useTranslation } from 'react-i18next'
 
 type FormData = GradeReviewSchema
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default function CreateReviewModal({ isOpen, onClose, gradeData, infoSutdent }: any) {
   const queryClient = useQueryClient()
+  const { t } = useTranslation()
 
   const {
     register,
@@ -38,7 +40,7 @@ export default function CreateReviewModal({ isOpen, onClose, gradeData, infoSutd
         await queryClient.invalidateQueries({
           queryKey: ['my-grade']
         })
-        toast.success('Gửi review thành công!')
+        toast.success(t('submitReviewSuccessfully'))
         onClose()
       }
     })
@@ -77,7 +79,7 @@ export default function CreateReviewModal({ isOpen, onClose, gradeData, infoSutd
         <div className='flex'>
           {' '}
           <Icon icon='material-symbols:rate-review-outline' className='mr-3 mt-1' width='30' height='30' />
-          <strong>Grade Review </strong>
+          <strong>{t('gradeReview')} </strong>
         </div>
         <IconButton onClick={onClose} color='inherit' size='small' disabled={reviewGradeMutation.isPending}>
           <Icon icon='material-symbols:close' width='25' />
@@ -88,26 +90,26 @@ export default function CreateReviewModal({ isOpen, onClose, gradeData, infoSutd
           <Stack spacing={{ xs: 2, sm: 16 }} direction={'row'}>
             <Stack direction={'column'} spacing={3}>
               <Typography variant='body1' className='mb-2'>
-                <strong>Fullname: </strong>
+                <strong>{t('fullname')}: </strong>
                 {infoSutdent?.fullName}
               </Typography>
               <Typography variant='body1' className='mb-2'>
-                <strong>Grade Composition: </strong> {gradeData?.name}
+                <strong>{t('gradeComposition')}: </strong> {gradeData?.name}
               </Typography>
             </Stack>
             <Stack direction={'column'} spacing={3}>
               <Typography variant='body1' className='mb-2'>
-                <strong>Student ID:</strong> {infoSutdent?.studentId}
+                <strong>{t('studentId')}:</strong> {infoSutdent?.studentId}
               </Typography>
               <Typography variant='body1' className='mb-2'>
-                <strong>Current Grade:</strong> {gradeData?.grades[0]?.grade}
+                <strong>{t('currentGrade')}:</strong> {gradeData?.grades[0]?.grade}
               </Typography>
             </Stack>
           </Stack>
           <Grid container alignItems='center'>
             <Grid item>
               <Typography variant='body1' sx={{ marginRight: '5px' }}>
-                <strong>Expectation Grade: </strong>
+                <strong>{t('expectGrade')}: </strong>
               </Typography>
             </Grid>
             <Grid item className='pt-4'>
@@ -123,7 +125,7 @@ export default function CreateReviewModal({ isOpen, onClose, gradeData, infoSutd
             </Grid>
           </Grid>
           <Typography variant='body1' className=''>
-            <strong>Explanation:</strong>{' '}
+            <strong>{t('explanation')}:</strong>{' '}
           </Typography>
           <div>
             <Textarea
@@ -149,10 +151,10 @@ export default function CreateReviewModal({ isOpen, onClose, gradeData, infoSutd
       </DialogContent>
       <DialogActions>
         <Button onClick={onSubmit} disabled={reviewGradeMutation.isPending} sx={{ textTransform: 'none' }}>
-          Sent
+          {t('sent')}
         </Button>
         <Button onClick={onClose} disabled={reviewGradeMutation.isPending} sx={{ textTransform: 'none' }}>
-          Close
+          {t('close')}
         </Button>
       </DialogActions>
     </Dialog>

@@ -4,6 +4,7 @@ import AccountCircle from '@mui/icons-material/AccountCircle'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import userApi, { UpdateProfileRequest } from 'src/apis/user.api'
@@ -17,6 +18,7 @@ type FormData = UpdateProfileSchema & {
 }
 
 function Profile() {
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
 
@@ -82,11 +84,11 @@ function Profile() {
       const file = files[0]
 
       if (file.size > 5 * 1024 * 1024) {
-        toast.error('Maximum image size is 5MB')
+        toast.error(t('maximumSize5MB'))
         return
       }
       if (!['image/jpg', 'image/jpeg', 'image/png'].includes(file.type)) {
-        toast.error('File type must be .jpg, .jpeg, .png')
+        toast.error(t('fileTypeValidation'))
         return
       }
       setFileAvatar(file)
@@ -95,7 +97,7 @@ function Profile() {
 
   return (
     <div className=' mt-20 flex flex-col items-center justify-center'>
-      <div className='text-5xl font-bold uppercase text-primary md:my-10  '>Profile</div>
+      <div className='text-5xl font-bold uppercase text-primary md:my-10'>{t('profile')}</div>
       <form className='w-4/5 md:w-3/5' onSubmit={onSubmit}>
         <div className='mt-8 flex flex-col-reverse md:flex-row md:items-start'>
           <div className='grid grid-cols-6 gap-2 px-10 md:w-2/3'>
@@ -124,14 +126,14 @@ function Profile() {
 
             <div className='col-span-12 grid w-full grid-cols-12 gap-2'>
               <div className='col-span-12 md:col-span-6'>
-                <Input label='First name' {...register('firstName')} containerProps={{ className: 'min-w-min' }} />
+                <Input label={t('firstName')} {...register('firstName')} containerProps={{ className: 'min-w-min' }} />
                 <p className='ml-1 flex min-h-[20px] items-center gap-1 text-xs font-normal text-red-400'>
                   {errors.firstName?.message}
                 </p>
               </div>
 
               <div className='col-span-12 md:col-span-6'>
-                <Input label='Last name' {...register('lastName')} containerProps={{ className: 'min-w-min' }} />
+                <Input label={t('lastName')} {...register('lastName')} containerProps={{ className: 'min-w-min' }} />
                 <p className='ml-1 flex min-h-[20px] items-center gap-1 text-xs font-normal text-red-400'>
                   {errors.lastName?.message}
                 </p>
@@ -139,14 +141,18 @@ function Profile() {
             </div>
 
             <div className='col-span-12'>
-              <Input label='Phone number' {...register('phoneNumber')} containerProps={{ className: 'min-w-min' }} />
+              <Input
+                label={t('phoneNumber')}
+                {...register('phoneNumber')}
+                containerProps={{ className: 'min-w-min' }}
+              />
               <p className='ml-1 flex min-h-[20px] items-center gap-1 text-xs font-normal text-red-400'>
                 {errors.phoneNumber?.message}
               </p>
             </div>
 
             <div className='col-span-12'>
-              <Input label='Address' {...register('address')} containerProps={{ className: 'min-w-min' }} />
+              <Input label={t('address')} {...register('address')} containerProps={{ className: 'min-w-min' }} />
               <p className='ml-1 flex min-h-[20px] items-center gap-1 text-xs font-normal text-red-400'>
                 {errors.address?.message}
               </p>
@@ -171,10 +177,10 @@ function Profile() {
                 onChange={onFileChange}
               />
               <Button type='button' onClick={handleChooseAvatar} className='border bg-white text-primary'>
-                Choose Avatar
+                {t('chooseAvatar')}
               </Button>
-              <span className=' mt-3 text-xs text-gray-400'>Maximum image size: 5MB</span>
-              <span className=' text-xs text-gray-400'>File: .jpg, .jpeg, .png</span>
+              <span className='mt-3 text-xs text-gray-400'>{t('maximumImgSize')}: 5MB</span>
+              <span className='text-xs text-gray-400'>File: .jpg, .jpeg, .png</span>
             </div>
           </div>
         </div>
@@ -182,7 +188,7 @@ function Profile() {
         <hr className='mb-5 mt-5 border-t-gray-600' />
         <div className='flex items-center justify-center'>
           <Button type='submit' className='mt-2 bg-primary uppercase ' disabled={updateProfileMutation.isPending}>
-            Update profile
+            {t('updateProfile')}
           </Button>
         </div>
       </form>

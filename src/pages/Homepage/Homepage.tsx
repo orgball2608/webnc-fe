@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { useEffect } from 'react'
 import { Helmet } from 'react-helmet'
+import { useTranslation } from 'react-i18next'
 import Skeleton from 'react-loading-skeleton'
 import courseApi from 'src/apis/courses.api'
 import { useAppDispatch } from 'src/app/store'
@@ -10,6 +11,8 @@ import { setMyClass } from 'src/slices/class.slice'
 import { CourseItem } from 'src/types/course.type'
 
 function Homepage() {
+  const { t } = useTranslation()
+
   const dispatch = useAppDispatch()
 
   const courseData = useQuery({
@@ -35,7 +38,7 @@ function Homepage() {
   return (
     <>
       <Helmet>
-        <title>Màn hình chính</title>
+        <title>{t('mainScreen')}</title>
       </Helmet>
 
       <div className='p-6'>

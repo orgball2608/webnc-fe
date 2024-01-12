@@ -1,7 +1,9 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button, Input } from '@material-tailwind/react'
 import { useMutation } from '@tanstack/react-query'
+import { t } from 'i18next'
 import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import userApi, { ChangePasswordRequest } from 'src/apis/user.api'
@@ -13,6 +15,7 @@ import { isAxiosUnprocessableEntityError } from 'src/utils/utils'
 type FormData = ChangePasswordSchema
 
 function ChangePassword() {
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const {
     register,
@@ -59,7 +62,7 @@ function ChangePassword() {
 
   return (
     <div className=' mt-32 flex flex-col items-center justify-center'>
-      <div className='mb-5 text-center text-5xl font-bold uppercase text-primary'>CHANGE PASSWORD</div>
+      <div className='mb-5 text-center text-5xl font-bold uppercase text-primary'>{t('changePassword')}</div>
       <form className='w-4/5 md:w-2/5' onSubmit={onSubmit}>
         <div className='mt-8 flex flex-col-reverse md:flex-row md:items-start'>
           <div className='grid w-full grid-cols-6 gap-2 px-10'>
@@ -67,7 +70,7 @@ function ChangePassword() {
               <Input
                 autoFocus={true}
                 type='password'
-                label='Current Password'
+                label={t('currentPassword')}
                 {...register('oldPassword')}
                 containerProps={{ className: 'min-w-min focus' }}
               />
@@ -78,7 +81,7 @@ function ChangePassword() {
 
             <div className='col-span-12'>
               <Input
-                label='New Password'
+                label={t('newPassword')}
                 type='password'
                 {...register('newPassword')}
                 containerProps={{ className: 'min-w-min' }}
@@ -91,7 +94,7 @@ function ChangePassword() {
             <div className='col-span-12'>
               <Input
                 type='password'
-                label='Confirm New Password'
+                label={t('confirmNewPassword')}
                 {...register('confirmPassword')}
                 containerProps={{ className: 'min-w-min' }}
               />
@@ -104,7 +107,7 @@ function ChangePassword() {
 
         <div className='mt-10 flex items-center justify-center'>
           <Button type='submit' className='mt-2 bg-primary uppercase ' disabled={changePasswordMutation.isPending}>
-            Change password
+            {t('changePassword')}
           </Button>
         </div>
       </form>

@@ -13,8 +13,10 @@ import { toast } from 'react-toastify'
 import { LuCheck, LuCopy } from 'react-icons/lu'
 import { Role } from 'src/constants/enums'
 import { useCourseDetail } from '../../ClassDetail'
+import { useTranslation } from 'react-i18next'
 
 function ClassDetailNews() {
+  const { t } = useTranslation()
   const { id: classId, data: courseDetailData, refetch: refetchCourseDetail, isSuccess } = useCourseDetail()
   const { roleInCourse } = useAppSelector((state) => state.class)
   const [isCopied, setIsCopied] = useState(false)
@@ -23,7 +25,7 @@ function ClassDetailNews() {
     mutationKey: ['upload-course-background', classId],
     mutationFn: (body: FormData) => courseApi.uploadBackground(classId as string, body),
     onSuccess: () => {
-      toast.success('Thay đổi hình nền thành công!')
+      toast.success(t('changeBackgroundSuccessfully'))
       refetchCourseDetail()
     }
   })
@@ -68,7 +70,7 @@ function ClassDetailNews() {
                 htmlFor='course-background'
                 className='absolute left-0 top-0 flex h-full w-full cursor-pointer items-center justify-center px-3 py-0'
               >
-                <span className='ml-3'>Tùy chỉnh</span>
+                <span className='ml-3'>{t('custom')}</span>
               </label>
               <FaPencilAlt className='h-[18px] w-[18px]' />
             </Button>
@@ -103,10 +105,10 @@ function ClassDetailNews() {
       {isMoreInfo && (
         <div className='rounded-b-lg bg-white p-6 text-primary shadow-md'>
           <p className='text-sm'>
-            <span className='font-medium'>Chủ đề </span> {courseDetailData?.topic || <Skeleton />}
+            <span className='font-medium'>{t('topic')} </span> {courseDetailData?.topic || <Skeleton />}
           </p>
           <p className='text-sm'>
-            <span className='font-medium'>Phòng </span> {courseDetailData?.room || <Skeleton />}
+            <span className='font-medium'>{t('room')} </span> {courseDetailData?.room || <Skeleton />}
           </p>
         </div>
       )}
@@ -115,12 +117,12 @@ function ClassDetailNews() {
         <div>
           {roleInCourse.role === Role.TEACHER && isSuccess && (
             <div className='mb-3 w-48 rounded-lg border border-primary px-4 pb-2 pt-4'>
-              <h2 className='mb-2 text-sm font-medium text-primary'>Class code</h2>
+              <h2 className='mb-2 text-sm font-medium text-primary'>{t('classCode')}</h2>
               <div className='mb-2 flex items-center'>
                 <p className='= w-full overflow-hidden text-ellipsis text-2xl font-bold'>{courseDetailData?.code}</p>
                 <IconButton
                   Icon={isCopied ? <LuCheck /> : <LuCopy />}
-                  tooltip='copy code'
+                  tooltip={t('copyCode')}
                   mode='dark'
                   onClick={handleClickCopy}
                 />
@@ -128,11 +130,11 @@ function ClassDetailNews() {
             </div>
           )}
           <div className='w-48 rounded-lg border border-primary px-4 pb-2 pt-4'>
-            <h2 className='mb-4 text-sm font-medium text-primary'>Sắp đến hạn</h2>
-            <p className='text-[13px] leading-5 text-fourth'>Tuyệt vời, không có bài tập nào sắp đến hạn!</p>
+            <h2 className='mb-4 text-sm font-medium text-primary'>{t('dueDateComing')}</h2>
+            <p className='text-[13px] leading-5 text-fourth'>{t('noAssignmentDue')}</p>
             <div className='mt-2 flex justify-end'>
               <Button variant='text' className='px-3 text-third' size='md'>
-                Xem tất cả
+                {t('seeAll')}
               </Button>
             </div>
           </div>
@@ -143,17 +145,10 @@ function ClassDetailNews() {
             <div className='ml-2 flex h-full w-[72px] items-center justify-center'>
               <Image src={profile?.avatar as string} alt='avatar' size='lg' />
             </div>
-            <p className='text-[13px] leading-5 text-fourth group-hover:text-secondary'>
-              Thông báo nội dung nào đó cho lớp học của bạn
-            </p>
+            <p className='text-[13px] leading-5 text-fourth group-hover:text-secondary'>{t('announceToClass')}</p>
           </div>
         </div>
       </div>
-      {/* 
-      <EditorProvider extensions={extensions} content={content}>
-        <FloatingMenu>This is the floating menu</FloatingMenu>
-        <BubbleMenu>This is the bubble menu</BubbleMenu>
-      </EditorProvider> */}
     </>
   )
 }

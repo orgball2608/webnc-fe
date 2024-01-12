@@ -1,5 +1,6 @@
 import { Button, Dialog, Card, CardBody, CardFooter } from '@material-tailwind/react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router'
 import { toast } from 'react-toastify'
 import courseApi from 'src/apis/courses.api'
@@ -14,6 +15,8 @@ interface Props {
   }
 }
 function DeleteMemberModal({ isDeleteModalOpen, setIsDeleteModalOpen, UserData }: Props) {
+  const { t } = useTranslation()
+
   const handler = () => setIsDeleteModalOpen(false)
   const queryClient = useQueryClient()
   const { classId } = useParams()
@@ -35,7 +38,7 @@ function DeleteMemberModal({ isDeleteModalOpen, setIsDeleteModalOpen, UserData }
             queryKey: ['members']
           })
 
-          toast.success('Xóa thành viên thành công!')
+          toast.success(t('deleteMemberSuccessfully'))
         }
       }
     )
@@ -52,12 +55,14 @@ function DeleteMemberModal({ isDeleteModalOpen, setIsDeleteModalOpen, UserData }
         <Card className='mx-auto w-full'>
           <CardBody className=''>
             <h4 className='mb-4 text-center text-lg font-medium text-primary'>
-              Xác nhận xóa {UserData?.firstName + ' ' + UserData?.lastName}?
+              {t('confirmDelete', {
+                delete: UserData?.firstName + ' ' + UserData?.lastName
+              })}
             </h4>
           </CardBody>
           <CardFooter className='flex gap-8 pt-0'>
             <Button variant='outlined' className='flex-1 text-sm' onClick={handler} fullWidth>
-              Hủy
+              {t('cancel')}
             </Button>
             <Button
               color='red'
@@ -67,7 +72,7 @@ function DeleteMemberModal({ isDeleteModalOpen, setIsDeleteModalOpen, UserData }
               disabled={deleteMemberMutation.isPending}
               fullWidth
             >
-              Xóa
+              {t('delete')}
             </Button>
           </CardFooter>
         </Card>

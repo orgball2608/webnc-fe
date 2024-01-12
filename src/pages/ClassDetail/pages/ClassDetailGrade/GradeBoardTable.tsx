@@ -21,6 +21,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { UpdateGradeSchema, updateGradeSchema } from 'src/utils/rules'
 import gradeReviewApi from 'src/apis/review-grade.api'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 interface Props {
   gradeBoardData: GradeBoard
@@ -43,6 +44,7 @@ function GradeBoardTable({
   setIsOpenModalEditGradeCompositions,
   setIsOpenModalSortGradeCompositions
 }: Props) {
+  const { t } = useTranslation()
   const queryClient = useQueryClient()
 
   const {
@@ -155,7 +157,7 @@ function GradeBoardTable({
     if (file) {
       const ext = getExtension(file.name)
       if (!['xlsx', 'xls', 'csv'].includes(ext)) {
-        toast.error('Vui lòng tải file đúng định dạng!')
+        toast.error(t('pleaseUploadCorrectFormat'))
         return
       }
       setStudentsFile(file)
@@ -216,7 +218,7 @@ function GradeBoardTable({
       await queryClient.invalidateQueries({
         queryKey: ['courses', courseDetailData?.id.toString(), 'grade-boards/final']
       })
-      toast.success('Tải lên danh sách sinh viên thành công!')
+      toast.success(t('uploadStudentsSuccessful'))
     } else if (gradesFile && dataCSVPreview?.gradeCompositionId) {
       const body = new FormData()
       body.append('file', gradesFile)
@@ -226,7 +228,7 @@ function GradeBoardTable({
       await queryClient.invalidateQueries({
         queryKey: ['courses', courseDetailData?.id.toString(), 'grade-boards/final']
       })
-      toast.success('Tải lên danh sách điểm thành công!')
+      toast.success(t('uploadGradesSuccessful'))
     }
   }
 
@@ -242,7 +244,7 @@ function GradeBoardTable({
         setGradesFile(file)
 
         if (!['xlsx', 'xls', 'csv'].includes(ext)) {
-          toast.error('Vui lòng tải file đúng định dạng!')
+          toast.error(t('pleaseUploadCorrectFormat'))
           return
         }
 
@@ -278,7 +280,6 @@ function GradeBoardTable({
   const handleCheckboxChange = async (gradeCompositionId: number, e: any) => {
     try {
       const value = e.target.checked
-      // console.log('vale: ' + value)
       const body = {
         isFinalized: value
       }
@@ -295,7 +296,7 @@ function GradeBoardTable({
       queryKey: ['courses', classId, 'grade-boards/final']
     })
     setDataGradeUpdate(null)
-    toast.success('Cập nhật điểm thành công!')
+    toast.success(t('updateGradeSuccessfully'))
   })
 
   return (
@@ -315,10 +316,10 @@ function GradeBoardTable({
                     <th key={header.key} className='border-y border-blue-gray-100 bg-blue-gray-50/50 p-4'>
                       <div className='flex gap-2'>
                         <Typography variant='small' color='blue-gray' className='text-base font-bold leading-none'>
-                          Học sinh
+                          {t('student')}
                         </Typography>
 
-                        <Tooltip content='Tải xuống mẫu danh sách học sinh'>
+                        <Tooltip content={t('downloadStudentsTemplate')}>
                           <button
                             onClick={exportStudentsTemplateFile}
                             className='relative top-[-3px] cursor-pointer text-lg transition-all duration-300 hover:text-blue-gray-400'
@@ -338,7 +339,7 @@ function GradeBoardTable({
                           }}
                         />
 
-                        <Tooltip content='Tải lên danh sách học sinh'>
+                        <Tooltip content={t('uploadStudentsList')}>
                           <label
                             htmlFor={uploadStudentsInputId}
                             className='relative top-[-3px] cursor-pointer text-lg transition-all duration-300 hover:text-blue-gray-400'
@@ -362,7 +363,7 @@ function GradeBoardTable({
 
                       {header.key !== HEADER_INDEX_KEY && (
                         <>
-                          <Tooltip content='Đánh dấu là đã hoàn tất'>
+                          <Tooltip content={t('markAsCompleted')}>
                             <input
                               onChange={(e) => handleCheckboxChange(header?.metaData?.id as number, e)}
                               type='checkbox'
@@ -371,7 +372,7 @@ function GradeBoardTable({
                             />
                           </Tooltip>
 
-                          <Tooltip content='Tải xuống mẫu điểm thành phần'>
+                          <Tooltip content={t('downloadGradesTemplate')}>
                             <button
                               onClick={() => exportGradesTemplateFile(header.label)}
                               className='relative top-[-3px] cursor-pointer text-lg transition-all duration-300 hover:text-blue-gray-400'
@@ -391,7 +392,7 @@ function GradeBoardTable({
                             }}
                           />
 
-                          <Tooltip content='Tải lên điểm thành phần'>
+                          <Tooltip content={t('uploadGradesList')}>
                             <label
                               htmlFor={uploadGradesInputId}
                               className='relative top-[-3px] cursor-pointer text-lg transition-all duration-300 hover:text-blue-gray-400'
@@ -407,7 +408,7 @@ function GradeBoardTable({
               })}
             <th className='border-y border-blue-gray-100 bg-blue-gray-50/50 p-4'>
               <Typography variant='small' color='blue-gray' className='font-bold leading-none opacity-70'>
-                Tổng điểm ({totalScale}%)
+                {t('total')} ({totalScale}%)
               </Typography>
             </th>
             <th className='border-y border-blue-gray-100 bg-blue-gray-50/50 p-4'>
@@ -415,9 +416,9 @@ function GradeBoardTable({
                 placement='bottom-start'
                 render={() => (
                   <>
-                    <DropdownItem onClick={() => setIsOpenModalAddGradeCompositions(true)}>Thêm</DropdownItem>
-                    <DropdownItem onClick={() => setIsOpenModalEditGradeCompositions(true)}>Chỉnh sửa</DropdownItem>
-                    <DropdownItem onClick={() => setIsOpenModalSortGradeCompositions(true)}>Sắp xếp</DropdownItem>
+                    <DropdownItem onClick={() => setIsOpenModalAddGradeCompositions(true)}>{t('add')}</DropdownItem>
+                    <DropdownItem onClick={() => setIsOpenModalEditGradeCompositions(true)}>{t('edit')}</DropdownItem>
+                    <DropdownItem onClick={() => setIsOpenModalSortGradeCompositions(true)}>{t('sort')}</DropdownItem>
                   </>
                 )}
               >
@@ -487,7 +488,7 @@ function GradeBoardTable({
                               )}
                               disabled={updateGradeMutation.isPending}
                             >
-                              Hủy
+                              {t('cancel')}
                             </button>
                             <button
                               onClick={onSubmitUpdateGrade}
@@ -500,7 +501,7 @@ function GradeBoardTable({
                               )}
                               disabled={updateGradeMutation.isPending}
                             >
-                              Cập nhật
+                              {t('update')}
                             </button>
                           </div>
                         ) : (
@@ -509,7 +510,7 @@ function GradeBoardTable({
                               {row?.[gradeComposition.key] || 0}
                             </Typography>
                             {!gradeComposition.metaData?.isFinalized && (
-                              <Tooltip content='Cập nhật điểm'>
+                              <Tooltip content={t('updateGrade')}>
                                 <IconButton
                                   variant='text'
                                   className='opacity-0 group-hover:opacity-100'
