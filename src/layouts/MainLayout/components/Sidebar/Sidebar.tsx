@@ -9,10 +9,13 @@ import ClassItem from 'src/components/ClassItem/ClassItem'
 import { useEffect, useState } from 'react'
 import { useAppSelector } from 'src/app/store'
 import DropdownButton from 'src/components/ClassItem/DropdownButton'
+import { useTranslation } from 'react-i18next'
 
 const weightMD = 720
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function Sidebar({ onToggleSidebar }: { onToggleSidebar: any }) {
+  const { t } = useTranslation()
+
   const { classId } = useParams()
   const location = useLocation()
   const store = useAppSelector((state) => state.auth)
@@ -74,11 +77,11 @@ function Sidebar({ onToggleSidebar }: { onToggleSidebar: any }) {
             )
           }
         >
-          <HomeItem avatarUrl={homeIcon} alt={'home'} name={'Màn hình chính'} />
+          <HomeItem avatarUrl={homeIcon} alt={'home'} name={t('mainScreen')} />
         </NavLink>
         <hr className=' border-t border-blue-gray-200' />
         {/* <div className='my-2 rounded-lg py-3 transition-all hover:bg-blue-gray-50 hover:bg-opacity-80 hover:text-blue-gray-900 focus:bg-blue-gray-50 focus:bg-opacity-80 focus:text-blue-gray-900'> */}
-        <DropdownButton name='Teaching' checkOpen={teachingDropdownOpen} onClick={toggleTeachingDropdown} />
+        <DropdownButton name={t('teaching')} checkOpen={teachingDropdownOpen} onClick={toggleTeachingDropdown} />
         {/* </div> */}
         {teachingDropdownOpen && (
           <>
@@ -103,7 +106,7 @@ function Sidebar({ onToggleSidebar }: { onToggleSidebar: any }) {
 
         <hr className='my-1 border-t border-blue-gray-200' />
 
-        <DropdownButton name='Enrolled' checkOpen={enrolledDropdownOpen} onClick={toggleEnrolledDropdown} />
+        <DropdownButton name={t('enrolled')} checkOpen={enrolledDropdownOpen} onClick={toggleEnrolledDropdown} />
         {enrolledDropdownOpen && (
           <>
             {enrolledList?.map((item, index) => (

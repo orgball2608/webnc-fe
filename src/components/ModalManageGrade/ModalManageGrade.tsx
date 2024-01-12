@@ -12,6 +12,7 @@ import { GradeComposition } from 'src/types/grade-composition.type'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import gradeCompositionApi, { GradeCompositionRequestBody } from 'src/apis/grade-composition.api'
 import { toast } from 'react-toastify'
+import { useTranslation } from 'react-i18next'
 
 interface Props {
   type: 'ADD' | 'EDIT' | 'SORT'
@@ -25,6 +26,7 @@ interface Props {
 type FormData = GradeCompositionsSchema
 
 function ModalManageGrade({ type, classId, open, handler, gradeCompositions, setNewGradeCompositions }: Props) {
+  const { t } = useTranslation()
   const queryClient = useQueryClient()
 
   const {
@@ -110,7 +112,7 @@ function ModalManageGrade({ type, classId, open, handler, gradeCompositions, set
         onSuccess: async (res) => {
           setNewGradeCompositions && setNewGradeCompositions(res.data.data)
           await queryClient.invalidateQueries({ queryKey: ['courses', classId, 'grade-boards/final'] })
-          toast.success('Sắp xếp điểm thành phần thành công!')
+          toast.success(t('sortGradeCompositionSuccessfully'))
         },
         onSettled: () => {
           setIsLoading(false)
@@ -158,7 +160,7 @@ function ModalManageGrade({ type, classId, open, handler, gradeCompositions, set
         ])
 
         handler()
-        toast.success('Thêm điểm thành phần thành công!')
+        toast.success(t('addGradeCompositionSuccessfully'))
       } else if (type === 'EDIT') {
         if (deleteIds.length > 0) {
           for (const deleteId of deleteIds) {
@@ -184,7 +186,7 @@ function ModalManageGrade({ type, classId, open, handler, gradeCompositions, set
         ])
 
         handler()
-        toast.success('Cập nhật điểm thành phần thành công!')
+        toast.success(t('editGradeCompositionSuccessfully'))
       }
     } finally {
       setIsLoading(false)
@@ -203,7 +205,7 @@ function ModalManageGrade({ type, classId, open, handler, gradeCompositions, set
         <Card className='mx-auto w-full'>
           <CardBody className='flex max-h-[calc(100vh-200px)] flex-col gap-4 overflow-auto'>
             <h4 className='mb-4 text-base font-medium text-primary'>
-              {type === 'ADD' ? 'Thêm điểm thành phần' : 'Chỉnh sửa điểm thành phần'}
+              {type === 'ADD' ? t('addGradeComposition') : t('editGradeComposition')}
             </h4>
             <form onSubmit={handler}>
               <DndList
@@ -227,7 +229,7 @@ function ModalManageGrade({ type, classId, open, handler, gradeCompositions, set
                             {...register(`grades.${index}.name`, { required: true })}
                             className='!text-base !text-primary disabled:cursor-not-allowed disabled:border-b disabled:bg-inherit disabled:opacity-50'
                             variant='standard'
-                            label={`Điểm thành phần ${index + 1}`}
+                            label={`${t('gradeComposition')} ${index + 1}`}
                             disabled={type === 'ADD' && Boolean(field.id)}
                           />
                           <p className='ml-1 flex min-h-[20px] items-center gap-1 text-xs font-normal text-red-400'>
@@ -241,7 +243,7 @@ function ModalManageGrade({ type, classId, open, handler, gradeCompositions, set
                           className='!text-base !text-primary disabled:cursor-not-allowed disabled:border-b disabled:bg-inherit disabled:opacity-50'
                           containerProps={{ className: 'min-w-min' }}
                           variant='standard'
-                          label={`Tỉ lệ ${index + 1}`}
+                          label={`${t('scale')} ${index + 1}`}
                           disabled={type === 'ADD' && Boolean(field.id)}
                         />
                         <p className='ml-1 flex min-h-[20px] items-center gap-1 text-xs font-normal text-red-400'>
@@ -279,14 +281,14 @@ function ModalManageGrade({ type, classId, open, handler, gradeCompositions, set
                         }}
                         className='text-14 h-11 w-full cursor-text border-b border-b-[#b0bec5] pb-[6px] pt-4 text-left text-sm text-[#607d8b]'
                       >
-                        Thêm điểm thành phần
+                        {t('addGradeComposition')}
                       </button>
                     )}
                   </div>
                 </div>
                 <div className='col-span-3'>
                   <div className='border-b border-b-[#b0bec5] pb-[6px] pt-4 text-sm font-medium text-black'>
-                    Tổng: {calculateTotalScale()}%
+                    {t('total')}: {calculateTotalScale()}%
                   </div>
                   <p className='ml-1 flex min-h-[20px] items-center gap-1 text-xs font-normal text-red-400'>
                     {(errors as any)?.totalScale?.message}
@@ -297,7 +299,7 @@ function ModalManageGrade({ type, classId, open, handler, gradeCompositions, set
           </CardBody>
           <CardFooter className='flex gap-8 pt-0'>
             <Button variant='outlined' className='flex-1 text-sm' onClick={handler} fullWidth disabled={isLoading}>
-              {type === 'SORT' ? 'Đóng' : 'Hủy'}
+              {type === 'SORT' ? t('close') : t('cancel')}
             </Button>
             {type !== 'SORT' && (
               <Button
@@ -307,7 +309,7 @@ function ModalManageGrade({ type, classId, open, handler, gradeCompositions, set
                 fullWidth
                 disabled={isLoading}
               >
-                Lưu
+                {t('save')}
               </Button>
             )}
           </CardFooter>

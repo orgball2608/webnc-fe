@@ -127,8 +127,6 @@ function createHttpInstance() {
         accessToken = ''
         refreshToken = ''
         profile = null
-
-        // toast.error(error.response?.data.data?.message || error.response?.data.message)
       }
 
       nProgress.done()

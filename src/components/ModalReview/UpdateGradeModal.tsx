@@ -19,12 +19,14 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { UpdateGradeSchema, updateGradeSchema } from 'src/utils/rules'
 import gradeReviewApi from 'src/apis/review-grade.api'
 import { toast } from 'react-toastify'
+import { useTranslation } from 'react-i18next'
 
 type FormData = UpdateGradeSchema
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default function UpdateGradeModal({ isOpen, onCloseUpdateModal, onCloseReviewModal, reviewData }: any) {
   const queryClient = useQueryClient()
+  const { t } = useTranslation()
 
   const {
     register,
@@ -53,8 +55,7 @@ export default function UpdateGradeModal({ isOpen, onCloseUpdateModal, onCloseRe
     await queryClient.invalidateQueries({
       queryKey: ['review-list']
     })
-    toast.success('Hoàn thành Review!')
-    // onClose()
+    toast.success(t('completeReview') + '!')
     onCloseReviewModal()
     onCloseUpdateModal()
   })
@@ -92,7 +93,7 @@ export default function UpdateGradeModal({ isOpen, onCloseUpdateModal, onCloseRe
         <div className='flex'>
           {' '}
           <Icon icon='material-symbols:rate-review-outline' className='mr-3 mt-1' width='30' height='30' />
-          <strong>Update Grade </strong>
+          <strong>{t('updateGrade')} </strong>
         </div>
         <IconButton
           onClick={onCloseUpdateModal}
@@ -106,12 +107,12 @@ export default function UpdateGradeModal({ isOpen, onCloseUpdateModal, onCloseRe
       <DialogContent>
         <Stack spacing={3}>
           <Typography variant='body1' className='mb-2'>
-            <strong>Current Grade: </strong> {reviewData?.grade}
+            <strong>{t('currentGrade')}: </strong> {reviewData?.grade}
           </Typography>
           <Grid container alignItems='center'>
             <Grid item>
               <Typography variant='body1' sx={{ marginRight: '5px' }}>
-                <strong>New Grade: </strong>
+                <strong>{t('newGrade')}: </strong>
               </Typography>
             </Grid>
             <Grid item className='pt-4'>
@@ -129,14 +130,14 @@ export default function UpdateGradeModal({ isOpen, onCloseUpdateModal, onCloseRe
           onClick={onSubmit}
           disabled={updateGradeMutation.isPending || markCompletedMutation.isPending}
         >
-          Complete review
+          {t('completeReview')}
         </Button>
         <Button
           sx={{ textTransform: 'none' }}
           onClick={onCloseUpdateModal}
           disabled={updateGradeMutation.isPending || markCompletedMutation.isPending}
         >
-          Close
+          {t('close')}
         </Button>
       </DialogActions>
     </Dialog>

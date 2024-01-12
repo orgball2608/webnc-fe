@@ -14,12 +14,14 @@ import { downloadFile } from 'src/utils/utils'
 import { Role } from 'src/constants/enums'
 import GradeStudent from './GradeStudent'
 import { useAppSelector } from 'src/app/store'
+import { useTranslation } from 'react-i18next'
 
 export const HEADER_INDEX_KEY = 'index'
 export const HEADER_STUDENT_ID_KEY = 'studentId'
 export const HEADER_FULLNAME_KEY = 'fullName'
 
 export default function ClassDetailGrade() {
+  const { t } = useTranslation()
   const { id: classId, data: courseDetailData, myRole, isLoadingMyrole } = useCourseDetail()
   const { roleInCourse } = useAppSelector((state) => state.class)
 
@@ -80,22 +82,18 @@ export default function ClassDetailGrade() {
           <div className='mb-8 flex items-center justify-between gap-8'>
             <div>
               <Typography variant='h2' color='blue-gray'>
-                Bảng điểm
+                {t('gradeBoard')}
               </Typography>
             </div>
           </div>
           {myRole === Role.TEACHER && (
             <div className='flex flex-col items-center justify-between gap-4 md:flex-row'>
-              {/* <div className='w-full md:w-72'>
-              <Input label='Search' icon={<IoSearchOutline className='h-5 w-5' />} />
-            </div> */}
-
               <div className='ml-auto flex shrink-0 flex-col items-center gap-2 sm:flex-row'>
                 <Button className='flex items-center gap-2' size='md' onClick={exportGradesBoardFile}>
                   <span className='relative top-[-1px] text-lg'>
                     <CgExport />
                   </span>
-                  Export grade board
+                  {t('exportGradeBoard')}
                 </Button>
               </div>
             </div>

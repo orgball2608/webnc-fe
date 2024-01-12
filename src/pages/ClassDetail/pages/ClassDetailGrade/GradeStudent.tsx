@@ -8,10 +8,12 @@ import { Box, Button, CircularProgress } from '@mui/material'
 import { USER_MESSAGES } from 'src/constants/constants'
 import { CreateReviewModal, ReviewDetailModal } from 'src/components/ModalReview'
 import { StudentGrade } from 'src/types/grade.type'
-
-const TABLE_HEAD = ['#', 'Tên điểm', '%', 'Điểm', '']
+import { useTranslation } from 'react-i18next'
 
 export default function GradeStudent() {
+  const { t } = useTranslation()
+  const TABLE_HEAD = ['#', t('gradeName'), '%', t('grade'), '']
+
   const { id: classId, myRole } = useCourseDetail()
   const [isOpenNewModal, setIsOpeNewModal] = useState(false)
   const [isOpenReviewModal, setIsOpeReviewModal] = useState(false)
@@ -87,7 +89,7 @@ export default function GradeStudent() {
       )}
       {messages == USER_MESSAGES.STUDENTID_HAS_NOT_BEEN_ENTERED && (
         <div className='-mt-2 mb-10 space-x-4 text-center text-lg'>
-          <strong>Tài khoản của bạn chưa có studentID, vui lòng nhập studentID để xem điểm</strong>
+          <strong>{t('doNotHaveStudentID')}</strong>
         </div>
       )}
       {!getCourseDetailQuery.isLoading && (
@@ -146,7 +148,7 @@ export default function GradeStudent() {
                       color='blue-gray'
                       className='text-center font-normal leading-none opacity-70'
                     >
-                      <strong>Chưa có thành phẩn điểm nào</strong>
+                      <strong>{t('noGrades')}</strong>
                     </Typography>
                   </td>
                 </tr>
@@ -195,7 +197,7 @@ export default function GradeStudent() {
                                 borderRadius: '10px'
                               }}
                             >
-                              Review
+                              {t('review')}
                             </Button>
                           ) : (
                             <Button
@@ -208,7 +210,7 @@ export default function GradeStudent() {
                                 borderRadius: '10px'
                               }}
                             >
-                              Review
+                              {t('review')}
                             </Button>
                           ))}
                       </div>

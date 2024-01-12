@@ -8,9 +8,7 @@ import Badge from '@mui/material/Badge'
 import MenuIcon from '@mui/icons-material/Menu'
 import AccountCircle from '@mui/icons-material/AccountCircle'
 import NotificationsIcon from '@mui/icons-material/Notifications'
-import MoreIcon from '@mui/icons-material/MoreVert'
 import { Link, useMatch } from 'react-router-dom'
-import MenuMobile from './MenuMobile'
 import MenuDesktop from './MenuDesktop'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import authApi from 'src/apis/auth.api'
@@ -28,11 +26,14 @@ import AccountItem from '../AccountItem'
 import classNames from 'classnames'
 import { toast } from 'react-toastify'
 import { BsChevronLeft } from 'react-icons/bs'
+import { useTranslation } from 'react-i18next'
 
 // eslint-disable-next-line prettier/prettier, @typescript-eslint/no-explicit-any
 export default function Header({ onToggleSidebar }: { onToggleSidebar: any }) {
   const homepageMatch = useMatch(path.home)
   const breadcrumbs = useAppSelector((state) => state.app.breadcrumbs)
+
+  const { t } = useTranslation()
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState<null | HTMLElement>(null)
@@ -41,9 +42,6 @@ export default function Header({ onToggleSidebar }: { onToggleSidebar: any }) {
 
   const dispatch = useAppDispatch()
   const { profile, isAuthenticated } = useAppSelector((state) => state.auth)
-
-  // const isMenuOpen = Boolean(anchorEl)
-  const isMobileMenuOpen = Boolean(mobileMoreAnchorEl)
 
   const signoutMutation = useMutation({
     mutationFn: authApi.signout,
@@ -89,10 +87,6 @@ export default function Header({ onToggleSidebar }: { onToggleSidebar: any }) {
     handleMobileMenuClose()
   }
 
-  const handleMobileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-    setMobileMoreAnchorEl(event.currentTarget)
-  }
-
   const handleSignout = () => {
     signoutMutation.mutate()
     handleMenuClose()
@@ -100,15 +94,6 @@ export default function Header({ onToggleSidebar }: { onToggleSidebar: any }) {
 
   const menuId = 'primary-search-account-menu'
   const renderMenu = MenuDesktop({ anchorEl, handleMenuClose, handleSignout })
-
-  const mobileMenuId = 'primary-search-account-menu-mobile'
-  const renderMobileMenu = MenuMobile({
-    mobileMoreAnchorEl,
-    mobileMenuId,
-    isMobileMenuOpen,
-    handleMobileMenuClose,
-    handleProfileMenuOpen
-  })
 
   const markNotificationAsRead = (id: number) => {
     markNotificationAsReadMutation.mutate(id, {
@@ -124,7 +109,7 @@ export default function Header({ onToggleSidebar }: { onToggleSidebar: any }) {
     await Promise.all(unreadNotifications.map((item) => markNotificationAsReadMutation.mutateAsync(item.id)))
     await getNotificationsQuery.refetch()
 
-    toast.success('Đánh dấu tất cả là đã đọc thành công!')
+    toast.success(t('markAllAsReadSuccess'))
   }
 
   return (
@@ -149,7 +134,7 @@ export default function Header({ onToggleSidebar }: { onToggleSidebar: any }) {
             <div>
               <Link to={path.home} style={{ textDecoration: 'none', color: 'inherit' }}>
                 <Typography variant='h6' component='div' style={{ cursor: 'pointer' }} className='hover:underline'>
-                  Lớp học
+                  {t('classroom')}
                 </Typography>
               </Link>
             </div>
@@ -170,30 +155,6 @@ export default function Header({ onToggleSidebar }: { onToggleSidebar: any }) {
               ))}
 
             <Box sx={{ flexGrow: 1 }} />
-            {/* <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-              <IconButton size='large' aria-label='show 17 new notifications' color='inherit'>
-                <Badge badgeContent={17} color='error'>
-                  <NotificationsIcon />
-                </Badge>
-              </IconButton>
-              <IconButton
-                size='large'
-                edge='end'
-                aria-label='account of current user'
-                aria-controls={menuId}
-                aria-haspopup='true'
-                onClick={handleProfileMenuOpen}
-                color='inherit'
-              >
-                {profile?.avatar ? (
-                  <img src={profile?.avatar} alt='' className='h-6 w-6 rounded-full border-white' />
-                ) : (
-                  <AccountCircle />
-                )}
-      
-                <Typography style={{ marginLeft: 8 }}>{profile?.firstName + ' ' + profile?.lastName}</Typography>
-              </IconButton>
-            </Box> */}
 
             {isAuthenticated ? (
               <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
@@ -202,8 +163,8 @@ export default function Header({ onToggleSidebar }: { onToggleSidebar: any }) {
                     placement='bottom-end'
                     render={() => (
                       <>
-                        <DropdownItem onClick={() => setIsOpenJoinClassModal(true)}>Tham gia lớp học</DropdownItem>
-                        <DropdownItem onClick={() => setIsOpenCreateClassModal(true)}>Tạo lớp học</DropdownItem>
+                        <DropdownItem onClick={() => setIsOpenJoinClassModal(true)}>{t('joinClass')}</DropdownItem>
+                        <DropdownItem onClick={() => setIsOpenCreateClassModal(true)}>{t('createClass')}</DropdownItem>
                       </>
                     )}
                   >
@@ -232,7 +193,7 @@ export default function Header({ onToggleSidebar }: { onToggleSidebar: any }) {
                             disabled={!unreadNotifications || unreadNotifications.length === 0}
                             onClick={markAllNotificationAsRead}
                           >
-                            Đánh dấu tất cả là đã đọc
+                            {t('markAllAsRead')}
                           </Button>
                         </div>
                         {notifications?.map((notification) => (
@@ -290,26 +251,12 @@ export default function Header({ onToggleSidebar }: { onToggleSidebar: any }) {
             ) : (
               <Link to={path.signin} className='inline-block'>
                 <Button size='md' variant='text' className='text-white'>
-                  Login
+                  {t('login')}
                 </Button>
               </Link>
             )}
-
-            <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
-              <IconButton
-                size='large'
-                aria-label='show more'
-                aria-controls={mobileMenuId}
-                aria-haspopup='true'
-                onClick={handleMobileMenuOpen}
-                color='inherit'
-              >
-                <MoreIcon />
-              </IconButton>
-            </Box>
           </Toolbar>
         </AppBar>
-        {renderMobileMenu}
         {renderMenu}
       </Box>
 

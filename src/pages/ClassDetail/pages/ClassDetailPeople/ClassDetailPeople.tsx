@@ -7,11 +7,6 @@ import { useState } from 'react'
 import InviteFormModal from 'src/components/InviteFormModal'
 import { useAppSelector } from 'src/app/store'
 
-const role = {
-  teachers: 'Giáo viên',
-  students: 'Học sinh'
-}
-
 type MemberStudent = Member & {
   studentId?: string
 }
@@ -23,8 +18,10 @@ import UserInfoModal from '../../../../components/MembersModals/UserInfoModal'
 import DeleteMemberModal from 'src/components/MembersModals/DeleteMemberModal'
 import { useCourseDetail } from '../../ClassDetail'
 import { Role } from 'src/constants/enums'
+import { useTranslation } from 'react-i18next'
 
 function ClassDetailPeople() {
+  const { t } = useTranslation()
   const { profile } = useAppSelector((state) => state.auth)
   const { members, isLoading } = useCourseDetail()
   const { roleInCourse } = useAppSelector((state) => state.class)
@@ -35,6 +32,11 @@ function ClassDetailPeople() {
   const [selectedMember, setSelectedMember] = useState<MemberStudent>()
   const [isInfoModalOpen, setIsInfoModalOpen] = useState(false)
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
+
+  const role = {
+    teachers: t('teacher'),
+    students: t('student')
+  }
 
   const handleClick = (role: string) => {
     setIsInviteModalOpen(true)
@@ -71,12 +73,12 @@ function ClassDetailPeople() {
     <>
       <div className='mb-10'>
         <div className='mb-1 flex h-[72px] items-center justify-between border-b border-b-[#4285f4]'>
-          <h2 className='pl-4 text-[32px] font-normal leading-10 text-third'>{Role.TEACHER}</h2>
+          <h2 className='pl-4 text-[32px] font-normal leading-10 text-third'>{t('teacher')}</h2>
           {roleInCourse.role === Role.TEACHER && (
             <IconButton
               Icon={<LuUserPlus />}
               mode='dark'
-              tooltip='Mời giáo viên'
+              tooltip={t('inviteTeachers')}
               onClick={() => handleClick(role.teachers)}
             />
           )}
@@ -101,10 +103,10 @@ function ClassDetailPeople() {
                       <>
                         {
                           <DropdownItem onClick={() => handleClickInfo(member?.teacher, role.teachers)}>
-                            Thông tin
+                            {t('detail')}
                           </DropdownItem>
                         }
-                        {<DropdownItem onClick={() => handleClickDelete(member?.teacher)}>Xóa</DropdownItem>}
+                        {<DropdownItem onClick={() => handleClickDelete(member?.teacher)}>{t('delete')}</DropdownItem>}
                       </>
                     )}
                   >
@@ -125,14 +127,16 @@ function ClassDetailPeople() {
 
       <div>
         <div className='mb-1 flex h-[72px] items-center justify-between border-b border-b-[#4285f4]'>
-          <h2 className='pl-4 text-[32px] font-normal leading-10 text-third'>{Role.STUDENT}</h2>
+          <h2 className='pl-4 text-[32px] font-normal leading-10 text-third'>{t('student')}</h2>
 
           <div className='flex items-center'>
-            <span className='pr-6 text-sm font-medium text-third'>{members?.enrollments?.length || 0} Sinh viên</span>
+            <span className='pr-6 text-sm font-medium text-third'>
+              {members?.enrollments?.length || 0} {t('student')}
+            </span>
             {roleInCourse.role === Role.TEACHER && (
               <IconButton
                 Icon={<LuUserPlus />}
-                tooltip='Mời học sinh'
+                tooltip={t('inviteStudents')}
                 mode='dark'
                 onClick={() => handleClick(role.students)}
               />
@@ -157,14 +161,14 @@ function ClassDetailPeople() {
                       <>
                         {
                           <DropdownItem onClick={() => handleClickInfo(member?.student, role.students)}>
-                            Thông tin
+                            {t('detail')}
                           </DropdownItem>
                         }
-                        {<DropdownItem onClick={() => handleClickDelete(member?.student)}>Xóa</DropdownItem>}
+                        {<DropdownItem onClick={() => handleClickDelete(member?.student)}>{t('delete')}</DropdownItem>}
                       </>
                     )}
                   >
-                    <div className=''>
+                    <div>
                       <IconButton Icon={<BsThreeDotsVertical />} mode='dark' />
                     </div>
                   </Dropdown>

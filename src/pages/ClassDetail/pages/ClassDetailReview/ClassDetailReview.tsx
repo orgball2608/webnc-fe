@@ -12,12 +12,13 @@ import { useCourseDetail } from '../../ClassDetail'
 import { Role } from 'src/constants/enums'
 import { useAppSelector } from 'src/app/store'
 import { ReviewDetailModal } from 'src/components/ModalReview'
-import { GradeReview, ReviewFull } from 'src/types/grade-review.type'
+import { ReviewFull } from 'src/types/grade-review.type'
 import gradeReviewApi from 'src/apis/review-grade.api'
 import { useQuery } from '@tanstack/react-query'
-import { Box, CircularProgress } from '@mui/material'
+import { useTranslation } from 'react-i18next'
 
 export default function ClassDetailReview() {
+  const { t } = useTranslation()
   const navigate = useNavigate()
 
   const courseContext = useCourseDetail()
@@ -65,14 +66,14 @@ export default function ClassDetailReview() {
         <>
           <div className='mb-10'>
             <div className='mb-4 flex h-[72px] items-center justify-between border-b border-b-[#4285f4]'>
-              <h2 className='text-[32px] font-normal leading-10 text-third'>New Reviews</h2>
+              <h2 className='text-[32px] font-normal leading-10 text-third'>{t('newReviews')}</h2>
               <div className='flex items-center'>
                 <span className='hidden pr-1 text-sm font-medium text-third md:flex'>
-                  {isOpenNewReviews && (listNewReview?.length || 0) + ' New Reviews'}
+                  {isOpenNewReviews && (listNewReview?.length || 0) + ' ' + t('newReviews')}
                 </span>
                 <IconButton
                   Icon={isOpenNewReviews ? <IoIosArrowDown /> : <IoIosArrowBack />}
-                  tooltip={!isOpenNewReviews ? 'Mở danh sách' : 'Đóng danh sách'}
+                  tooltip={!isOpenNewReviews ? t('openList') : t('closeList')}
                   mode='dark'
                   onClick={() => setIsOpenNewReviews(!isOpenNewReviews)}
                 />
@@ -94,11 +95,12 @@ export default function ClassDetailReview() {
                         <div className='flex space-x-2 tracking-wide'>
                           <Icon icon='material-symbols:rate-review-outline' width='30' height='30' />
                           <div className='h-100 flex pl-4 font-bold tracking-wide'>
-                            {/* <div> */}
-                            {/* </div>{' '} */}
                             {review?.studentId + ' - ' + review?.fullName}
                           </div>
-                          <div className='tracking-wide'> đã yêu cầu phúc khảo cột điểm {review?.gradeName}</div>
+                          <div className='tracking-wide'>
+                            {' '}
+                            {t('requestedAGradeReview')} {review?.gradeName}
+                          </div>
                         </div>
                       </button>
                     </li>
@@ -115,7 +117,7 @@ export default function ClassDetailReview() {
               >
                 <Icon icon='material-symbols:rate-review-outline' width='30' height='30' />
                 <div className='h-100 flex pl-4 font-bold tracking-wide'>
-                  {(listNewReview?.length || 0) + ' New Reviews'}
+                  {(listNewReview?.length || 0) + ' ' + t('newReviews')}
                 </div>
               </div>
             )}
@@ -123,15 +125,15 @@ export default function ClassDetailReview() {
 
           <div>
             <div className='mb-4 flex h-[72px] items-center justify-between border-b border-b-[#4285f4]'>
-              <h2 className=' text-[32px] font-normal leading-10 text-third'>Completed</h2>
+              <h2 className=' text-[32px] font-normal leading-10 text-third'>{t('completed')}</h2>
 
               <div className='flex items-center'>
                 <span className='hidden pr-1 text-sm font-medium text-third md:flex'>
-                  {isOpenCompleted && (listCompletedReview?.length || 0) + ' Reviews Completed'}
+                  {isOpenCompleted && (listCompletedReview?.length || 0) + ' ' + t('reviewsCompleted')}
                 </span>
                 <IconButton
                   Icon={isOpenCompleted ? <IoIosArrowDown /> : <IoIosArrowBack />}
-                  tooltip={!isOpenCompleted ? 'Mở danh sách' : 'Đóng danh sách'}
+                  tooltip={!isOpenCompleted ? t('openList') : t('closeList')}
                   mode='dark'
                   onClick={() => setIsOpenCompleted(!isOpenCompleted)}
                 />
@@ -152,7 +154,10 @@ export default function ClassDetailReview() {
                           <div className='flex pl-4 font-bold tracking-wide'>
                             {review?.studentId + ' - ' + review?.fullName}
                           </div>
-                          <div className='tracking-wide'> đã yêu cầu phúc khảo cột điểm {review?.gradeName}</div>
+                          <div className='tracking-wide'>
+                            {' '}
+                            {t('requestedAGradeReview')} {review?.gradeName}
+                          </div>
                         </div>
                       </button>
                     </li>
@@ -170,7 +175,7 @@ export default function ClassDetailReview() {
               >
                 <Icon icon='material-symbols-light:download-done' width='30' height='30' />
                 <div className='flex pl-6 font-bold tracking-wide'>
-                  {(listCompletedReview?.length || 0) + ' Reviews Completed'}
+                  {(listCompletedReview?.length || 0) + ' ' + t('reviewsCompleted')}
                 </div>
               </div>
             )}

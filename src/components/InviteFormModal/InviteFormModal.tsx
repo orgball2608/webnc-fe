@@ -10,11 +10,13 @@ import courseApi from 'src/apis/courses.api'
 import { isAxiosUnprocessableEntityError } from 'src/utils/utils'
 import { useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
-// import { useLocation } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 
 type FormData = InvitationSchema
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default function InviteFormModal({ isInviteModalOpen, setIsInviteModalOpen, isRole, role, profile }: any) {
+  const { t } = useTranslation()
+
   const currentURL = window.location.href
   const inviteLink = currentURL.replace('/people', `/invite?scr=${profile.id}`)
   const [isCopied, setIsCopied] = useState(false)
@@ -80,16 +82,18 @@ export default function InviteFormModal({ isInviteModalOpen, setIsInviteModalOpe
       <Dialog size='sm' open={isInviteModalOpen} handler={setIsInviteModalOpen} className='bg-transparent shadow-none'>
         <Card className='mx-auto w-full'>
           <CardBody className='flex flex-col gap-4'>
-            <h4 className='mb-4 text-base font-medium text-primary'>Mời {isRole}</h4>
+            <h4 className='mb-4 text-base font-medium text-primary'>
+              {t('invite')} {isRole}
+            </h4>
             <form>
               {isRole === role.students && (
                 <div>
-                  <p className='mb-2 text-sm font-medium'>Link mời</p>
+                  <p className='mb-2 text-sm font-medium'>{t('invitationLink')}</p>
                   <div className='mb-4 flex items-center'>
                     <p className='= w-full overflow-hidden text-ellipsis text-third'>{inviteLink}</p>
                     <IconButton
                       Icon={isCopied ? <LuCheck /> : <LuCopy />}
-                      tooltip='copy link'
+                      tooltip={t('copyLink')}
                       mode='dark'
                       onClick={handleClickCopy}
                     />
@@ -107,16 +111,15 @@ export default function InviteFormModal({ isInviteModalOpen, setIsInviteModalOpe
           </CardBody>
           <CardFooter className='flex gap-8 pt-0'>
             <Button variant='outlined' className='flex-1 text-sm' onClick={() => setIsInviteModalOpen(false)} fullWidth>
-              Hủy
+              {t('cancel')}
             </Button>
             <Button
-              // variant='gradient'
               className='flex-1 bg-primary text-sm'
               onClick={onSubmit}
               disabled={invitationMutation.isPending}
               fullWidth
             >
-              Mời
+              {t('invite')}
             </Button>
           </CardFooter>
         </Card>
