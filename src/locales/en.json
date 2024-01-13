@@ -176,5 +176,8 @@
   "resetPassword": "Reset password",
   "backToSignIn": "Back to Sign in",
   "somethingWrong": "Something went wrong!",
-  "noDataPleaseUploadStudents": "No data. Please upload your student list"
+  "noDataPleaseUploadStudents": "No data. Please upload your student list",
+  "accountConfirmation": "Account Confirmation",
+  "emailWithConfirmationLink": "An email with your account confirmation link has been sent to your email:",
+  "checkEmailAndComeback": "Check your email and comeback to proceed!"
 }
