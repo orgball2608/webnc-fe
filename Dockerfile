@@ -7,7 +7,7 @@ ENV PATH /usr/src/app/node_modules/.bin:$PATH
 
 COPY . .
 
-RUN npm install
+RUN npm install --force
 
 RUN npm run build
 
