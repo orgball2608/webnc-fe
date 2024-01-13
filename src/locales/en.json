@@ -121,7 +121,7 @@
   "currentGrade": "Current grade",
   "expectGrade": "Expectation Grade",
   "explanation": "Explanation",
-  "sent": "Sent",
+  "send": "Send",
   "comments": "Comments",
   "resolvedReview": "Review has been resolved",
   "updateGradeAndCompleteReview": "Update grade and complete review",
@@ -181,5 +181,6 @@
   "emailWithConfirmationLink": "An email with your account confirmation link has been sent to your email:",
   "checkEmailAndComeback": "Check your email and comeback to proceed!",
   "resend": "Resend",
-  "proceed": "Proceed"
+  "proceed": "Proceed",
+  "typeExplanation": "Type your explanation here"
 }

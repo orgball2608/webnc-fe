@@ -107,7 +107,7 @@ function Signin() {
             </div>
 
             <div className='col-span-12'>
-              <Input size='lg' label='Password' type='password' {...register('password')} />
+              <Input size='lg' label={t('password')} type='password' {...register('password')} />
               <p className='ml-1 flex min-h-[20px] items-center gap-1 text-xs font-normal text-red-400'>
                 {t(errors.password?.message)}
               </p>

@@ -73,7 +73,7 @@ export default function ClassDetailGrade() {
     } catch (error) {}
   }
 
-  const isLoading = getGradeCompositionsQuery.isLoading || getGradeBoardQuery.isLoading
+  const isLoading = getGradeCompositionsQuery.isLoading || getGradeBoardQuery.isLoading || isLoadingMyrole
 
   if (isLoading) {
     return (

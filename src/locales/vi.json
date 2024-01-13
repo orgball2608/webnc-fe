@@ -121,7 +121,7 @@
   "currentGrade": "Điểm hiện tại",
   "expectGrade": "Điểm mong muốn",
   "explanation": "Lý do",
-  "sent": "Đã gửi",
+  "send": "Gửi",
   "comments": "Bình luận",
   "resolvedReview": "Đánh giá đã được giải quyết",
   "updateGradeAndCompleteReview": "Cập nhật điểm và hoàn thành đánh giá",
@@ -181,5 +181,6 @@
   "emailWithConfirmationLink": "Một email chứa liên kết xác nhận tài khoản của bạn đã được gửi đến địa chỉ email của bạn:",
   "checkEmailAndComeback": "Kiểm tra email của bạn và quay lại để tiếp tục!",
   "resend": "Gửi lại",
-  "proceed": "Tiếp tục"
+  "proceed": "Tiếp tục",
+  "typeExplanation": "Nhập lý do"
 }

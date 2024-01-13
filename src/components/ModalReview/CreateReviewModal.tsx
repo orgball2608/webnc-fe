@@ -137,7 +137,7 @@ export default function CreateReviewModal({ isOpen, onClose, gradeData, infoSutd
                 paddingX: '10px',
                 paddingY: '10px'
               }}
-              placeholder='Type your explanation here'
+              placeholder={t('typeExplanation')}
               variant='outlined'
               minRows={3}
               {...register('explanation')}
@@ -151,7 +151,7 @@ export default function CreateReviewModal({ isOpen, onClose, gradeData, infoSutd
       </DialogContent>
       <DialogActions>
         <Button onClick={onSubmit} disabled={reviewGradeMutation.isPending} sx={{ textTransform: 'none' }}>
-          {t('sent')}
+          {t('send')}
         </Button>
         <Button onClick={onClose} disabled={reviewGradeMutation.isPending} sx={{ textTransform: 'none' }}>
           {t('close')}

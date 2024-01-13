@@ -93,7 +93,7 @@ function ModalManageGrade({ type, classId, open, handler, gradeCompositions, set
 
   useEffect(() => {
     if ((errors as any).ununiqueGradeCompositionName) {
-      toast.error((errors as any).ununiqueGradeCompositionName.message)
+      toast.error(t((errors as any).ununiqueGradeCompositionName.message as string))
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [(errors as any).ununiqueGradeCompositionName])
@@ -291,7 +291,7 @@ function ModalManageGrade({ type, classId, open, handler, gradeCompositions, set
                     {t('total')}: {calculateTotalScale()}%
                   </div>
                   <p className='ml-1 flex min-h-[20px] items-center gap-1 text-xs font-normal text-red-400'>
-                    {(errors as any)?.totalScale?.message}
+                    {t((errors as any)?.totalScale?.message as string)}
                   </p>
                 </div>
               </div>

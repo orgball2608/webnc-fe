@@ -61,7 +61,7 @@ function ResetPassword() {
           <div className='col-span-12'>
             <Input
               size='lg'
-              label='New password'
+              label={t('newPassword')}
               type='password'
               {...register('password')}
               containerProps={{ className: 'min-w-min' }}
@@ -72,7 +72,7 @@ function ResetPassword() {
           </div>
 
           <div className='col-span-12'>
-            <Input size='lg' label='Confirm password' type='password' {...register('confirmPassword')} />
+            <Input size='lg' label={t('confirmPassword')} type='password' {...register('confirmPassword')} />
             <p className='ml-1 flex min-h-[20px] items-center gap-1 text-xs font-normal text-red-400'>
               {t(errors.confirmPassword?.message)}
             </p>

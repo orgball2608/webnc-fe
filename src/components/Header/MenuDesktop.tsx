@@ -2,7 +2,7 @@ import MenuItem from '@mui/material/MenuItem'
 import Menu from '@mui/material/Menu'
 import { Link } from 'react-router-dom'
 import path from 'src/constants/path'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { IoMdArrowBack } from 'react-icons/io'
 import { useTranslation } from 'react-i18next'
 
@@ -47,6 +47,12 @@ export default function MenuDesktop({ anchorEl, handleMenuClose, handleSignout }
   const [history, setHistory] = useState([{ data: MENU_ITEMS }])
   const currentMenuData = history[history.length - 1]?.data
 
+  useEffect(() => {
+    if (!anchorEl) {
+      setHistory([{ data: MENU_ITEMS }])
+    }
+  }, [anchorEl])
+
   const handleBack = () => {
     setHistory((prevHistory) => prevHistory.slice(0, history.length - 1))
   }
@@ -69,7 +75,6 @@ export default function MenuDesktop({ anchorEl, handleMenuClose, handleSignout }
                 setHistory((prevHistory) => [...prevHistory, { data: item.children }])
               } else {
                 item.onClick()
-                handleBack()
               }
             }}
             className='min-w-[200px]'
