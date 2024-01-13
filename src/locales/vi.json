@@ -179,5 +179,7 @@
   "noDataPleaseUploadStudents": "Không có dữ liệu. Hãy tải lên danh sách sinh viên",
   "accountConfirmation": "Xác nhận Tài khoản",
   "emailWithConfirmationLink": "Một email chứa liên kết xác nhận tài khoản của bạn đã được gửi đến địa chỉ email của bạn:",
-  "checkEmailAndComeback": "Kiểm tra email của bạn và quay lại để tiếp tục!"
+  "checkEmailAndComeback": "Kiểm tra email của bạn và quay lại để tiếp tục!",
+  "resend": "Gửi lại",
+  "proceed": "Tiếp tục"
 }

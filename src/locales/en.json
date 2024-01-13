@@ -179,5 +179,7 @@
   "noDataPleaseUploadStudents": "No data. Please upload your student list",
   "accountConfirmation": "Account Confirmation",
   "emailWithConfirmationLink": "An email with your account confirmation link has been sent to your email:",
-  "checkEmailAndComeback": "Check your email and comeback to proceed!"
+  "checkEmailAndComeback": "Check your email and comeback to proceed!",
+  "resend": "Resend",
+  "proceed": "Proceed"
 }

@@ -37,7 +37,7 @@ function ForgotPassword() {
   return (
     <>
       {forgotPasswordMutation.isSuccess ? (
-        <AccountConfirmation email={watch('email')} onSubmit={handleResendVerifyPassword} buttonTitle='Resend' />
+        <AccountConfirmation email={watch('email')} onSubmit={handleResendVerifyPassword} buttonTitle={t('resend')} />
       ) : (
         <div className='px-5'>
           <Typography variant='h3' className='mb-8'>

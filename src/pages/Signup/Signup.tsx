@@ -61,6 +61,7 @@ function Signup() {
     <>
       {signupMutation.isSuccess ? (
         <AccountConfirmation
+          buttonTitle={t('proceed')}
           email={watch('email')}
           onSubmit={() => {
             navigate(path.signin, {
