@@ -55,7 +55,7 @@ export default function JoinClassModal({ open, handler }: Props) {
           })
         ])
         const course = res.data.data
-        const classURL = currentURL.replace(`/home`, `class/${course?.courseId}/news`)
+        const classURL = currentURL.replace(`/home`, `/class/${course?.courseId}/news`)
         handler()
         reset()
         toast.success(t('joinClassSuccessfully'))
