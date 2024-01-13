@@ -515,10 +515,11 @@ function GradeBoardTable({
                                   className='opacity-0 group-hover:opacity-100'
                                   size='sm'
                                   onClick={() => {
-                                    const grade = String(row[gradeComposition.key])
+                                    const grade = String(row[gradeComposition.key] || 0)
                                     setDataGradeUpdate(gradeComposition)
 
                                     setValue('grade', grade)
+
                                     setValue('studentId', row.studentId)
                                   }}
                                 >
