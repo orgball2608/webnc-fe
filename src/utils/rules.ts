@@ -1,35 +1,18 @@
 import * as zod from 'zod'
 
 const authValidation = {
-  email: zod
-    .string()
-    .min(1, { message: 'Email is required' })
-    .email('Email is invalid')
-    .max(160, 'Length from 5 to 160 characters'),
-  password: zod
-    .string()
-    .min(1, 'Password is required')
-    .min(5, 'Length from 5 to 160 characters')
-    .max(160, 'Length from 5 to 160 characters'),
+  email: zod.string().min(1, { message: 'emailRequired' }).email('emailInvalid').max(160, 'lengthFrom5To160'),
+  password: zod.string().min(1, 'passwordRequired').min(5, 'lengthFrom5To160').max(160, 'lengthFrom5To160'),
   confirmPassword: zod
     .string()
-    .min(1, 'Confirm password is required')
-    .min(5, 'Length from 5 to 160 characters')
-    .max(160, 'Length from 5 to 160 characters'),
-  firstName: zod.string().min(1, 'First name is required').max(160, 'Maximum length is 160 characters').trim(),
-  lastName: zod.string().min(1, 'Last name is required').max(160, 'Maximum length is 160 characters').trim(),
-  phoneNumber: zod.string().min(1, 'Phone number is required').max(20, 'Maximum length is 20 characters').trim(),
-  address: zod.string().min(1, 'Address is required').max(160, 'Maximum length is 160 characters').trim(),
-  studentId: zod.optional(zod.string().max(30, 'Student ID has a maximum of 30 characters').trim())
-}
-
-const numberValidation = (data: string) => {
-  if (/^\d+$/.test(data)) {
-    const dataNumber = +data
-
-    if (dataNumber >= 0) return true
-  }
-  return false
+    .min(1, 'confirmPasswordRequired')
+    .min(5, 'lengthFrom5To160')
+    .max(160, 'lengthFrom5To160'),
+  firstName: zod.string().min(1, 'firstNameRequired').max(160, 'maxLength160').trim(),
+  lastName: zod.string().min(1, 'lastNameRequired').max(160, 'maxLength160').trim(),
+  phoneNumber: zod.string().min(1, 'phoneNumberRequired').max(20, 'maxLength20').trim(),
+  address: zod.string().min(1, 'addressRequired').max(160, 'maxLength160').trim(),
+  studentId: zod.optional(zod.string().max(30, 'maxLength30').trim())
 }
 
 export const loginSchema = zod.object({
@@ -48,7 +31,7 @@ export const registerSchema = zod
     address: authValidation.address
   })
   .refine((data) => data.password === data.confirmPassword, {
-    message: 'Confirm password does not match',
+    message: 'confirmPasswordNotMatch',
     path: ['confirmPassword']
   })
 
@@ -67,7 +50,7 @@ export const changePasswordSchema = zod
     confirmPassword: authValidation.confirmPassword
   })
   .refine((data) => data.newPassword === data.confirmPassword, {
-    message: 'Confirm password does not match',
+    message: 'confirmPasswordNotMatch',
     path: ['confirmPassword']
   })
 
@@ -77,15 +60,15 @@ export const resetPasswordSchema = zod
     confirmPassword: authValidation.confirmPassword
   })
   .refine((data) => data.password === data.confirmPassword, {
-    message: 'Confirm password does not match',
+    message: 'confirmPasswordNotMatch',
     path: ['confirmPassword']
   })
 
 export const classSchema = zod.object({
-  name: zod.string().min(1, 'Name is required').max(100, 'Maximum length is 100 characters'),
-  description: zod.optional(zod.string().max(100, 'Maximum length is 100 characters')),
-  room: zod.optional(zod.string().max(100, 'Maximum length is 100 characters')),
-  topic: zod.optional(zod.string().max(100, 'Maximum length is 100 characters'))
+  name: zod.string().min(1, 'nameRequired').max(100, 'maxLength100'),
+  description: zod.optional(zod.string().max(100, 'maxLength100')),
+  room: zod.optional(zod.string().max(100, 'maxLength100')),
+  topic: zod.optional(zod.string().max(100, 'maxLength100'))
 })
 
 export const invitationSchema = zod.object({
@@ -95,19 +78,16 @@ export const invitationSchema = zod.object({
 })
 
 export const classCodeSchema = zod.object({
-  classCode: zod
-    .string()
-    .min(5, 'The class code must be at least 5 characters')
-    .max(7, 'The class code has a maximum of 5 characters')
+  classCode: zod.string().min(5, 'classCodeAtLeast5').max(7, 'classCodeMaximum7')
 })
 
 export const gradeCompositionSchema = zod.object({
   id: zod.optional(zod.number()),
-  name: zod.string().min(1, 'Name is required').max(100, 'Maximum length is 100 characters'),
+  name: zod.string().min(1, 'nameRequired').max(100, 'maxLength100'),
   scale: zod
     .string()
-    .min(1, 'Scale is required')
-    .max(100, 'Maximum length is 100 characters')
+    .min(1, 'scaleRequired')
+    .max(100, 'maxLength100')
     .refine(
       (data: string) => {
         if (/^\d+$/.test(data)) {
@@ -118,14 +98,14 @@ export const gradeCompositionSchema = zod.object({
         return false
       },
       {
-        message: 'Scale must be a number and greater than 0'
+        message: 'scaleMustBeInteger'
       }
     )
 })
 
 export const gradeCompositionsSchema = zod
   .object({
-    grades: zod.array(gradeCompositionSchema).min(1, 'Must be at least one grade')
+    grades: zod.array(gradeCompositionSchema).min(1, 'atLeastOneGrade')
   })
   .refine(
     (data) => {
@@ -138,7 +118,7 @@ export const gradeCompositionsSchema = zod
       return totalScale <= 100
     },
     {
-      message: 'Total scale must be less than or equal to 100',
+      message: 'totalScaleLessThan100',
       path: ['totalScale']
     }
   )
@@ -156,17 +136,17 @@ export const gradeCompositionsSchema = zod
       return true
     },
     {
-      message: 'Grade composition name must be unique',
+      message: 'gradeCompositionNameUnique',
       path: ['ununiqueGradeCompositionName']
     }
   )
 
 export const gradeSchema = zod.object({
-  studentId: zod.string().min(1, 'Student ID is required').max(100, 'Maximum length is 100 characters'),
-  name: zod.string().min(1, 'Name is required').max(100, 'Maximum length is 100 characters'),
+  studentId: zod.string().min(1, 'studentIdRequired').max(100, 'maxLength100'),
+  name: zod.string().min(1, 'nameRequired').max(100, 'maxLength100'),
   grade: zod
     .string()
-    .min(1, 'Grade is required')
+    .min(1, 'gradeRequired')
     .refine(
       (data: string) => {
         if (/^\d+$/.test(data)) {
@@ -177,7 +157,7 @@ export const gradeSchema = zod.object({
         return false
       },
       {
-        message: 'Grade must be a number and range [0, 10]'
+        message: 'gradeRange0To10'
       }
     )
 })
@@ -185,7 +165,7 @@ export const gradeSchema = zod.object({
 const gradeReview = {
   expectedGrade: zod
     .string()
-    .min(1, 'Grade is required')
+    .min(1, 'gradeRequired')
     .refine(
       (data: string) => {
         if (/^\d+$/.test(data)) {
@@ -196,13 +176,10 @@ const gradeReview = {
         return false
       },
       {
-        message: 'Grade must be a number and range [0, 10]'
+        message: 'gradeRange0To10'
       }
     ),
-  explanation: zod
-    .string()
-    .min(2, 'Expanation must be greater than or equal to 2.')
-    .max(1000, 'Maximum length is 1000 characters.')
+  explanation: zod.string().min(2, 'explanationRange').max(1000, 'maxLength1000')
 }
 
 export const gradeReviewSchema = zod.object({

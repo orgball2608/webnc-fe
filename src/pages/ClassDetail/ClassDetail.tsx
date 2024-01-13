@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import classNames from 'classnames'
 import isEmpty from 'lodash/isEmpty'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { NavLink, Outlet, useNavigate, useOutletContext, useParams } from 'react-router-dom'
 import courseApi from 'src/apis/courses.api'
 import { useAppDispatch, useAppSelector } from 'src/app/store'
@@ -75,7 +75,7 @@ function ClassDetail() {
     if (!isEmpty(courseDetailData)) {
       dispatch(setBreadcrumbs([{ name: courseDetailData.name, path: `/class/${classId}/news` }]))
     }
-  }, [courseDetailData])
+  }, [courseDetailData, classId, dispatch])
 
   useEffect(() => {
     dispatch(setRoleInCourses({ classId: classId as string, role: '' }))
@@ -99,7 +99,7 @@ function ClassDetail() {
     return () => {
       dispatch(clearBreadcrumbs())
     }
-  }, [])
+  }, [dispatch])
 
   const refetchCourseDetail = () => {
     getCourseDetailQuery.refetch()

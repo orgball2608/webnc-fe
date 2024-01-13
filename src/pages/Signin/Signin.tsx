@@ -102,14 +102,14 @@ function Signin() {
             <div className='col-span-12'>
               <Input size='lg' label='Email' {...register('email')} containerProps={{ className: 'min-w-min' }} />
               <p className='ml-1 flex min-h-[20px] items-center gap-1 text-xs font-normal text-red-400'>
-                {errors.email?.message}
+                {t(errors.email?.message)}
               </p>
             </div>
 
             <div className='col-span-12'>
               <Input size='lg' label='Password' type='password' {...register('password')} />
               <p className='ml-1 flex min-h-[20px] items-center gap-1 text-xs font-normal text-red-400'>
-                {errors.password?.message}
+                {t(errors.password?.message)}
               </p>
             </div>
           </div>

@@ -1,7 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button, Input } from '@material-tailwind/react'
 import { useMutation } from '@tanstack/react-query'
-import { t } from 'i18next'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
@@ -75,7 +74,7 @@ function ChangePassword() {
                 containerProps={{ className: 'min-w-min focus' }}
               />
               <p className='ml-1 flex min-h-[20px] items-center gap-1 text-xs font-normal text-red-400'>
-                {errors.oldPassword?.message}
+                {t(errors.oldPassword?.message)}
               </p>
             </div>
 
@@ -87,7 +86,7 @@ function ChangePassword() {
                 containerProps={{ className: 'min-w-min' }}
               />
               <p className='ml-1 flex min-h-[20px] items-center gap-1 text-xs font-normal text-red-400'>
-                {errors.newPassword?.message}
+                {t(errors.newPassword?.message)}
               </p>
             </div>
 
@@ -99,7 +98,7 @@ function ChangePassword() {
                 containerProps={{ className: 'min-w-min' }}
               />
               <p className='ml-1 flex min-h-[20px] items-center gap-1 text-xs font-normal text-red-400'>
-                {errors.confirmPassword?.message}
+                {t(errors.confirmPassword?.message)}
               </p>
             </div>
           </div>

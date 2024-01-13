@@ -53,8 +53,8 @@ function AccountItem({
           {subtitle && (
             <p
               className={classNames('max-w-full text-[12px] font-normal leading-[1rem] text-secondary', {
-                'line-clamp-2': Boolean(notificationStatus),
-                truncate: !Boolean(notificationStatus),
+                'line-clamp-2': notificationStatus,
+                truncate: !notificationStatus,
                 '!text-[#aaa]': notificationStatus === NOTIFICATION_STATUS.READ
               })}
             >
@@ -64,7 +64,7 @@ function AccountItem({
           {notificationCreatedAt && (
             <p
               className={classNames('max-w-full text-[12px] font-normal leading-[1rem] text-secondary', {
-                truncate: !Boolean(notificationStatus),
+                truncate: !notificationStatus,
                 '!text-[#aaa]': notificationStatus === NOTIFICATION_STATUS.READ,
                 '!font-medium !text-blue': notificationStatus === NOTIFICATION_STATUS.UNREAD
               })}

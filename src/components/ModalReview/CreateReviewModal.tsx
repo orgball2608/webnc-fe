@@ -120,7 +120,7 @@ export default function CreateReviewModal({ isOpen, onClose, gradeData, infoSutd
                 {...register('expectedGrade')}
               />
               <p className='ml-1 flex min-h-[20px] items-center gap-1 text-xs font-normal text-red-400'>
-                {errors.expectedGrade?.message as string}
+                {t(errors.expectedGrade?.message) as string}
               </p>
             </Grid>
           </Grid>
@@ -144,7 +144,7 @@ export default function CreateReviewModal({ isOpen, onClose, gradeData, infoSutd
               disabled={reviewGradeMutation.isPending}
             />
             <p className='ml-1 flex min-h-[20px] items-center gap-1 text-xs font-normal text-red-400'>
-              {errors.explanation?.message as string}
+              {t(errors.explanation?.message) as string}
             </p>
           </div>
         </Stack>

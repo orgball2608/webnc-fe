@@ -118,7 +118,7 @@ export default function UpdateGradeModal({ isOpen, onCloseUpdateModal, onCloseRe
             <Grid item className='pt-4'>
               <TextField type='number' variant='standard' {...register('grade')} />
               <p className='ml-1 flex min-h-[20px] items-center gap-1 text-xs font-normal text-red-400'>
-                {errors.grade?.message as string}
+                {t(errors.grade?.message) as string}
               </p>
             </Grid>
           </Grid>

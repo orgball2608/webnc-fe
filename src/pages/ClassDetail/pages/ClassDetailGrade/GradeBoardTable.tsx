@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { IoPencil } from 'react-icons/io5'
-import { Typography, IconButton, Tooltip, Input } from '@material-tailwind/react'
+import { Typography, IconButton, Tooltip } from '@material-tailwind/react'
 import { BsThreeDotsVertical } from 'react-icons/bs'
 import Dropdown, { DropdownItem } from 'src/components/Dropdown'
 import { CgExport, CgImport } from 'react-icons/cg'
@@ -432,8 +432,7 @@ function GradeBoardTable({
           </tr>
         </thead>
         <tbody>
-          {gradeBoardData?.rows &&
-            gradeBoardData.rows.length > 0 &&
+          {gradeBoardData?.rows && gradeBoardData.rows.length > 0 ? (
             gradeBoardData.rows.map((row, index) => {
               const isLast = index === gradeBoardData.rows.length - 1
               const classes = isLast ? 'p-4 text-center' : 'p-4 border-b border-blue-gray-50 text-center'
@@ -542,7 +541,12 @@ function GradeBoardTable({
                   <td className={classes}></td>
                 </tr>
               )
-            })}
+            })
+          ) : (
+            <tr className='text-center'>
+              <td colSpan={4}>{t('noDataPleaseUploadStudents')}</td>
+            </tr>
+          )}
         </tbody>
       </table>
 

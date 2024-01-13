@@ -96,7 +96,7 @@ export default function JoinClassModal({ open, handler }: Props) {
                   label={t('classCode')}
                 />
                 <p className='ml-1 flex min-h-[20px] items-center gap-1 text-xs font-normal text-red-400'>
-                  {errors.classCode?.message}
+                  {t(errors.classCode?.message)}
                 </p>
               </div>
             </form>

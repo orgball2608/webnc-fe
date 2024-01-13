@@ -87,7 +87,7 @@ function ModalManageClass({ open, handler }: Props) {
                   label={t('classNameRequired')}
                 />
                 <p className='ml-1 flex min-h-[20px] items-center gap-1 text-xs font-normal text-red-400'>
-                  {errors.name?.message}
+                  {t(errors.name?.message)}
                 </p>
               </div>
               <div className='mb-2'>
@@ -98,7 +98,7 @@ function ModalManageClass({ open, handler }: Props) {
                   label={t('part')}
                 />
                 <p className='ml-1 flex min-h-[20px] items-center gap-1 text-xs font-normal text-red-400'>
-                  {errors.description?.message}
+                  {t(errors.description?.message)}
                 </p>
               </div>
 
@@ -110,7 +110,7 @@ function ModalManageClass({ open, handler }: Props) {
                   label={t('topic')}
                 />
                 <p className='ml-1 flex min-h-[20px] items-center gap-1 text-xs font-normal text-red-400'>
-                  {errors.topic?.message}
+                  {t(errors.topic?.message)}
                 </p>
               </div>
 
@@ -122,7 +122,7 @@ function ModalManageClass({ open, handler }: Props) {
                   label={t('room')}
                 />
                 <p className='ml-1 flex min-h-[20px] items-center gap-1 text-xs font-normal text-red-400'>
-                  {errors.room?.message}
+                  {t(errors.room?.message)}
                 </p>
               </div>
             </form>

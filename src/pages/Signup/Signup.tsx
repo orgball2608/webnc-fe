@@ -88,7 +88,7 @@ function Signup() {
                     containerProps={{ className: 'min-w-min' }}
                   />
                   <p className='ml-1 flex min-h-[20px] items-center gap-1 text-xs font-normal text-red-400'>
-                    {errors.firstName?.message}
+                    {t(errors.firstName?.message)}
                   </p>
                 </div>
 
@@ -100,14 +100,14 @@ function Signup() {
                     containerProps={{ className: 'min-w-min' }}
                   />
                   <p className='ml-1 flex min-h-[20px] items-center gap-1 text-xs font-normal text-red-400'>
-                    {errors.lastName?.message}
+                    {t(errors.lastName?.message)}
                   </p>
                 </div>
 
                 <div className='col-span-12'>
                   <Input size='lg' label='Email' {...register('email')} containerProps={{ className: 'min-w-min' }} />
                   <p className='ml-1 flex min-h-[20px] items-center gap-1 text-xs font-normal text-red-400'>
-                    {errors.email?.message}
+                    {t(errors.email?.message)}
                   </p>
                 </div>
 
@@ -119,7 +119,7 @@ function Signup() {
                     containerProps={{ className: 'min-w-min' }}
                   />
                   <p className='ml-1 flex min-h-[20px] items-center gap-1 text-xs font-normal text-red-400'>
-                    {errors.phoneNumber?.message}
+                    {t(errors.phoneNumber?.message)}
                   </p>
                 </div>
 
@@ -131,21 +131,21 @@ function Signup() {
                     containerProps={{ className: 'min-w-min' }}
                   />
                   <p className='ml-1 flex min-h-[20px] items-center gap-1 text-xs font-normal text-red-400'>
-                    {errors.address?.message}
+                    {t(errors.address?.message)}
                   </p>
                 </div>
 
                 <div className='col-span-12'>
                   <Input size='lg' label={t('password')} type='password' {...register('password')} />
                   <p className='ml-1 flex min-h-[20px] items-center gap-1 text-xs font-normal text-red-400'>
-                    {errors.password?.message}
+                    {t(errors.password?.message)}
                   </p>
                 </div>
 
                 <div className='col-span-12'>
                   <Input size='lg' label={t('confirmPassword')} type='password' {...register('confirmPassword')} />
                   <p className='ml-1 flex min-h-[20px] items-center gap-1 text-xs font-normal text-red-400'>
-                    {errors.confirmPassword?.message}
+                    {t(errors.confirmPassword?.message)}
                   </p>
                 </div>
               </div>

@@ -1,5 +1,4 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
-import { CourseItem } from 'src/types/course.type'
 
 interface Breadcrumb {
   name: string

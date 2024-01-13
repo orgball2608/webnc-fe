@@ -110,7 +110,7 @@ function Profile() {
                 {...register('studentId')}
               />
               <p className='ml-1 flex min-h-[20px] items-center gap-1 text-xs font-normal text-red-400'>
-                {errors.studentId?.message}
+                {t(errors.studentId?.message)}
               </p>
             </div>
 
@@ -128,14 +128,14 @@ function Profile() {
               <div className='col-span-12 md:col-span-6'>
                 <Input label={t('firstName')} {...register('firstName')} containerProps={{ className: 'min-w-min' }} />
                 <p className='ml-1 flex min-h-[20px] items-center gap-1 text-xs font-normal text-red-400'>
-                  {errors.firstName?.message}
+                  {t(errors.firstName?.message)}
                 </p>
               </div>
 
               <div className='col-span-12 md:col-span-6'>
                 <Input label={t('lastName')} {...register('lastName')} containerProps={{ className: 'min-w-min' }} />
                 <p className='ml-1 flex min-h-[20px] items-center gap-1 text-xs font-normal text-red-400'>
-                  {errors.lastName?.message}
+                  {t(errors.lastName?.message)}
                 </p>
               </div>
             </div>
@@ -147,14 +147,14 @@ function Profile() {
                 containerProps={{ className: 'min-w-min' }}
               />
               <p className='ml-1 flex min-h-[20px] items-center gap-1 text-xs font-normal text-red-400'>
-                {errors.phoneNumber?.message}
+                {t(errors.phoneNumber?.message)}
               </p>
             </div>
 
             <div className='col-span-12'>
               <Input label={t('address')} {...register('address')} containerProps={{ className: 'min-w-min' }} />
               <p className='ml-1 flex min-h-[20px] items-center gap-1 text-xs font-normal text-red-400'>
-                {errors.address?.message}
+                {t(errors.address?.message)}
               </p>
             </div>
           </div>

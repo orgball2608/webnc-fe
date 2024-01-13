@@ -233,7 +233,7 @@ function ModalManageGrade({ type, classId, open, handler, gradeCompositions, set
                             disabled={type === 'ADD' && Boolean(field.id)}
                           />
                           <p className='ml-1 flex min-h-[20px] items-center gap-1 text-xs font-normal text-red-400'>
-                            {errors.grades?.[index]?.name?.message}
+                            {t(errors.grades?.[index]?.name?.message)}
                           </p>
                         </div>
                       </div>
@@ -244,10 +244,10 @@ function ModalManageGrade({ type, classId, open, handler, gradeCompositions, set
                           containerProps={{ className: 'min-w-min' }}
                           variant='standard'
                           label={`${t('scale')} ${index + 1}`}
-                          disabled={type === 'ADD' && Boolean(field.id)}
+                          disabled={type === 'ADD' && field.id}
                         />
                         <p className='ml-1 flex min-h-[20px] items-center gap-1 text-xs font-normal text-red-400'>
-                          {errors.grades?.[index]?.scale?.message}
+                          {t(errors.grades?.[index]?.scale?.message)}
                         </p>
                       </div>
                       <div className='col-span-2 flex flex-col'>

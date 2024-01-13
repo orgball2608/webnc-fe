@@ -36,7 +36,6 @@ export default function Header({ onToggleSidebar }: { onToggleSidebar: any }) {
   const { t } = useTranslation()
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
-  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState<null | HTMLElement>(null)
   const [isOpenCreateClassModal, setIsOpenCreateClassModal] = React.useState(false)
   const [isOpenJoinClassModal, setIsOpenJoinClassModal] = React.useState(false)
 
@@ -78,13 +77,11 @@ export default function Header({ onToggleSidebar }: { onToggleSidebar: any }) {
     setAnchorEl(event.currentTarget)
   }
 
-  const handleMobileMenuClose = () => {
-    setMobileMoreAnchorEl(null)
-  }
-
-  const handleMenuClose = () => {
+  const handleMenuClose = (callback?: () => void) => {
     setAnchorEl(null)
-    handleMobileMenuClose()
+    if (callback && typeof callback === 'function') {
+      callback()
+    }
   }
 
   const handleSignout = () => {
@@ -174,7 +171,7 @@ export default function Header({ onToggleSidebar }: { onToggleSidebar: any }) {
                   </Dropdown>
                 )}
 
-                {notifications && notifications.length > 0 ? (
+                {notifications && (
                   <Dropdown
                     placement='bottom-end'
                     offset={{
@@ -183,37 +180,45 @@ export default function Header({ onToggleSidebar }: { onToggleSidebar: any }) {
                     classNameContent='w-[360px] max-h-[calc(100vh-100px)] overflow-y-auto'
                     render={() => (
                       <>
-                        <div className='flex justify-end px-5 py-1'>
-                          <Button
-                            variant='text'
-                            className={classNames('px-3 py-2 text-[14px] font-normal normal-case', {
-                              '!text-primary !opacity-80': unreadNotifications.length === 0,
-                              'text-blue': unreadNotifications.length > 0
-                            })}
-                            disabled={!unreadNotifications || unreadNotifications.length === 0}
-                            onClick={markAllNotificationAsRead}
-                          >
-                            {t('markAllAsRead')}
-                          </Button>
-                        </div>
-                        {notifications?.map((notification) => (
-                          <DropdownItem
-                            key={notification.id}
-                            onClick={() => markNotificationAsRead(notification.id)}
-                            disabled={notification.status === NOTIFICATION_STATUS.READ}
-                          >
-                            <AccountItem
-                              className='h-fit !px-0 py-3'
-                              alt=''
-                              avatarUrl=''
-                              name={notification.title}
-                              subtitle={notification.body}
-                              notificationStatus={notification.status}
-                              notificationCreatedAt={notification.createdAt}
-                              disabled={notification.status === NOTIFICATION_STATUS.READ}
-                            />
-                          </DropdownItem>
-                        ))}
+                        {notifications.length > 0 ? (
+                          <>
+                            <div className='flex justify-end px-5 py-1'>
+                              <Button
+                                variant='text'
+                                className={classNames('px-3 py-2 text-[14px] font-normal normal-case', {
+                                  '!text-primary !opacity-80': unreadNotifications.length === 0,
+                                  'text-blue': unreadNotifications.length > 0
+                                })}
+                                disabled={!unreadNotifications || unreadNotifications.length === 0}
+                                onClick={markAllNotificationAsRead}
+                              >
+                                {t('markAllAsRead')}
+                              </Button>
+                            </div>
+                            {notifications.map((notification) => (
+                              <DropdownItem
+                                key={notification.id}
+                                onClick={() => markNotificationAsRead(notification.id)}
+                                disabled={notification.status === NOTIFICATION_STATUS.READ}
+                              >
+                                <AccountItem
+                                  className='h-fit !px-0 py-3'
+                                  alt=''
+                                  avatarUrl=''
+                                  name={notification.title}
+                                  subtitle={notification.body}
+                                  notificationStatus={notification.status}
+                                  notificationCreatedAt={notification.createdAt}
+                                  disabled={notification.status === NOTIFICATION_STATUS.READ}
+                                />
+                              </DropdownItem>
+                            ))}
+                          </>
+                        ) : (
+                          <>
+                            <DropdownItem disabled>{t('noNotification')}</DropdownItem>
+                          </>
+                        )}
                       </>
                     )}
                   >
@@ -223,12 +228,6 @@ export default function Header({ onToggleSidebar }: { onToggleSidebar: any }) {
                       </Badge>
                     </IconButton>
                   </Dropdown>
-                ) : (
-                  <>
-                    <IconButton size='large' color='inherit'>
-                      <NotificationsIcon />
-                    </IconButton>
-                  </>
                 )}
 
                 <IconButton

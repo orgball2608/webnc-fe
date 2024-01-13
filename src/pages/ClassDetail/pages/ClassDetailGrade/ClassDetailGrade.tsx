@@ -73,8 +73,18 @@ export default function ClassDetailGrade() {
     } catch (error) {}
   }
 
+  const isLoading = getGradeCompositionsQuery.isLoading || getGradeBoardQuery.isLoading
+
+  if (isLoading) {
+    return (
+      <>
+        <div>{t('loading')}</div>
+      </>
+    )
+  }
+
   return !classId ? (
-    <div>Something wrong</div>
+    <div>{t('somethingWrong')}</div>
   ) : (
     <>
       <Card className='h-full w-full shadow-none'>

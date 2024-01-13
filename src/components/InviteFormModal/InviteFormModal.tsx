@@ -104,7 +104,7 @@ export default function InviteFormModal({ isInviteModalOpen, setIsInviteModalOpe
               <div className='my-6'>
                 <Input {...register('email')} variant='standard' label='Email' containerProps={{ className: 'mb-4' }} />
                 <p className='ml-1 flex min-h-[20px] items-center gap-1 text-xs font-normal text-red-400'>
-                  {errors.email?.message as string}
+                  {t(errors.email?.message)}
                 </p>
               </div>
             </form>

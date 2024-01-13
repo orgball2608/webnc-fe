@@ -9,25 +9,7 @@ import defaultUser from 'src/assets/images/default-user.webp'
 import { Link } from 'react-router-dom'
 import path from 'src/constants/path'
 import { Helmet } from 'react-helmet'
-
-const features = [
-  {
-    image: introFunc1,
-    description: 'Dễ dàng quản lý nhiều lớp học, nhiều học sinh'
-  },
-  {
-    image: introFunc2,
-    description: 'Giao bài tập và quản lý thời hạn nộp bài'
-  },
-  {
-    image: introFunc3,
-    description: 'Bảo mật tài liệu, nâng cao hiệu quả giảng dạy'
-  },
-  {
-    image: introFunc4,
-    description: 'Dễ dàng quản lý nhiều lớp học, nhiều học sinh'
-  }
-]
+import { useTranslation } from 'react-i18next'
 
 const members = [
   {
@@ -48,10 +30,31 @@ const members = [
 ]
 
 function LandingPage() {
+  const { t } = useTranslation()
+
+  const features = [
+    {
+      image: introFunc1,
+      description: t('easilyManage')
+    },
+    {
+      image: introFunc2,
+      description: t('assignAssignmentsAndManageDeadlines')
+    },
+    {
+      image: introFunc3,
+      description: t('secureDocuments')
+    },
+    {
+      image: introFunc4,
+      description: t('easilyManage')
+    }
+  ]
+
   return (
     <>
       <Helmet>
-        <title>Classroom</title>
+        <title>{t('classroom')}</title>
       </Helmet>
 
       <section className='py-8'>
@@ -59,16 +62,13 @@ function LandingPage() {
           <div className='grid grid-cols-2 gap-4 px-4'>
             <div className='col-span-2 flex flex-col justify-center md:col-span-1 '>
               <Typography variant='h1' className='mb-6 text-4xl'>
-                Nền tảng lớp học trực tuyến hiệu quả và phổ biến
+                {t('effectiveAndPopularPlatform')}
               </Typography>
 
-              <Typography className='mb-5 text-gray-600'>
-                Năm 2021, đối mặt với dịch Covid, việc học trực tuyến ngày càng đóng vai trò quan trọng trong nền giáo
-                dục. Friendly Class ra đời với sự mệnh giải quyết những vấn đề trong việc học và dạy.
-              </Typography>
+              <Typography className='mb-5 text-gray-600'>{t('friendlyClassWasBorn')}</Typography>
 
               <Link className='inline-block' to={path.signin}>
-                <Button className='rounded-full bg-primary'>Tham gia ngay</Button>
+                <Button className='rounded-full bg-primary'> {t('joinNow')}</Button>
               </Link>
             </div>
 
@@ -84,7 +84,7 @@ function LandingPage() {
       <section className='bg-light-blue-50 py-8'>
         <div className='container'>
           <Typography variant='h2' className='mb-6'>
-            Tính năng chính
+            {t('mainFeatures')}
           </Typography>
 
           <div className='grid grid-cols-4 gap-6'>
@@ -104,11 +104,11 @@ function LandingPage() {
         <div className='container'>
           <div className='text-center'>
             <Typography variant='h3'>
-              Nhóm <span className='text-[#3061AF]'>WebNC2023</span>
+              {t('team')} <span className='text-[#3061AF]'>WebNC2023</span>
             </Typography>
 
-            <Typography className='mb-2 mt-5'>Năm thành lập: 2023</Typography>
-            <Typography>Môn học: Phát triển ứng dụng web nâng cao</Typography>
+            <Typography className='mb-2 mt-5'>{t('yearOfEstablishment')}: 2023</Typography>
+            <Typography>{t('subject')}</Typography>
           </div>
 
           <div className='mt-10 grid grid-cols-3 gap-20'>
@@ -132,7 +132,7 @@ function LandingPage() {
           </div>
 
           <Alert color='blue' className='mx-auto mt-10 w-max text-base font-bold uppercase'>
-            CẢM ƠN BẠN ĐÃ SỬ DỤNG SẢN PHẨM CỦA CHÚNG MÌNH!
+            {t('thanksForUsing')}
           </Alert>
         </div>
       </section>
@@ -141,18 +141,18 @@ function LandingPage() {
         <div className='container'>
           <div className='grid grid-cols-3 gap-10 px-10'>
             <div className='col-span-1'>
-              <p className='mb-6 text-center text-xl font-bold uppercase'>Classroom</p>
+              <p className='mb-6 text-center text-xl font-bold uppercase'>{t('classroom')}</p>
               <p className='text-base'>©Copyright WebNC2023 Team</p>
             </div>
 
             <div className='col-span-1'>
-              <p className='mb-6 text-center text-xl font-bold uppercase'>Địa chỉ</p>
+              <p className='mb-6 text-center text-xl font-bold uppercase'>{t('address')}</p>
               <p className='mb-1 text-base'>Trường Đại học Khoa học Tự nhiên</p>
               <p className='text-base'>Phát triển ứng dụng web nâng cao - 20_3</p>
             </div>
 
             <div className='col-span-1'>
-              <p className='mb-6 text-center text-xl font-bold uppercase'>Liên hệ</p>
+              <p className='mb-6 text-center text-xl font-bold uppercase'>{t('contact')}</p>
               <div className='flex justify-center gap-4'>
                 <IconButton className='rounded bg-[#ea4335] text-lg text-white hover:shadow-[#ea4335]/20 focus:shadow-[#ea4335]/20 active:shadow-[#ea4335]/10'>
                   <FaGoogle />
