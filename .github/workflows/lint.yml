@@ -20,7 +20,7 @@ jobs:
           node-version-file: .nvmrc
 
       - name: Install dependencies from lockfile
-        run: npm install --frozen-lockfile
+        run: npm install --force
 
       - name: Run prettier step
         run: npm run prettier:fix
