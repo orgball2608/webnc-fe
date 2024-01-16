@@ -10,7 +10,7 @@ import AccountCircle from '@mui/icons-material/AccountCircle'
 import NotificationsIcon from '@mui/icons-material/Notifications'
 import { Link, useMatch } from 'react-router-dom'
 import MenuDesktop from './MenuDesktop'
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import authApi from 'src/apis/auth.api'
 import { useAppDispatch, useAppSelector } from 'src/app/store'
 import { signout as signoutAction } from 'src/slices/auth.slice'
@@ -30,6 +30,7 @@ import { useTranslation } from 'react-i18next'
 
 // eslint-disable-next-line prettier/prettier, @typescript-eslint/no-explicit-any
 export default function Header({ onToggleSidebar }: { onToggleSidebar: any }) {
+  const queryClient = useQueryClient()
   const homepageMatch = useMatch(path.home)
   const breadcrumbs = useAppSelector((state) => state.app.breadcrumbs)
 
@@ -46,6 +47,7 @@ export default function Header({ onToggleSidebar }: { onToggleSidebar: any }) {
     mutationFn: authApi.signout,
     onSuccess: () => {
       dispatch(signoutAction())
+      queryClient.clear()
     }
   })
 
